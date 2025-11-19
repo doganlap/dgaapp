@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react'
 import { budgetAPI } from '../api'
 import { FiDollarSign, FiTrendingUp, FiPieChart } from 'react-icons/fi'
+import { useLocale } from '../context/LocaleContext'
+import { motion } from 'framer-motion'
+import { Bar, Line, Pie } from 'react-chartjs-2'
 
 function Budget() {
+  const { locale } = useLocale()
+  const isAr = locale === 'ar'
   const [overview, setOverview] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -32,56 +37,56 @@ function Budget() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Budget Overview</h1>
-        <p className="text-gray-600 mt-1">National digital transformation budget tracking</p>
+        <h1 className="text-3xl font-bold text-gray-900">{isAr ? 'نظرة عامة على الميزانية' : 'Budget Overview'}</h1>
+        <p className="text-gray-600 mt-1">{isAr ? 'متابعة ميزانية التحول الرقمي الوطنية' : 'National digital transformation budget tracking'}</p>
       </div>
 
       {/* Budget Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">Total Allocated</h3>
+            <h3 className="text-lg font-semibold">{isAr ? 'إجمالي المخصص' : 'Total Allocated'}</h3>
             <FiDollarSign className="text-3xl opacity-80" />
           </div>
           <p className="text-4xl font-bold">
-            SAR {((overview?.totalAllocated || 0) / 1000000000).toFixed(2)}B
+            {isAr ? 'ريال' : 'SAR'} {((overview?.totalAllocated || 0) / 1000000000).toFixed(2)}{isAr ? 'مليار' : 'B'}
           </p>
-          <p className="text-sm opacity-90 mt-2">Across all programs</p>
+            <p className="text-sm opacity-90 mt-2">{isAr ? 'عبر جميع البرامج' : 'Across all programs'}</p>
         </div>
 
         <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">Total Spent</h3>
+            <h3 className="text-lg font-semibold">{isAr ? 'إجمالي المصروف' : 'Total Spent'}</h3>
             <FiTrendingUp className="text-3xl opacity-80" />
           </div>
           <p className="text-4xl font-bold">
-            SAR {((overview?.totalSpent || 0) / 1000000000).toFixed(2)}B
+            {isAr ? 'ريال' : 'SAR'} {((overview?.totalSpent || 0) / 1000000000).toFixed(2)}{isAr ? 'مليار' : 'B'}
           </p>
-          <p className="text-sm opacity-90 mt-2">Year to date</p>
+            <p className="text-sm opacity-90 mt-2">{isAr ? 'منذ بداية السنة' : 'Year to date'}</p>
         </div>
 
         <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">Utilization Rate</h3>
+            <h3 className="text-lg font-semibold">{isAr ? 'معدل الاستفادة' : 'Utilization Rate'}</h3>
             <FiPieChart className="text-3xl opacity-80" />
           </div>
           <p className="text-4xl font-bold">
             {overview?.utilizationRate || 0}%
           </p>
-          <p className="text-sm opacity-90 mt-2">Budget efficiency</p>
+            <p className="text-sm opacity-90 mt-2">{isAr ? 'كفاءة الميزانية' : 'Budget efficiency'}</p>
         </div>
       </div>
 
       {/* Regional Breakdown */}
       <div className="bg-white rounded-xl shadow-md p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-6">Regional Budget Distribution</h3>
+        <h3 className="text-xl font-bold text-gray-900 mb-6">{isAr ? 'توزيع الميزانية حسب المنطقة' : 'Regional Budget Distribution'}</h3>
         <div className="space-y-4">
           {overview?.byRegion?.map((region) => (
             <div key={region.region} className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="font-medium text-gray-700">{region.region} Region</span>
+                <span className="font-medium text-gray-700">{isAr ? `منطقة ${region.region}` : `${region.region} Region`}</span>
                 <span className="font-bold text-gray-900">
-                  SAR {(region.total / 1000000).toFixed(1)}M
+                  {isAr ? 'ريال' : 'SAR'} {(region.total / 1000000).toFixed(1)}{isAr ? 'م' : 'M'}
                 </span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-3">
@@ -95,56 +100,114 @@ function Budget() {
         </div>
       </div>
 
-      {/* Budget Categories */}
+      {/* Animated Budget Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Top Spending Categories</h3>
-          <div className="space-y-3">
-            {[
-              { category: 'Infrastructure', amount: 850, percentage: 35 },
-              { category: 'Software Licenses', amount: 620, percentage: 25 },
-              { category: 'Consulting', amount: 480, percentage: 20 },
-              { category: 'Staff Costs', amount: 320, percentage: 13 },
-              { category: 'Training', amount: 180, percentage: 7 },
-            ].map((item) => (
-              <div key={item.category} className="flex items-center justify-between py-2">
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium text-gray-700">{item.category}</span>
-                    <span className="text-sm font-semibold text-gray-900">
-                      SAR {item.amount}M ({item.percentage}%)
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-dga-green h-2 rounded-full"
-                      style={{ width: `${item.percentage}%` }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Spending Categories - Pie Chart */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="bg-white rounded-xl shadow-md p-6"
+        >
+          <h3 className="text-xl font-bold text-gray-900 mb-4">{isAr ? 'الميزانية حسب الفئة' : 'Budget by Category'}</h3>
+          <Pie
+            data={{
+              labels: [isAr ? 'البنية التحتية' : 'Infrastructure', isAr ? 'تراخيص البرمجيات' : 'Software Licenses', isAr ? 'الاستشارات' : 'Consulting', isAr ? 'تكاليف الموظفين' : 'Staff Costs', isAr ? 'التدريب' : 'Training'],
+              datasets: [{
+                data: [850, 620, 480, 320, 180],
+                backgroundColor: [
+                  'rgba(59, 130, 246, 0.8)',
+                  'rgba(16, 185, 129, 0.8)',
+                  'rgba(251, 146, 60, 0.8)',
+                  'rgba(139, 92, 246, 0.8)',
+                  'rgba(236, 72, 153, 0.8)'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+              }]
+            }}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'bottom',
+                  labels: {
+                    padding: 15,
+                    font: { size: 12 }
+                  }
+                },
+                tooltip: {
+                  callbacks: {
+                    label: (context) => `${context.label}: ${isAr ? 'ريال' : 'SAR'} ${context.parsed}${isAr ? 'م' : 'M'}`
+                  }
+                }
+              },
+              animation: {
+                animateScale: true,
+                animateRotate: true,
+                duration: 2000
+              }
+            }}
+          />
+        </motion.div>
 
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Quarterly Trend</h3>
-          <div className="space-y-3">
-            {['Q1 2024', 'Q2 2024', 'Q3 2024', 'Q4 2024'].map((quarter, index) => (
-              <div key={quarter} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-                <span className="font-medium text-gray-700">{quarter}</span>
-                <div className="flex items-center gap-4">
-                  <span className="text-sm text-gray-600">
-                    SAR {(Math.random() * 500 + 200).toFixed(0)}M
-                  </span>
-                  <span className={`text-sm font-semibold ${Math.random() > 0.5 ? 'text-green-600' : 'text-red-600'}`}>
-                    {Math.random() > 0.5 ? '+' : '-'}{(Math.random() * 15).toFixed(1)}%
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Quarterly Trend - Line Chart */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="bg-white rounded-xl shadow-md p-6"
+        >
+          <h3 className="text-xl font-bold text-gray-900 mb-4">{isAr ? 'اتجاه الإنفاق ربع السنوي' : 'Quarterly Spending Trend'}</h3>
+          <Line
+            data={{
+              labels: [isAr ? 'الربع 1 2024' : 'Q1 2024', isAr ? 'الربع 2 2024' : 'Q2 2024', isAr ? 'الربع 3 2024' : 'Q3 2024', isAr ? 'الربع 4 2024' : 'Q4 2024'],
+              datasets: [
+                {
+                  label: isAr ? 'المخصص' : 'Allocated',
+                  data: [620, 680, 710, 780],
+                  borderColor: 'rgb(59, 130, 246)',
+                  backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                  tension: 0.4,
+                  fill: true
+                },
+                {
+                  label: isAr ? 'المصروف' : 'Spent',
+                  data: [580, 640, 670, 720],
+                  borderColor: 'rgb(34, 197, 94)',
+                  backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                  tension: 0.4,
+                  fill: true
+                }
+              ]
+            }}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'top'
+                },
+                tooltip: {
+                  callbacks: {
+                    label: (context) => `${context.dataset.label}: ${isAr ? 'ريال' : 'SAR'} ${context.parsed.y}${isAr ? 'م' : 'M'}`
+                  }
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    callback: (value) => `${value}M`
+                  }
+                }
+              },
+              animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart'
+              }
+            }}
+          />
+        </motion.div>
       </div>
     </div>
   )

@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
 import { programAPI } from '../api'
-import { FiSearch, FiCalendar, FiTrendingUp } from 'react-icons/fi'
+import { FiSearch, FiCalendar } from 'react-icons/fi'
+import { useLocale } from '../context/LocaleContext'
 
 function Programs() {
+  const { locale } = useLocale()
+  const isAr = locale === 'ar'
   const [programs, setPrograms] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -52,8 +55,8 @@ function Programs() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Digital Transformation Programs</h1>
-          <p className="text-gray-600 mt-1">{programs.length} programs nationwide</p>
+          <h1 className="text-3xl font-bold text-gray-900">{isAr ? 'برامج التحول الرقمي' : 'Digital Transformation Programs'}</h1>
+          <p className="text-gray-600 mt-1">{isAr ? `${programs.length} برنامج على مستوى المملكة` : `${programs.length} programs nationwide`}</p>
         </div>
       </div>
 
@@ -63,7 +66,7 @@ function Programs() {
           <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <input
             type="text"
-            placeholder="Search programs..."
+            placeholder={isAr ? 'ابحث عن البرامج...' : 'Search programs...'}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -83,25 +86,28 @@ function Programs() {
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Program
+                    {isAr ? 'البرنامج' : 'Program'}
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Type
+                    {isAr ? 'النوع' : 'Type'}
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Status
+                    {isAr ? 'الحالة' : 'Status'}
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Priority
+                    {isAr ? 'الأولوية' : 'Priority'}
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Budget
+                    {isAr ? 'الميزانية' : 'Budget'}
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Progress
+                    {isAr ? 'التقدم' : 'Progress'}
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Timeline
+                    {isAr ? 'الجدول الزمني' : 'Timeline'}
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    {isAr ? 'حالة سير العمل' : 'Workflow Status'}
                   </th>
                 </tr>
               </thead>
@@ -130,10 +136,10 @@ function Programs() {
                     <td className="px-6 py-4">
                       <div>
                         <p className="font-semibold text-gray-900">
-                          SAR {(program.allocated_budget / 1000000).toFixed(1)}M
+                          {isAr ? 'ريال' : 'SAR'} {(program.allocated_budget / 1000000).toFixed(1)}{isAr ? 'م' : 'M'}
                         </p>
                         <p className="text-xs text-gray-600">
-                          Spent: {((program.spent_budget / program.allocated_budget) * 100).toFixed(0)}%
+                          {isAr ? 'المصروف:' : 'Spent:'} {((program.spent_budget / program.allocated_budget) * 100).toFixed(0)}%
                         </p>
                       </div>
                     </td>
@@ -156,6 +162,9 @@ function Programs() {
                         <span>{new Date(program.start_date).getFullYear()}</span>
                       </div>
                     </td>
+                    <td className="px-6 py-4">
+                      <span className="badge badge-info">{isAr ? 'المتابعة الذاتية مفعلة' : 'Autonomous Follow-up Active'}</span>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -164,7 +173,7 @@ function Programs() {
 
           {filteredPrograms.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">No programs found</p>
+              <p className="text-gray-500 text-lg">{isAr ? 'لا توجد برامج' : 'No programs found'}</p>
             </div>
           )}
         </div>

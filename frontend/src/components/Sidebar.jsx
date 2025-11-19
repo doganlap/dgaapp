@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import { useLocale } from '../context/LocaleContext'
 import { 
   FiHome, 
   FiDatabase, 
@@ -9,13 +10,15 @@ import {
 } from 'react-icons/fi'
 
 function Sidebar() {
+  const { locale } = useLocale()
+  const isAr = locale === 'ar'
   const navItems = [
-    { path: '/', label: 'لوحة التحكم', icon: FiHome },
-    { path: '/entities', label: 'الجهات', icon: FiDatabase },
-    { path: '/programs', label: 'البرامج', icon: FiBox },
-    { path: '/budget', label: 'الميزانية', icon: FiDollarSign },
-    { path: '/reports', label: 'التقارير', icon: FiBarChart2 },
-    { path: '/users', label: 'المستخدمون', icon: FiUsers },
+    { path: '/', label: isAr ? 'لوحة التحكم' : 'Dashboard', icon: FiHome },
+    { path: '/entities', label: isAr ? 'الجهات' : 'Entities', icon: FiDatabase },
+    { path: '/programs', label: isAr ? 'البرامج' : 'Programs', icon: FiBox },
+    { path: '/budget', label: isAr ? 'الميزانية' : 'Budget', icon: FiDollarSign },
+    { path: '/reports', label: isAr ? 'التقارير' : 'Reports', icon: FiBarChart2 },
+    { path: '/users', label: isAr ? 'المستخدمون' : 'Users', icon: FiUsers },
   ]
 
   return (
@@ -23,9 +26,9 @@ function Sidebar() {
       <div className="p-6 border-b border-gray-700">
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <span className="text-dga-green">🏛️</span>
-          منصة هيئة الحكومة الرقمية
+          {isAr ? 'منصة هيئة الحكومة الرقمية' : 'DGA Platform'}
         </h1>
-        <p className="text-sm text-gray-400 mt-1">هيئة الحكومة الرقمية</p>
+        <p className="text-sm text-gray-400 mt-1">{isAr ? 'هيئة الحكومة الرقمية' : 'Digital Government Authority'}</p>
       </div>
       
       <nav className="flex-1 p-4 space-y-2">
@@ -50,8 +53,8 @@ function Sidebar() {
       
       <div className="p-4 border-t border-gray-700">
         <div className="text-xs text-gray-400">
-          <p>الإصدار 1.0.0</p>
-          <p>© 2025 هيئة الحكومة الرقمية</p>
+          <p>{isAr ? 'الإصدار 1.0.0' : 'Version 1.0.0'}</p>
+          <p>{isAr ? '© 2025 هيئة الحكومة الرقمية' : '© 2025 DGA'}</p>
         </div>
       </div>
     </aside>
