@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { api } from '../../api'
+import api from '../../api'
 import { useLocale } from '../../context/LocaleContext'
 import { FiTrendingUp, FiAlertCircle, FiCheckCircle, FiBarChart2, FiTarget } from 'react-icons/fi'
 import { Line, Bar, Doughnut } from 'react-chartjs-2'

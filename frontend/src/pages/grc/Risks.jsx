@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { api } from '../../api'
+import api from '../../api'
 import { useLocale } from '../../context/LocaleContext'
 import { FiAlertTriangle, FiPlus, FiFilter } from 'react-icons/fi'
 import DataTable from '../../components/DataTable'
