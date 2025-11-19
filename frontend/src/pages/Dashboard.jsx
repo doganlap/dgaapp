@@ -95,35 +95,35 @@ function Dashboard() {
 
   const stats = [
     {
-      label: 'Total Entities',
+      label: 'إجمالي الجهات',
       value: overview?.totalEntities || 0,
       icon: FiActivity,
       color: 'bg-blue-500',
       trend: '+12%'
     },
     {
-      label: 'Active Programs',
+      label: 'البرامج النشطة',
       value: overview?.activePrograms || 0,
       icon: FiCheckCircle,
       color: 'bg-green-500',
       trend: '+8%'
     },
     {
-      label: 'Total Budget',
-      value: `SAR ${((overview?.totalBudget || 0) / 1000000000).toFixed(2)}B`,
+      label: 'إجمالي الميزانية',
+      value: `${((overview?.totalBudget || 0) / 1000000000).toFixed(2)} مليار ريال سعودي`,
       icon: FiDollarSign,
       color: 'bg-yellow-500',
       trend: '+15%'
     },
     {
-      label: 'Avg KPI Achievement',
+      label: 'متوسط تحقيق مؤشرات الأداء',
       value: `${avgKpiAchievement}%`,
       icon: FiTrendingUp,
       color: 'bg-purple-500',
       trend: '+2%'
     },
     {
-      label: 'Overall Compliance',
+      label: 'معدل الامتثال العام',
       value: `${complianceRate}%`,
       icon: FiCheckCircle,
       color: 'bg-teal-500',
@@ -133,21 +133,21 @@ function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-blue-50 rounded-xl p-6 mb-6">
-        <h2 className="text-2xl font-bold text-blue-900 mb-4">Automated Oversight Demo</h2>
-        <p className="text-blue-700 mb-4">This dashboard demonstrates autonomous follow-up on national digital transformation programs, with real-time KPI achievement, compliance monitoring, risk distribution, and maturity insights.</p>
+      <div className="bg-gradient-to-l from-blue-100 to-blue-50 rounded-xl p-6 mb-6">
+        <h2 className="text-2xl font-bold text-blue-900 mb-4">عرض مراقبة مؤتمتة</h2>
+        <p className="text-blue-700 mb-4">تعرض هذه اللوحة متابعة ذاتية لبرامج التحول الرقمي الوطنية، مع مؤشرات الأداء في الوقت الفعلي، ومراقبة الامتثال، وتوزيع المخاطر، ورؤى النضج الرقمي.</p>
         <ul className="list-disc pl-6 text-blue-700">
-          <li>Coordination across {overview?.totalEntities || 0} entities</li>
-          <li>Autonomous workflow for {overview?.activePrograms || 0} programs</li>
-          <li>Average KPI achievement at {avgKpiAchievement}%</li>
-          <li>Compliance rate at {complianceRate}%</li>
-          <li>Risk distribution: High {riskCounts[0]}, Medium {riskCounts[1]}, Low {riskCounts[2]}</li>
-          <li>Maturity levels: Advanced {maturityCounts[0]}, Intermediate {maturityCounts[1]}, Basic {maturityCounts[2]}</li>
+          <li>تنسيق عبر {overview?.totalEntities || 0} جهة</li>
+          <li>سير عمل ذاتي لـ {overview?.activePrograms || 0} برنامج</li>
+          <li>متوسط تحقيق المؤشرات {avgKpiAchievement}%</li>
+          <li>معدل الامتثال {complianceRate}%</li>
+          <li>توزيع المخاطر: عالية {riskCounts[0]}، متوسطة {riskCounts[1]}، منخفضة {riskCounts[2]}</li>
+          <li>مستويات النضج: متقدم {maturityCounts[0]}، متوسط {maturityCounts[1]}، أساسي {maturityCounts[2]}</li>
         </ul>
       </div>
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">National Overview</h1>
-        <p className="text-gray-600 mt-1">Saudi Arabia Digital Transformation Dashboard</p>
+        <h1 className="text-3xl font-bold text-gray-900">نظرة عامة وطنية</h1>
+        <p className="text-gray-600 mt-1">لوحة تحكم التحول الرقمي في المملكة العربية السعودية</p>
       </div>
 
       {/* Stats Grid with Animation */}
@@ -195,10 +195,10 @@ function Dashboard() {
           transition={{ duration: 0.6 }}
           className="bg-white rounded-xl shadow-md p-6"
         >
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Regional Distribution</h3>
+          <h3 className="text-xl font-bold text-gray-900 mb-4">التوزيع الإقليمي</h3>
           <Doughnut
             data={{
-              labels: ['Central (Riyadh)', 'Western (Jeddah)', 'Eastern (Dammam)', 'Northern (Tabuk)', 'Southern (Abha)'],
+              labels: ['المنطقة الوسطى (الرياض)', 'المنطقة الغربية (جدة)', 'المنطقة الشرقية (الدمام)', 'المنطقة الشمالية (تبوك)', 'المنطقة الجنوبية (أبها)'],
               datasets: [{
                 data: [42, 38, 28, 24, 26],
                 backgroundColor: [
@@ -231,7 +231,7 @@ function Dashboard() {
                 },
                 tooltip: {
                   callbacks: {
-                    label: (context) => `${context.label}: ${context.parsed} entities`
+                    label: (context) => `${context.label}: ${context.parsed} جهة`
                   }
                 }
               },
@@ -251,12 +251,12 @@ function Dashboard() {
           transition={{ duration: 0.6 }}
           className="bg-white rounded-xl shadow-md p-6"
         >
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Program Status Overview</h3>
+          <h3 className="text-xl font-bold text-gray-900 mb-4">حالة البرامج</h3>
           <Bar
             data={{
-              labels: ['Planning', 'In Progress', 'Completed', 'On Hold'],
+              labels: ['تخطيط', 'قيد التنفيذ', 'مكتمل', 'معلّق'],
               datasets: [{
-                label: 'Number of Programs',
+                label: 'عدد البرامج',
                 data: [24, 89, 45, 13],
                 backgroundColor: [
                   'rgba(234, 179, 8, 0.8)',
@@ -283,7 +283,7 @@ function Dashboard() {
                 },
                 tooltip: {
                   callbacks: {
-                    label: (context) => `${context.parsed.y} programs`
+                    label: (context) => `${context.parsed.y} برنامج`
                   }
                 }
               },
@@ -311,12 +311,12 @@ function Dashboard() {
           transition={{ duration: 0.6 }}
           className="bg-white rounded-xl shadow-md p-6"
         >
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Risk Distribution</h3>
+          <h3 className="text-xl font-bold text-gray-900 mb-4">توزيع المخاطر</h3>
           <Bar
             data={{
-              labels: ['High', 'Medium', 'Low'],
+              labels: ['عالية', 'متوسطة', 'منخفضة'],
               datasets: [{
-                label: 'Risks',
+                label: 'المخاطر',
                 data: riskCounts,
                 backgroundColor: [
                   'rgba(239, 68, 68, 0.8)',
@@ -348,10 +348,10 @@ function Dashboard() {
           transition={{ duration: 0.6 }}
           className="bg-white rounded-xl shadow-md p-6"
         >
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Maturity Levels</h3>
+          <h3 className="text-xl font-bold text-gray-900 mb-4">مستويات النضج</h3>
           <Doughnut
             data={{
-              labels: ['Advanced', 'Intermediate', 'Basic'],
+              labels: ['متقدم', 'متوسط', 'أساسي'],
               datasets: [{
                 data: maturityCounts,
                 backgroundColor: [
@@ -386,13 +386,13 @@ function Dashboard() {
         transition={{ duration: 0.6, delay: 0.2 }}
         className="bg-white rounded-xl shadow-md p-6"
       >
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Budget Allocation Trend (2024-2026)</h3>
+        <h3 className="text-xl font-bold text-gray-900 mb-4">اتجاه تخصيص الميزانية (2024-2026)</h3>
         <Line
           data={{
             labels: ['Q1 2024', 'Q2 2024', 'Q3 2024', 'Q4 2024', 'Q1 2025', 'Q2 2025', 'Q3 2025', 'Q4 2025'],
             datasets: [
               {
-                label: 'Allocated Budget (SAR Millions)',
+                label: 'الميزانية المخصصة (ملايين الريال)',
                 data: [620, 680, 710, 780, 850, 920, 980, 1040],
                 borderColor: 'rgb(59, 130, 246)',
                 backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -402,7 +402,7 @@ function Dashboard() {
                 pointHoverRadius: 8
               },
               {
-                label: 'Spent Budget (SAR Millions)',
+                label: 'الميزانية المصروفة (ملايين الريال)',
                 data: [580, 640, 670, 720, 790, 850, 900, 950],
                 borderColor: 'rgb(34, 197, 94)',
                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
@@ -433,7 +433,7 @@ function Dashboard() {
               y: {
                 beginAtZero: true,
                 ticks: {
-                  callback: (value) => `${value}M`
+                  callback: (value) => `${value}م`
                 }
               }
             },
@@ -447,7 +447,7 @@ function Dashboard() {
 
       {/* Recent Activity */}
       <div className="bg-white rounded-xl shadow-md p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Recent Activity</h3>
+        <h3 className="text-xl font-bold text-gray-900 mb-4">النشاط الأخير</h3>
         <div className="space-y-3">
           {[
             { action: 'New program created', entity: 'Ministry of Health', time: '2 hours ago' },

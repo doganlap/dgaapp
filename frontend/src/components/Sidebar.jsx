@@ -10,12 +10,12 @@ import {
 
 function Sidebar() {
   const navItems = [
-    { path: '/', label: 'Dashboard', icon: FiHome },
-    { path: '/entities', label: 'Entities', icon: FiDatabase },
-    { path: '/programs', label: 'Programs', icon: FiBox },
-    { path: '/budget', label: 'Budget', icon: FiDollarSign },
-    { path: '/reports', label: 'Reports', icon: FiBarChart2 },
-    { path: '/users', label: 'Users', icon: FiUsers },
+    { path: '/', label: 'لوحة التحكم', icon: FiHome },
+    { path: '/entities', label: 'الجهات', icon: FiDatabase },
+    { path: '/programs', label: 'البرامج', icon: FiBox },
+    { path: '/budget', label: 'الميزانية', icon: FiDollarSign },
+    { path: '/reports', label: 'التقارير', icon: FiBarChart2 },
+    { path: '/users', label: 'المستخدمون', icon: FiUsers },
   ]
 
   return (
@@ -23,9 +23,9 @@ function Sidebar() {
       <div className="p-6 border-b border-gray-700">
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <span className="text-dga-green">🏛️</span>
-          DGA Platform
+          منصة هيئة الحكومة الرقمية
         </h1>
-        <p className="text-sm text-gray-400 mt-1">Digital Government Authority</p>
+        <p className="text-sm text-gray-400 mt-1">هيئة الحكومة الرقمية</p>
       </div>
       
       <nav className="flex-1 p-4 space-y-2">
@@ -50,8 +50,8 @@ function Sidebar() {
       
       <div className="p-4 border-t border-gray-700">
         <div className="text-xs text-gray-400">
-          <p>Version 1.0.0</p>
-          <p>© 2025 DGA</p>
+          <p>الإصدار 1.0.0</p>
+          <p>© 2025 هيئة الحكومة الرقمية</p>
         </div>
       </div>
     </aside>

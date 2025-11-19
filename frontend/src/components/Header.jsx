@@ -7,12 +7,12 @@ function Header() {
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
-        <div>
+        <div className="text-right">
           <h2 className="text-2xl font-bold text-gray-800">
-            Welcome back, {user?.full_name?.split(' ')[0] || 'User'}
+            مرحبًا بك، {user?.full_name?.split(' ')[0] || 'المستخدم'}
           </h2>
           <p className="text-sm text-gray-600">
-            {user?.role?.replace('_', ' ').toUpperCase()} | {user?.region} Region
+            {user?.role?.replace('_', ' ').toUpperCase()} | منطقة {user?.region}
           </p>
         </div>
         
@@ -35,7 +35,7 @@ function Header() {
             className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
           >
             <FiLogOut />
-            <span className="font-medium">Logout</span>
+            <span className="font-medium">تسجيل الخروج</span>
           </button>
         </div>
       </div>
