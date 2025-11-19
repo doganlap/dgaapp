@@ -73,6 +73,15 @@ export const reportingAPI = {
   getKPIs: () => api.get('/dga/reporting/kpis'),
 }
 
+// Rich data APIs
+export const dgaDataAPI = {
+  getAllKPIs: (params) => api.get('/dga/kpis', { params }),
+  getComplianceRecords: (params) => api.get('/dga/compliance-records', { params }),
+  getRisks: (params) => api.get('/dga/risks', { params }),
+  getDigitalMaturityScores: (params) => api.get('/dga/digital-maturity-scores', { params }),
+  getStakeholderConsensus: (params) => api.get('/dga/stakeholder-consensus', { params }),
+}
+
 // Project APIs
 export const projectAPI = {
   getAll: (params) => api.get('/dga/projects', { params }),

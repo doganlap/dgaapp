@@ -1,9 +1,41 @@
 import { useState, useEffect } from 'react'
-import { reportingAPI } from '../api'
+import { reportingAPI, dgaDataAPI } from '../api'
 import { FiActivity, FiDollarSign, FiCheckCircle, FiTrendingUp } from 'react-icons/fi'
+import { motion } from 'framer-motion'
+import { Line, Bar, Doughnut } from 'react-chartjs-2'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+} from 'chart.js'
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+)
 
 function Dashboard() {
   const [overview, setOverview] = useState(null)
+  const [kpis, setKpis] = useState([])
+  const [complianceRecords, setComplianceRecords] = useState([])
+  const [risks, setRisks] = useState([])
+  const [maturityScores, setMaturityScores] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -12,8 +44,18 @@ function Dashboard() {
 
   const loadDashboard = async () => {
     try {
-      const response = await reportingAPI.getNationalOverview()
-      setOverview(response.data.data)
+      const [overviewRes, kpisRes, complianceRes, risksRes, maturityRes] = await Promise.all([
+        reportingAPI.getNationalOverview(),
+        dgaDataAPI.getAllKPIs(),
+        dgaDataAPI.getComplianceRecords(),
+        dgaDataAPI.getRisks(),
+        dgaDataAPI.getDigitalMaturityScores()
+      ])
+      setOverview(overviewRes.data.data)
+      setKpis(kpisRes.data.data || [])
+      setComplianceRecords(complianceRes.data.data || [])
+      setRisks(risksRes.data.data || [])
+      setMaturityScores(maturityRes.data.data || [])
     } catch (error) {
       console.error('Failed to load dashboard:', error)
     } finally {
@@ -28,6 +70,28 @@ function Dashboard() {
       </div>
     )
   }
+
+  const avgKpiAchievement = kpis.length
+    ? Math.round(
+        kpis
+          .map(k => parseInt(String(k.current_value || '0').replace('%', '')) || 0)
+          .reduce((a, b) => a + b, 0) / kpis.length
+      )
+    : 0
+
+  const complianceRate = complianceRecords.length
+    ? Math.round(
+        (complianceRecords.filter(r => String(r.status).toLowerCase() === 'compliant').length / complianceRecords.length) * 100
+      )
+    : 0
+
+  const riskCounts = ['High', 'Medium', 'Low'].map(level =>
+    risks.filter(r => r.severity === level).length
+  )
+
+  const maturityCounts = ['Advanced', 'Intermediate', 'Basic'].map(level =>
+    maturityScores.filter(s => s.maturity_level === level).length
+  )
 
   const stats = [
     {
@@ -52,83 +116,334 @@ function Dashboard() {
       trend: '+15%'
     },
     {
-      label: 'Avg Completion',
-      value: `${overview?.avgCompletion || 0}%`,
+      label: 'Avg KPI Achievement',
+      value: `${avgKpiAchievement}%`,
       icon: FiTrendingUp,
       color: 'bg-purple-500',
-      trend: '+5%'
+      trend: '+2%'
+    },
+    {
+      label: 'Overall Compliance',
+      value: `${complianceRate}%`,
+      icon: FiCheckCircle,
+      color: 'bg-teal-500',
+      trend: '+1%'
     },
   ]
 
   return (
     <div className="space-y-6">
+      <div className="bg-blue-50 rounded-xl p-6 mb-6">
+        <h2 className="text-2xl font-bold text-blue-900 mb-4">Automated Oversight Demo</h2>
+        <p className="text-blue-700 mb-4">This dashboard demonstrates autonomous follow-up on national digital transformation programs, with real-time KPI achievement, compliance monitoring, risk distribution, and maturity insights.</p>
+        <ul className="list-disc pl-6 text-blue-700">
+          <li>Coordination across {overview?.totalEntities || 0} entities</li>
+          <li>Autonomous workflow for {overview?.activePrograms || 0} programs</li>
+          <li>Average KPI achievement at {avgKpiAchievement}%</li>
+          <li>Compliance rate at {complianceRate}%</li>
+          <li>Risk distribution: High {riskCounts[0]}, Medium {riskCounts[1]}, Low {riskCounts[2]}</li>
+          <li>Maturity levels: Advanced {maturityCounts[0]}, Intermediate {maturityCounts[1]}, Basic {maturityCounts[2]}</li>
+        </ul>
+      </div>
       <div>
         <h1 className="text-3xl font-bold text-gray-900">National Overview</h1>
         <p className="text-gray-600 mt-1">Saudi Arabia Digital Transformation Dashboard</p>
       </div>
 
-      {/* Stats Grid */}
+      {/* Stats Grid with Animation */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
-          <div key={index} className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-600 text-sm font-medium">{stat.label}</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">{stat.value}</p>
+                <motion.p
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
+                  className="text-3xl font-bold text-gray-900 mt-2"
+                >
+                  {stat.value}
+                </motion.p>
                 <p className="text-green-600 text-sm mt-2">{stat.trend} from last month</p>
               </div>
-              <div className={`${stat.color} p-4 rounded-lg`}>
+              <motion.div
+                initial={{ rotate: -180, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                transition={{ duration: 0.6, delay: index * 0.1 + 0.3 }}
+                className={`${stat.color} p-4 rounded-lg`}
+              >
                 <stat.icon className="text-white text-2xl" />
-              </div>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
-      {/* Regional Distribution */}
+      {/* Animated Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-md p-6">
+        {/* Regional Distribution - Doughnut Chart */}
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="bg-white rounded-xl shadow-md p-6"
+        >
           <h3 className="text-xl font-bold text-gray-900 mb-4">Regional Distribution</h3>
-          <div className="space-y-4">
-            {['Central', 'Western', 'Eastern', 'Northern', 'Southern'].map((region) => (
-              <div key={region} className="flex items-center justify-between">
-                <span className="font-medium text-gray-700">{region} Region</span>
-                <div className="flex items-center gap-3">
-                  <div className="w-32 bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-primary-600 h-2 rounded-full"
-                      style={{ width: `${Math.random() * 100}%` }}
-                    ></div>
-                  </div>
-                  <span className="text-sm font-semibold text-gray-900 w-12 text-right">
-                    {Math.floor(Math.random() * 50) + 20}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+          <Doughnut
+            data={{
+              labels: ['Central (Riyadh)', 'Western (Jeddah)', 'Eastern (Dammam)', 'Northern (Tabuk)', 'Southern (Abha)'],
+              datasets: [{
+                data: [42, 38, 28, 24, 26],
+                backgroundColor: [
+                  'rgba(59, 130, 246, 0.8)',
+                  'rgba(16, 185, 129, 0.8)',
+                  'rgba(251, 146, 60, 0.8)',
+                  'rgba(139, 92, 246, 0.8)',
+                  'rgba(236, 72, 153, 0.8)'
+                ],
+                borderColor: [
+                  'rgb(59, 130, 246)',
+                  'rgb(16, 185, 129)',
+                  'rgb(251, 146, 60)',
+                  'rgb(139, 92, 246)',
+                  'rgb(236, 72, 153)'
+                ],
+                borderWidth: 2
+              }]
+            }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: true,
+              plugins: {
+                legend: {
+                  position: 'bottom',
+                  labels: {
+                    padding: 15,
+                    font: { size: 12 }
+                  }
+                },
+                tooltip: {
+                  callbacks: {
+                    label: (context) => `${context.label}: ${context.parsed} entities`
+                  }
+                }
+              },
+              animation: {
+                animateScale: true,
+                animateRotate: true,
+                duration: 2000
+              }
+            }}
+          />
+        </motion.div>
 
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Program Status</h3>
-          <div className="space-y-4">
-            {[
-              { status: 'Planning', count: 24, color: 'bg-yellow-500' },
-              { status: 'In Progress', count: 89, color: 'bg-blue-500' },
-              { status: 'Completed', count: 45, color: 'bg-green-500' },
-              { status: 'On Hold', count: 13, color: 'bg-gray-500' },
-            ].map((item) => (
-              <div key={item.status} className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
-                  <span className="font-medium text-gray-700">{item.status}</span>
-                </div>
-                <span className="text-sm font-semibold text-gray-900">{item.count}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Program Status - Bar Chart */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="bg-white rounded-xl shadow-md p-6"
+        >
+          <h3 className="text-xl font-bold text-gray-900 mb-4">Program Status Overview</h3>
+          <Bar
+            data={{
+              labels: ['Planning', 'In Progress', 'Completed', 'On Hold'],
+              datasets: [{
+                label: 'Number of Programs',
+                data: [24, 89, 45, 13],
+                backgroundColor: [
+                  'rgba(234, 179, 8, 0.8)',
+                  'rgba(59, 130, 246, 0.8)',
+                  'rgba(34, 197, 94, 0.8)',
+                  'rgba(156, 163, 175, 0.8)'
+                ],
+                borderColor: [
+                  'rgb(234, 179, 8)',
+                  'rgb(59, 130, 246)',
+                  'rgb(34, 197, 94)',
+                  'rgb(156, 163, 175)'
+                ],
+                borderWidth: 2,
+                borderRadius: 8
+              }]
+            }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: true,
+              plugins: {
+                legend: {
+                  display: false
+                },
+                tooltip: {
+                  callbacks: {
+                    label: (context) => `${context.parsed.y} programs`
+                  }
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    stepSize: 20
+                  }
+                }
+              },
+              animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart'
+              }
+            }}
+          />
+        </motion.div>
       </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="bg-white rounded-xl shadow-md p-6"
+        >
+          <h3 className="text-xl font-bold text-gray-900 mb-4">Risk Distribution</h3>
+          <Bar
+            data={{
+              labels: ['High', 'Medium', 'Low'],
+              datasets: [{
+                label: 'Risks',
+                data: riskCounts,
+                backgroundColor: [
+                  'rgba(239, 68, 68, 0.8)',
+                  'rgba(234, 179, 8, 0.8)',
+                  'rgba(34, 197, 94, 0.8)'
+                ],
+                borderColor: [
+                  'rgb(239, 68, 68)',
+                  'rgb(234, 179, 8)',
+                  'rgb(34, 197, 94)'
+                ],
+                borderWidth: 2,
+                borderRadius: 8
+              }]
+            }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: true,
+              plugins: { legend: { display: false } },
+              scales: { y: { beginAtZero: true } },
+              animation: { duration: 2000, easing: 'easeInOutQuart' }
+            }}
+          />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="bg-white rounded-xl shadow-md p-6"
+        >
+          <h3 className="text-xl font-bold text-gray-900 mb-4">Maturity Levels</h3>
+          <Doughnut
+            data={{
+              labels: ['Advanced', 'Intermediate', 'Basic'],
+              datasets: [{
+                data: maturityCounts,
+                backgroundColor: [
+                  'rgba(16, 185, 129, 0.8)',
+                  'rgba(59, 130, 246, 0.8)',
+                  'rgba(251, 146, 60, 0.8)'
+                ],
+                borderColor: [
+                  'rgb(16, 185, 129)',
+                  'rgb(59, 130, 246)',
+                  'rgb(251, 146, 60)'
+                ],
+                borderWidth: 2
+              }]
+            }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: true,
+              plugins: {
+                legend: { position: 'bottom', labels: { padding: 15, font: { size: 12 } } }
+              },
+              animation: { animateScale: true, animateRotate: true, duration: 2000 }
+            }}
+          />
+        </motion.div>
+      </div>
+
+      {/* Budget Trend - Line Chart */}
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="bg-white rounded-xl shadow-md p-6"
+      >
+        <h3 className="text-xl font-bold text-gray-900 mb-4">Budget Allocation Trend (2024-2026)</h3>
+        <Line
+          data={{
+            labels: ['Q1 2024', 'Q2 2024', 'Q3 2024', 'Q4 2024', 'Q1 2025', 'Q2 2025', 'Q3 2025', 'Q4 2025'],
+            datasets: [
+              {
+                label: 'Allocated Budget (SAR Millions)',
+                data: [620, 680, 710, 780, 850, 920, 980, 1040],
+                borderColor: 'rgb(59, 130, 246)',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 6,
+                pointHoverRadius: 8
+              },
+              {
+                label: 'Spent Budget (SAR Millions)',
+                data: [580, 640, 670, 720, 790, 850, 900, 950],
+                borderColor: 'rgb(34, 197, 94)',
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 6,
+                pointHoverRadius: 8
+              }
+            ]
+          }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: {
+                position: 'top',
+                labels: {
+                  padding: 20,
+                  font: { size: 13 }
+                }
+              },
+              tooltip: {
+                mode: 'index',
+                intersect: false
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  callback: (value) => `${value}M`
+                }
+              }
+            },
+            animation: {
+              duration: 2500,
+              easing: 'easeInOutCubic'
+            }
+          }}
+        />
+      </motion.div>
 
       {/* Recent Activity */}
       <div className="bg-white rounded-xl shadow-md p-6">
