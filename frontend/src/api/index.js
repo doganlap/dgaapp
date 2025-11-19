@@ -95,4 +95,46 @@ export const ticketAPI = {
   update: (id, data) => api.put(`/dga/tickets/${id}`, data),
 }
 
+// GRC APIs
+export const grcAPI = {
+  // Dashboard
+  getDashboard: () => api.get('/grc/dashboard'),
+  getInsights: () => api.get('/grc/dashboard/insights'),
+  
+  // Risks
+  getAllRisks: (params) => api.get('/grc/risks', { params }),
+  getRiskById: (id) => api.get(`/grc/risks/${id}`),
+  createRisk: (data) => api.post('/grc/risks', data),
+  updateRisk: (id, data) => api.put(`/grc/risks/${id}`, data),
+  deleteRisk: (id) => api.delete(`/grc/risks/${id}`),
+  getRiskAnalytics: () => api.get('/grc/risks/analytics/overview'),
+  getRiskTrends: (params) => api.get('/grc/risks/analytics/trends', { params }),
+  
+  // Compliance
+  getAllCompliance: (params) => api.get('/grc/compliance', { params }),
+  getComplianceById: (id) => api.get(`/grc/compliance/${id}`),
+  createCompliance: (data) => api.post('/grc/compliance', data),
+  updateCompliance: (id, data) => api.put(`/grc/compliance/${id}`, data),
+  getComplianceAnalytics: () => api.get('/grc/compliance/analytics/overview'),
+  getComplianceByStandard: (standard) => api.get(`/grc/compliance/standards/${standard}`),
+  getEntityCompliance: (entityId) => api.get(`/grc/compliance/entity/${entityId}`),
+  
+  // Governance
+  getGovernanceOverview: () => api.get('/grc/governance/overview'),
+  getGovernancePolicies: () => api.get('/grc/governance/policies'),
+  getGovernanceFrameworks: () => api.get('/grc/governance/frameworks'),
+  getGovernanceControls: () => api.get('/grc/governance/controls'),
+  
+  // Insights
+  getRiskPredictions: () => api.get('/grc/insights/risk-predictions'),
+  getComplianceTrends: (params) => api.get('/grc/insights/compliance-trends', { params }),
+  getRecommendations: () => api.get('/grc/insights/recommendations'),
+  getHeatmap: () => api.get('/grc/insights/heatmap'),
+  
+  // Reports
+  getExecutiveSummary: () => api.get('/grc/reports/executive-summary'),
+  getRiskReport: () => api.get('/grc/reports/risk-report'),
+  getComplianceReport: () => api.get('/grc/reports/compliance-report'),
+}
+
 export default api

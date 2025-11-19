@@ -7,13 +7,18 @@ import {
   FiDollarSign, 
   FiBarChart2, 
   FiUsers,
-  FiBriefcase
+  FiBriefcase,
+  FiShield,
+  FiAlertTriangle,
+  FiCheckCircle,
+  FiTarget
 } from 'react-icons/fi'
 
 function Sidebar() {
   const { locale } = useLocale()
   const isAr = locale === 'ar'
-  const navItems = [
+  
+  const dgaNavItems = [
     { path: '/', label: isAr ? 'لوحة التحكم' : 'Dashboard', icon: FiHome },
     { path: '/entities', label: isAr ? 'الجهات' : 'Entities', icon: FiDatabase },
     { path: '/programs', label: isAr ? 'البرامج' : 'Programs', icon: FiBox },
@@ -21,6 +26,13 @@ function Sidebar() {
     { path: '/finance-demo', label: isAr ? 'التحكم المالي' : 'Finance Control', icon: FiBriefcase },
     { path: '/reports', label: isAr ? 'التقارير' : 'Reports', icon: FiBarChart2 },
     { path: '/users', label: isAr ? 'المستخدمون' : 'Users', icon: FiUsers },
+  ]
+
+  const grcNavItems = [
+    { path: '/grc', label: isAr ? 'لوحة تحكم GRC' : 'GRC Dashboard', icon: FiShield },
+    { path: '/grc/risks', label: isAr ? 'المخاطر' : 'Risks', icon: FiAlertTriangle },
+    { path: '/grc/compliance', label: isAr ? 'الامتثال' : 'Compliance', icon: FiCheckCircle },
+    { path: '/grc/insights', label: isAr ? 'الرؤى' : 'Insights', icon: FiTarget },
   ]
 
   return (
@@ -33,24 +45,58 @@ function Sidebar() {
         <p className="text-sm text-gray-400 mt-1">{isAr ? 'هيئة الحكومة الرقمية' : 'Digital Government Authority'}</p>
       </div>
       
-      <nav className="flex-1 p-4 space-y-2">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            end={item.path === '/'}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                isActive
-                  ? 'bg-dga-green text-white'
-                  : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-              }`
-            }
-          >
-            <item.icon className="text-xl" />
-            <span className="font-medium">{item.label}</span>
-          </NavLink>
-        ))}
+      <nav className="flex-1 p-4 space-y-4 overflow-y-auto">
+        {/* DGA Section */}
+        <div>
+          <h3 className="text-xs font-semibold text-gray-400 uppercase mb-2 px-4">
+            {isAr ? 'هيئة الحكومة الرقمية' : 'DGA'}
+          </h3>
+          <div className="space-y-2">
+            {dgaNavItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                end={item.path === '/'}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                    isActive
+                      ? 'bg-dga-green text-white'
+                      : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                  }`
+                }
+              >
+                <item.icon className="text-xl" />
+                <span className="font-medium">{item.label}</span>
+              </NavLink>
+            ))}
+          </div>
+        </div>
+
+        {/* GRC Section */}
+        <div>
+          <h3 className="text-xs font-semibold text-gray-400 uppercase mb-2 px-4">
+            {isAr ? 'الحوكمة والمخاطر والامتثال' : 'GRC'}
+          </h3>
+          <div className="space-y-2">
+            {grcNavItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                end={item.path === '/grc'}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                    isActive
+                      ? 'bg-dga-green text-white'
+                      : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                  }`
+                }
+              >
+                <item.icon className="text-xl" />
+                <span className="font-medium">{item.label}</span>
+              </NavLink>
+            ))}
+          </div>
+        </div>
       </nav>
       
       <div className="p-4 border-t border-gray-700">

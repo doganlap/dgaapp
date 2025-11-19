@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react'
 import { programAPI } from '../api'
 import { FiSearch, FiCalendar, FiTrendingUp, FiDollarSign, FiCheckCircle, FiClock, FiAlertTriangle } from 'react-icons/fi'
 import { useLocale } from '../context/LocaleContext'
+import DataTable from '../components/DataTable'
 
 function Programs() {
   const { locale } = useLocale()
   const isAr = locale === 'ar'
   const [programs, setPrograms] = useState([])
   const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState('')
   const [programStats, setProgramStats] = useState(null)
   const [selectedProgram, setSelectedProgram] = useState(null)
 
@@ -105,10 +105,6 @@ function Programs() {
     }
   }
 
-  const filteredPrograms = programs.filter(program =>
-    program.program_name.toLowerCase().includes(search.toLowerCase()) ||
-    program.program_code.toLowerCase().includes(search.toLowerCase())
-  )
 
   const getStatusColor = (status) => {
     const colors = {
@@ -188,19 +184,6 @@ function Programs() {
         </div>
       )}
 
-      {/* Search */}
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <div className="relative">
-          <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          <input
-            type="text"
-            placeholder={isAr ? 'ابحث عن البرامج...' : 'Search programs...'}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-          />
-        </div>
-      </div>
 
       {/* Detailed Program Statistics */}
       {programStats && (
@@ -315,118 +298,96 @@ function Programs() {
         </div>
       )}
 
-      {/* Programs Table */}
-      {loading ? (
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-        </div>
-      ) : (
-        <div className="bg-white rounded-xl shadow-md overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    {isAr ? 'البرنامج' : 'Program'}
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    {isAr ? 'النوع' : 'Type'}
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    {isAr ? 'الحالة' : 'Status'}
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    {isAr ? 'الأولوية' : 'Priority'}
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    {isAr ? 'الميزانية' : 'Budget'}
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    {isAr ? 'التقدم' : 'Progress'}
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    {isAr ? 'الجدول الزمني' : 'Timeline'}
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    {isAr ? 'حالة سير العمل' : 'Workflow Status'}
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredPrograms.map((program) => (
-                  <tr key={program.program_id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div>
-                        <p className="font-semibold text-gray-900">{program.program_name}</p>
-                        <p className="text-sm text-gray-600">{program.program_code}</p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-sm text-gray-700">{program.program_type}</span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`badge ${getStatusColor(program.status)}`}>
-                        {program.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`badge ${getPriorityColor(program.priority)}`}>
-                        {program.priority}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div>
-                        <p className="font-semibold text-gray-900">
-                          {isAr ? 'ريال' : 'SAR'} {(program.allocated_budget / 1000000).toFixed(1)}{isAr ? 'م' : 'M'}
-                        </p>
-                        <p className="text-xs text-gray-600">
-                          {isAr ? 'المصروف:' : 'Spent:'} {((program.spent_budget / program.allocated_budget) * 100).toFixed(0)}%
-                        </p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 bg-gray-200 rounded-full h-2">
-                          <div
-                            className="bg-primary-600 h-2 rounded-full"
-                            style={{ width: `${program.completion_percentage}%` }}
-                          ></div>
-                        </div>
-                        <span className="text-sm font-semibold text-gray-900 w-12">
-                          {program.completion_percentage}%
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-1 text-sm text-gray-600">
-                        <FiCalendar className="text-gray-400" />
-                        <span>{new Date(program.start_date).getFullYear()}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="badge badge-info">{isAr ? 'المتابعة الذاتية مفعلة' : 'Autonomous Follow-up Active'}</span>
-                    </td>
-                    <td className="px-6 py-4 text-sm">
-                      <button 
-                        onClick={() => setSelectedProgram(program)}
-                        className="text-primary-600 hover:text-primary-800 font-semibold"
-                      >
-                        {isAr ? 'عرض التفاصيل' : 'View Details'}
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {filteredPrograms.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">{isAr ? 'لا توجد برامج' : 'No programs found'}</p>
-            </div>
-          )}
-        </div>
-      )}
+      {/* Interactive Programs Table */}
+      <DataTable
+        data={programs}
+        columns={[
+          {
+            key: 'program_name',
+            label: isAr ? 'البرنامج' : 'Program',
+            sortable: true,
+            filterable: false,
+            render: (value, item) => (
+              <div>
+                <div className="font-semibold text-gray-900">{value}</div>
+                <div className="text-sm text-gray-600">{item.program_code}</div>
+              </div>
+            )
+          },
+          {
+            key: 'program_type',
+            label: isAr ? 'النوع' : 'Type',
+            sortable: true,
+            filterable: true
+          },
+          {
+            key: 'status',
+            label: isAr ? 'الحالة' : 'Status',
+            sortable: true,
+            filterable: true,
+            render: (value) => (
+              <span className={`badge ${getStatusColor(value)}`}>{value}</span>
+            )
+          },
+          {
+            key: 'priority',
+            label: isAr ? 'الأولوية' : 'Priority',
+            sortable: true,
+            filterable: true,
+            render: (value) => (
+              <span className={`badge ${getPriorityColor(value)}`}>{value}</span>
+            )
+          },
+          {
+            key: 'allocated_budget',
+            label: isAr ? 'الميزانية' : 'Budget',
+            sortable: true,
+            filterable: false,
+            render: (value, item) => (
+              <div>
+                <div className="font-semibold text-gray-900">
+                  {isAr ? 'ريال' : 'SAR'} {value ? (value / 1000000).toFixed(1) : '0.0'}{isAr ? 'م' : 'M'}
+                </div>
+                {item.spent_budget && value && (
+                  <div className="text-xs text-gray-600">
+                    {isAr ? 'المصروف:' : 'Spent:'} {((item.spent_budget / value) * 100).toFixed(0)}%
+                  </div>
+                )}
+              </div>
+            )
+          },
+          {
+            key: 'completion_percentage',
+            label: isAr ? 'التقدم' : 'Progress',
+            sortable: true,
+            filterable: false,
+            render: (value) => (
+              <div className="flex items-center gap-2">
+                <div className="flex-1 bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-dga-green h-2 rounded-full"
+                    style={{ width: `${value || 0}%` }}
+                  ></div>
+                </div>
+                <span className="text-sm font-semibold text-gray-900 w-12">{value || 0}%</span>
+              </div>
+            )
+          },
+          {
+            key: 'start_date',
+            label: isAr ? 'تاريخ البدء' : 'Start Date',
+            sortable: true,
+            filterable: false,
+            render: (value) => value ? new Date(value).toLocaleDateString() : '-'
+          }
+        ]}
+        pageSize={25}
+        searchable={true}
+        exportable={true}
+        onRowClick={(program) => setSelectedProgram(program)}
+        emptyMessage={isAr ? 'لا توجد برامج' : 'No programs found'}
+        loading={loading}
+      />
 
       {/* Program Detail Modal */}
       {selectedProgram && (

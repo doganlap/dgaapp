@@ -8,8 +8,11 @@
     "dev": "nodemon src/server.js",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
-    "migrate": "node database/migrate.js",
-    "seed": "node database/seed.js",
+    "migrate": "knex migrate:latest",
+    "migrate:rollback": "knex migrate:rollback",
+    "seed": "knex seed:run",
+    "seed:all": "knex seed:run --specific=000_master_seed.js",
+    "seed:entities": "knex seed:run --specific=002_seed_all_158_entities.js",
     "lint": "eslint src/**/*.js",
     "format": "prettier --write \"src/**/*.js\"",
     "vercel-build": "echo 'Build complete'"

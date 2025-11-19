@@ -9,6 +9,10 @@ import Budget from './pages/Budget'
 import Reports from './pages/Reports'
 import Users from './pages/Users'
 import FinanceDemo from './pages/FinanceDemo'
+import GRCDashboard from './pages/grc/GRCDashboard'
+import Risks from './pages/grc/Risks'
+import Compliance from './pages/grc/Compliance'
+import Insights from './pages/grc/Insights'
 import Layout from './components/Layout'
 
 
@@ -27,6 +31,11 @@ function App() {
               <Route path="reports" element={<Reports />} />
               <Route path="users" element={<Users />} />
               <Route path="finance-demo" element={<FinanceDemo />} />
+              {/* GRC Routes */}
+              <Route path="grc" element={<GRCDashboard />} />
+              <Route path="grc/risks" element={<Risks />} />
+              <Route path="grc/compliance" element={<Compliance />} />
+              <Route path="grc/insights" element={<Insights />} />
             </Route>
           </Routes>
         </Router>

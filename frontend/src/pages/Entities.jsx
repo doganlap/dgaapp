@@ -2,30 +2,24 @@ import { useState, useEffect } from 'react'
 import { entityAPI } from '../api'
 import { FiSearch, FiFilter, FiPlus, FiMapPin, FiBarChart2, FiTrendingUp, FiDollarSign, FiBriefcase, FiDatabase } from 'react-icons/fi'
 import { useLocale } from '../context/LocaleContext'
+import DataTable from '../components/DataTable'
 
 function Entities() {
   const { locale } = useLocale()
   const isAr = locale === 'ar'
   const [entities, setEntities] = useState([])
   const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState('')
-  const [regionFilter, setRegionFilter] = useState('')
-  const [statusFilter, setStatusFilter] = useState('')
   const [entityStats, setEntityStats] = useState(null)
   const [selectedEntity, setSelectedEntity] = useState(null)
 
   useEffect(() => {
     loadEntities()
-  }, [regionFilter, statusFilter])
+  }, [])
 
   const loadEntities = async () => {
     try {
       setLoading(true)
-      const params = {}
-      if (regionFilter) params.region = regionFilter
-      if (statusFilter) params.status = statusFilter
-      
-      const response = await entityAPI.getAll(params)
+      const response = await entityAPI.getAll()
       const entitiesData = response.data.data.entities || response.data.data
       setEntities(entitiesData)
       
@@ -100,10 +94,6 @@ function Entities() {
     }
   }
 
-  const filteredEntities = entities.filter(entity =>
-    (entity.entity_name_en || entity.entity_name || '').toLowerCase().includes(search.toLowerCase()) ||
-    (entity.entity_code || '').toLowerCase().includes(search.toLowerCase())
-  )
 
   return (
     <div className="space-y-6">
@@ -248,45 +238,6 @@ function Entities() {
         </div>
       )}
 
-      {/* Filters */}
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="relative">
-            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder={isAr ? 'ابحث عن الجهات...' : 'Search entities...'}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
-          </div>
-          
-          <select
-            value={regionFilter}
-            onChange={(e) => setRegionFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-          >
-            <option value="">{isAr ? 'جميع المناطق' : 'All Regions'}</option>
-            <option value="Central">{isAr ? 'الوسطى' : 'Central'}</option>
-            <option value="Western">{isAr ? 'الغربية' : 'Western'}</option>
-            <option value="Eastern">{isAr ? 'الشرقية' : 'Eastern'}</option>
-            <option value="Northern">{isAr ? 'الشمالية' : 'Northern'}</option>
-            <option value="Southern">{isAr ? 'الجنوبية' : 'Southern'}</option>
-          </select>
-
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-          >
-            <option value="">{isAr ? 'جميع الحالات' : 'All Status'}</option>
-            <option value="Active">{isAr ? 'نشطة' : 'Active'}</option>
-            <option value="Inactive">{isAr ? 'متوقفة' : 'Inactive'}</option>
-            <option value="Under Review">{isAr ? 'تحت المراجعة' : 'Under Review'}</option>
-          </select>
-        </div>
-      </div>
 
       {/* Entities Grid */}
       {loading ? (

@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react'
 import api from '../api'
 import { useLocale } from '../context/LocaleContext'
+import DataTable from '../components/DataTable'
 
 function Users() {
   const { locale } = useLocale()
   const isAr = locale === 'ar'
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState('')
-  const [roleFilter, setRoleFilter] = useState('')
   const [stats, setStats] = useState({
     admins: 0,
     regionalManagers: 0,
@@ -44,13 +43,6 @@ function Users() {
     }
   }
 
-  const filteredUsers = users.filter(user => {
-    const matchesSearch = search === '' || 
-      user.name_en?.toLowerCase().includes(search.toLowerCase()) ||
-      user.email?.toLowerCase().includes(search.toLowerCase())
-    const matchesRole = roleFilter === '' || user.role === roleFilter
-    return matchesSearch && matchesRole
-  })
 
   if (loading) {
     return (
@@ -90,97 +82,67 @@ function Users() {
         ))}
       </div>
 
-      {/* User List */}
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-gray-900">{isAr ? 'المستخدمون النشطون' : 'Active Users'}</h2>
-          <div className="flex gap-3">
-            <input
-              type="text"
-              placeholder={isAr ? 'ابحث عن المستخدمين...' : 'Search users...'}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
-            <select 
-              value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-            >
-              <option value="">{isAr ? 'جميع الأدوار' : 'All Roles'}</option>
-              <option value="DGA Admin">{isAr ? 'مدير الهيئة' : 'DGA Admin'}</option>
-              <option value="Regional Manager">{isAr ? 'مدير إقليمي' : 'Regional Manager'}</option>
-              <option value="Program Director">{isAr ? 'مدير برنامج' : 'Program Director'}</option>
-              <option value="Financial Controller">{isAr ? 'مدير مالي' : 'Financial Controller'}</option>
-              <option value="Compliance Auditor">{isAr ? 'مدقق امتثال' : 'Compliance Auditor'}</option>
-              <option value="Analytics Lead">{isAr ? 'قائد التحليلات' : 'Analytics Lead'}</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{isAr ? 'المستخدم' : 'User'}</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{isAr ? 'الجهة' : 'Entity'}</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{isAr ? 'الدور' : 'Role'}</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{isAr ? 'المنطقة' : 'Region'}</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{isAr ? 'الحالة' : 'Status'}</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{isAr ? 'الإجراءات' : 'Actions'}</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {filteredUsers.length === 0 ? (
-                <tr>
-                  <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
-                    {isAr ? 'لا يوجد مستخدمون' : 'No users found'}
-                  </td>
-                </tr>
-              ) : (
-                filteredUsers.slice(0, 50).map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <div>
-                      <div className="font-semibold text-gray-900">{user.name_en || user.name || 'N/A'}</div>
-                      <div className="text-sm text-gray-600">{user.email}</div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">{user.entity_name || 'N/A'}</td>
-                  <td className="px-6 py-4">
-                    <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold">
-                      {user.role}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">{user.region || 'N/A'}</td>
-                  <td className="px-6 py-4">
-                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      user.status === 'Active' 
-                        ? 'bg-green-100 text-green-700' 
-                        : 'bg-gray-100 text-gray-700'
-                    }`}>
-                      {user.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <button className="text-primary-600 hover:text-primary-800 font-semibold text-sm">
-                      {isAr ? 'إدارة' : 'Manage'}
-                    </button>
-                  </td>
-                </tr>
-              )))
-              }
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination Info */}
-        {filteredUsers.length > 50 && (
-          <div className="mt-4 text-sm text-gray-600 text-center">
-            {isAr ? `عرض أول 50 من ${filteredUsers.length} مستخدم` : `Showing first 50 of ${filteredUsers.length} users`}
-          </div>
-        )}
-      </div>
+      {/* Interactive Users Table */}
+      <DataTable
+        data={users}
+        columns={[
+          {
+            key: 'name_en',
+            label: isAr ? 'المستخدم' : 'User',
+            sortable: true,
+            filterable: false,
+            render: (value, item) => (
+              <div>
+                <div className="font-semibold text-gray-900">{value || item.name || 'N/A'}</div>
+                <div className="text-sm text-gray-600">{item.email}</div>
+              </div>
+            )
+          },
+          {
+            key: 'entity_name',
+            label: isAr ? 'الجهة' : 'Entity',
+            sortable: true,
+            filterable: true
+          },
+          {
+            key: 'role',
+            label: isAr ? 'الدور' : 'Role',
+            sortable: true,
+            filterable: true,
+            render: (value) => (
+              <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold">
+                {value}
+              </span>
+            )
+          },
+          {
+            key: 'region',
+            label: isAr ? 'المنطقة' : 'Region',
+            sortable: true,
+            filterable: true
+          },
+          {
+            key: 'status',
+            label: isAr ? 'الحالة' : 'Status',
+            sortable: true,
+            filterable: true,
+            render: (value) => (
+              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                value === 'Active' 
+                  ? 'bg-green-100 text-green-700' 
+                  : 'bg-gray-100 text-gray-700'
+              }`}>
+                {value}
+              </span>
+            )
+          }
+        ]}
+        pageSize={25}
+        searchable={true}
+        exportable={true}
+        emptyMessage={isAr ? 'لا يوجد مستخدمون' : 'No users found'}
+        loading={loading}
+      />
     </div>
   )
 }

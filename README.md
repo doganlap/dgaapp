@@ -7,15 +7,16 @@
 The DGA Oversight Platform is a comprehensive digital governance system designed for the Digital Government Authority (DGA) of Saudi Arabia to monitor, track, and manage digital transformation initiatives across 158 government entities.
 
 ### 📊 Key Features
-- **158 Government Entities** monitored across 5 regions
-- **171 Digital Programs** tracking (Digital Transformation, Infrastructure, AI, Cybersecurity, etc.)
+- **158 Government Entities** monitored across 5 regions (Target: 100% coverage)
+- **300+ Digital Programs** tracking (Digital Transformation, Infrastructure, AI, Cybersecurity, etc.)
 - **691 Users** with 7 role-based access levels
-- **SAR 2.48 Billion** budget oversight and allocation
+- **SAR 2.48+ Billion** budget oversight and allocation
 - **Real-time KPI Tracking** and performance analytics
 - **Multi-region Architecture** (Central, Western, Eastern, Northern, Southern)
 - **🚀 Advanced Analytics** - Predictive budget forecasting, risk analysis, digital maturity scoring
 - **🛡️ Compliance Monitoring** - PDPL, NCA ECC, ISO 27001 automated compliance reporting
 - **⚙️ Workflow Automation** - Multi-level approvals, automated alerts, batch operations
+- **📊 GRC Module** - Complete Governance, Risk & Compliance management (Production-ready)
 
 ### 🚀 Technology Stack
 
@@ -65,16 +66,23 @@ DGA/
 
 ### 🗃️ Database Schema
 **10 Core Tables:**
-1. `users` - User authentication and management
-2. `dga_entities` - Government ministries & agencies
-3. `dga_programs` - Digital transformation programs
+1. `users` - User authentication and management (691 users)
+2. `dga_entities` - Government ministries & agencies (Target: 158 entities, 100% coverage)
+3. `dga_programs` - Digital transformation programs (300+ programs)
 4. `dga_projects` - Implementation projects
-5. `dga_budget` - Financial tracking
-6. `dga_kpi_reports` - Performance metrics
+5. `dga_budget` - Financial tracking (Complete budget coverage)
+6. `dga_kpi_reports` - Performance metrics (Comprehensive KPI tracking)
 7. `dga_milestones` - Project milestones
 8. `dga_audit_trail` - Security audit logs
 9. `dga_tickets` - Support tickets
 10. `dga_notifications` - System alerts
+
+**5 Extended Tables:**
+1. `kpis` - Entity-level KPI tracking
+2. `compliance_records` - Compliance monitoring (PDPL, NCA ECC, ISO 27001)
+3. `risks` - Risk management
+4. `stakeholder_consensus` - Stakeholder agreements
+5. `digital_maturity_scores` - Digital maturity metrics
 
 ### 🔐 Login Credentials
 
@@ -504,5 +512,6 @@ cd backend && npm run seed
 **Approved by**: Head of Accounts, DGA  
 **Date**: November 19, 2025  
 **Version**: 1.0.0
-#   d g a a p p  
+#   d g a a p p 
+ 
  

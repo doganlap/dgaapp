@@ -16,6 +16,7 @@ const swaggerSpec = require('./config/swagger');
 const authRoutes = require('./routes/auth.routes');
 const dgaRoutes = require('./routes/dga.routes');
 const advancedRoutes = require('./routes/advanced.routes');
+const grcRoutes = require('./routes/grc.routes');
 
 // Initialize app
 const app = express();
@@ -139,6 +140,14 @@ app.get('/api', (req, res) => {
         analytics: '/api/advanced/analytics',
         compliance: '/api/advanced/compliance',
         workflow: '/api/advanced/workflow'
+      },
+      grc: {
+        dashboard: '/api/grc/dashboard',
+        risks: '/api/grc/risks',
+        compliance: '/api/grc/compliance',
+        governance: '/api/grc/governance',
+        insights: '/api/grc/insights',
+        reports: '/api/grc/reports'
       }
     },
     documentation: '/api/docs',
@@ -149,6 +158,7 @@ app.get('/api', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/dga', dgaRoutes);
 app.use('/api/advanced', advancedRoutes);
+app.use('/api/grc', grcRoutes);
 
 // 404 handler
 app.use(notFoundHandler);
