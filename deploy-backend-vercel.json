@@ -1,0 +1,22 @@
+{
+  "name": "dga-oversight-backend",
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "src/server.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "DATABASE_URL": "@dga-database-url",
+    "JWT_SECRET": "@dga-jwt-secret",
+    "CORS_ORIGIN": "https://dga-oversight-frontend.vercel.app"
+  }
+}

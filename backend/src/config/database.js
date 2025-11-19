@@ -1,16 +1,25 @@
 const knex = require('knex');
 require('dotenv').config();
 
-const dbConfig = {
-  client: 'pg',
-  connection: process.env.DATABASE_URL || {
+// Parse DATABASE_URL if provided, otherwise use individual config
+let connectionConfig;
+if (process.env.DATABASE_URL) {
+  // Use connection string directly (Knex will parse it)
+  connectionConfig = process.env.DATABASE_URL;
+} else {
+  connectionConfig = {
     host: process.env.DB_HOST || 'localhost',
     port: process.env.DB_PORT || 5432,
     database: process.env.DB_NAME || 'dga_oversight',
     user: process.env.DB_USER || 'postgres',
     password: process.env.DB_PASSWORD || 'postgres',
-    ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false,
-  },
+    ssl: false,
+  };
+}
+
+const dbConfig = {
+  client: 'pg',
+  connection: connectionConfig,
   pool: {
     min: 2,
     max: 10,

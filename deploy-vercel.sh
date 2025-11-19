@@ -1,58 +1,43 @@
 #!/bin/bash
 
-echo "========================================"
-echo "DGA Oversight Platform - Vercel Deployment"
-echo "========================================"
+# Bash Script to Deploy DGA App to Vercel
+# Run this from the project root directory
+
+echo "🚀 Deploying DGA Oversight Platform to Vercel..."
 echo ""
 
-echo "Step 1: Installing Vercel CLI (if not installed)"
+# Check if Vercel CLI is installed
 if ! command -v vercel &> /dev/null; then
-    echo "Installing Vercel CLI..."
+    echo "❌ Vercel CLI not found. Installing..."
     npm install -g vercel
-else
-    echo "Vercel CLI already installed"
 fi
 
+# Deploy Backend
+echo "📦 Step 1: Deploying Backend..."
+cd backend
+vercel --prod
 echo ""
-echo "Step 2: Building Frontend"
+read -p "Enter your backend URL (e.g., https://dga-oversight-backend.vercel.app): " backend_url
+cd ..
+
+# Deploy Frontend
+echo "🎨 Step 2: Deploying Frontend..."
 cd frontend
-npm run build
-if [ $? -ne 0 ]; then
-    echo "Frontend build failed!"
-    exit 1
+
+# Create .env.production if it doesn't exist
+if [ ! -f .env.production ]; then
+    echo "VITE_API_URL=$backend_url/api" > .env.production
+    echo "✅ Created .env.production with API URL"
 fi
+
+vercel --prod
 cd ..
 
 echo ""
-echo "Step 3: Ready to Deploy"
+echo "✅ Deployment Complete!"
 echo ""
-echo "IMPORTANT: Before deploying, set these environment variables in Vercel:"
+echo "📋 Next Steps:"
+echo "1. Update CORS_ORIGIN in backend Vercel environment variables"
+echo "2. Test the deployed application"
+echo "3. Check Vercel dashboard for logs"
 echo ""
-echo "Backend Environment Variables:"
-echo "  DATABASE_URL = postgres://7adda8e42fc0eb3496e98548aa7aeb6fb23913bf75b3d1df34ff84d900e8d8bc:sk_ItoaunvtC_nusXsKKGLZn@db.prisma.io:5432/postgres?sslmode=require"
-echo "  JWT_SECRET = dga-2025-ultra-secure-jwt-secret-key-change-in-production"
-echo "  CORS_ORIGIN = [Your Frontend URL after deployment]"
-echo "  NODE_ENV = production"
-echo ""
-echo "Frontend Environment Variables:"
-echo "  VITE_API_URL = [Your Backend URL]/api"
-echo ""
-echo "========================================"
-echo "Deployment Options:"
-echo "========================================"
-echo ""
-echo "Option 1: Deploy Backend"
-echo "  cd backend"
-echo "  vercel --prod"
-echo ""
-echo "Option 2: Deploy Frontend (after updating VITE_API_URL)"
-echo "  cd frontend"
-echo "  vercel --prod"
-echo ""
-echo "Option 3: Deploy via Vercel Dashboard"
-echo "  Visit: https://vercel.com/new"
-echo "  Import this repository"
-echo ""
-echo "========================================"
-echo "For detailed instructions, see: VERCEL_DEPLOYMENT.md"
-echo "========================================"
