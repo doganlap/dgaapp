@@ -4,15 +4,18 @@ const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+const swaggerUi = require('swagger-ui-express');
 require('dotenv').config();
 
 const { testConnection } = require('./config/database');
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 const logger = require('./utils/logger');
+const swaggerSpec = require('./config/swagger');
 
 // Import routes
 const authRoutes = require('./routes/auth.routes');
 const dgaRoutes = require('./routes/dga.routes');
+const advancedRoutes = require('./routes/advanced.routes');
 
 // Initialize app
 const app = express();
@@ -21,10 +24,26 @@ const PORT = process.env.PORT || 5000;
 // Security middleware
 app.use(helmet());
 
-// CORS configuration
+// CORS configuration - Allow specific origins only
+const allowedOrigins = process.env.CORS_ORIGIN 
+  ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
+  : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176', 'http://localhost:5177', 'http://localhost:5178'];
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176', 'http://localhost:5177', 'http://localhost:5178'],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  maxAge: 86400, // 24 hours
 }));
 
 // Compression middleware
@@ -43,15 +62,29 @@ if (process.env.NODE_ENV === 'development') {
   }));
 }
 
-// Rate limiting
-const limiter = rateLimit({
+// Rate limiting - General API
+const apiLimiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
-  message: 'Too many requests from this IP, please try again later.',
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 1000, // Increased for demo
+  message: 'Too many requests from this IP, please try again after 15 minutes.',
   standardHeaders: true,
   legacyHeaders: false,
+  skipSuccessfulRequests: false, // Count all requests
 });
-app.use('/api/', limiter);
+
+// Stricter rate limiting for authentication endpoints (prevent brute force)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Only 10 login attempts per 15 minutes
+  message: 'Too many login attempts. Please try again after 15 minutes.',
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true, // Only count failed attempts
+});
+
+app.use('/api/', apiLimiter);
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/register', authLimiter);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -63,6 +96,30 @@ app.get('/health', (req, res) => {
     version: '1.0.0',
   });
 });
+
+// Swagger API Documentation
+if (process.env.ENABLE_SWAGGER !== 'false') {
+  app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'DGA Oversight API Docs',
+    swaggerOptions: {
+      persistAuthorization: true,
+      displayRequestDuration: true,
+      docExpansion: 'none',
+      filter: true,
+      showExtensions: true,
+      showCommonExtensions: true
+    }
+  }));
+
+  // Swagger JSON endpoint
+  app.get('/api/docs.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerSpec);
+  });
+
+  logger.info('📚 API Documentation available at /api/docs');
+}
 
 // API information
 app.get('/api', (req, res) => {
@@ -78,6 +135,11 @@ app.get('/api', (req, res) => {
       budget: '/api/dga/budget',
       reporting: '/api/dga/reporting',
       tickets: '/api/dga/tickets',
+      advanced: {
+        analytics: '/api/advanced/analytics',
+        compliance: '/api/advanced/compliance',
+        workflow: '/api/advanced/workflow'
+      }
     },
     documentation: '/api/docs',
   });
@@ -86,6 +148,7 @@ app.get('/api', (req, res) => {
 // Mount routes
 app.use('/api/auth', authRoutes);
 app.use('/api/dga', dgaRoutes);
+app.use('/api/advanced', advancedRoutes);
 
 // 404 handler
 app.use(notFoundHandler);

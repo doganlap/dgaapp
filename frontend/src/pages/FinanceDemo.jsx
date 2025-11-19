@@ -18,18 +18,18 @@ export default function FinanceDemo() {
         console.log('Loading finance data...');
         
         // Load data sequentially to avoid rate limiting
-        const summaryRes = await api.get('/api/dga/finance/summary');
+        const summaryRes = await api.get('/dga/finance/summary');
         setSummary(summaryRes.data.data);
         
         // Small delay between requests
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        const contractsRes = await api.get('/api/dga/finance/contracts');
+        const contractsRes = await api.get('/dga/finance/contracts');
         setContracts(contractsRes.data.data.slice(0,5));
         
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        const invoicesRes = await api.get('/api/dga/finance/invoices');
+        const invoicesRes = await api.get('/dga/finance/invoices');
         setInvoices(invoicesRes.data.data);
         
         console.log('Finance data loaded successfully');
@@ -147,7 +147,7 @@ export default function FinanceDemo() {
           </p>
         </div>
         <button 
-          onClick={() => window.open('http://localhost:5000/api/dga/finance/invoices?format=csv','_blank')}
+          onClick={() => window.open('http://localhost:5000/dga/finance/invoices?format=csv','_blank')}
           className="btn-primary flex items-center gap-2"
         >
           <FiFileText /> {isAr ? 'تصدير CSV' : 'Export CSV'}
