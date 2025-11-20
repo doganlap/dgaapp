@@ -1,0 +1,34 @@
+code,name_ar,name_en,jurisdiction_ar,jurisdiction_en,website,category,ministry,established_year
+NCA,الهيئة الوطنية للأمن السيبراني,National Cybersecurity Authority,الأمن السيبراني وحماية البنية التحتية الحرجة,Cybersecurity & Critical Infrastructure Protection,https://nca.gov.sa,cybersecurity,Presidency,2017
+SAMA,البنك المركزي السعودي,Saudi Central Bank (SAMA),القطاع المالي والبنوك والتأمين والتقنية المالية,Financial Services & Banking,https://sama.gov.sa,financial,Ministry of Finance,1952
+SDAIA,الهيئة السعودية للبيانات والذكاء الاصطناعي,Saudi Data & AI Authority,البيانات الشخصية والذكاء الاصطناعي,Data Protection & Artificial Intelligence,https://sdaia.gov.sa,data_ai,Presidency,2019
+CMA,هيئة السوق المالية,Capital Market Authority,أسواق رأس المال والأوراق المالية,Capital Markets & Securities,https://cma.org.sa,financial,Ministry of Finance,2003
+DGA,هيئة الحكومة الرقمية,Digital Government Authority,التحول الرقمي الحكومي والخدمات الإلكترونية,Digital Government Transformation,https://dga.gov.sa,digital_gov,Presidency,2021
+CST,هيئة الاتصالات والفضاء والتقنية,Communications Space & Technology Commission,الاتصالات والفضاء وتقنية المعلومات والحوسبة السحابية,Telecom ICT & Cloud Computing,https://cst.gov.sa,telecom,Presidency,2023
+ZATCA,هيئة الزكاة والضريبة والجمارك,Zakat Tax & Customs Authority,الزكاة والضريبة والجمارك والفوترة الإلكترونية,Zakat Tax Customs & E-Invoicing,https://zatca.gov.sa,tax_customs,Ministry of Finance,2021
+MOCI,وزارة التجارة,Ministry of Commerce,التجارة وحماية المستهلك والسجل التجاري,Commerce Consumer Protection & Commercial Registry,https://mc.gov.sa,commerce,Ministry of Commerce,1954
+SFDA,هيئة الغذاء والدواء,Saudi Food & Drug Authority,الغذاء والدواء والأجهزة الطبية,Food Drug & Medical Devices,https://sfda.gov.sa,healthcare,Ministry of Health,2003
+MOH,وزارة الصحة,Ministry of Health,الرعاية الصحية والمنشآت الصحية,Healthcare Facilities & Services,https://moh.gov.sa,healthcare,Ministry of Health,1950
+CBAHI,المركز السعودي لاعتماد المنشآت الصحية,Saudi Central Board for Accreditation of Healthcare Institutions,اعتماد المنشآت الصحية,Healthcare Accreditation,https://cbahi.gov.sa,healthcare,Ministry of Health,2005
+SCFHS,الهيئة السعودية للتخصصات الصحية,Saudi Commission for Health Specialties,التعليم الطبي والتخصصات الصحية,Medical Education & Health Specialties,https://scfhs.org.sa,healthcare,Ministry of Health,1992
+ECRA,هيئة تنظيم الكهرباء والإنتاج المزدوج,Electricity & Cogeneration Regulatory Authority,الكهرباء والإنتاج المزدوج,Electricity & Cogeneration,https://ecra.gov.sa,energy,Ministry of Energy,2001
+WEA,هيئة المياه والكهرباء,Water & Electricity Authority,المياه والكهرباء,Water & Electricity Services,https://wea.gov.sa,utilities,Ministry of Environment Water & Agriculture,2003
+MOMRAH,وزارة الشؤون البلدية والقروية والإسكان,Ministry of Municipal Rural Affairs & Housing,البلديات والإسكان والتخطيط العمراني,Municipalities Housing & Urban Planning,https://momra.gov.sa,municipal,Ministry of Municipal & Rural Affairs,1975
+MHRSD,وزارة الموارد البشرية والتنمية الاجتماعية,Ministry of Human Resources & Social Development,الموارد البشرية وقانون العمل والتأمينات الاجتماعية,Labor Law HR & Social Insurance,https://hrsd.gov.sa,labor,Ministry of HR & Social Development,2016
+MISA,وزارة الاستثمار,Ministry of Investment,الاستثمار الأجنبي والتراخيص الاستثمارية,Foreign Investment & Investment Licensing,https://misa.gov.sa,investment,Ministry of Investment,2019
+NCEC,المركز الوطني للامتثال البيئي,National Center for Environmental Compliance,الامتثال البيئي والمعايير البيئية,Environmental Compliance & Standards,https://ncec.gov.sa,environment,Ministry of Environment Water & Agriculture,2019
+MEWA,وزارة البيئة والمياه والزراعة,Ministry of Environment Water & Agriculture,البيئة والمياه والزراعة,Environment Water & Agriculture,https://mewa.gov.sa,environment,Ministry of Environment,2016
+GASTAT,الهيئة العامة للإحصاء,General Authority for Statistics,الإحصاءات والبيانات الوطنية,National Statistics & Data,https://stats.gov.sa,statistics,Presidency,2019
+CITC,هيئة الاتصالات وتقنية المعلومات (سابقاً),Communications & IT Commission (Legacy - Now CST),الاتصالات وتقنية المعلومات,Telecom & IT,https://citc.gov.sa,telecom,Merged into CST,2003
+YESSER,برنامج التعاملات الإلكترونية الحكومية (سابقاً),E-Government Program (Legacy - Now DGA),التعاملات الحكومية الإلكترونية,E-Government Transactions,https://yesser.gov.sa,digital_gov,Merged into DGA,2005
+MONSHAAT,الهيئة العامة للمنشآت الصغيرة والمتوسطة,Small & Medium Enterprises Authority,المنشآت الصغيرة والمتوسطة,SME Development,https://monshaat.gov.sa,business,Ministry of Commerce,2016
+PIF,صندوق الاستثمارات العامة,Public Investment Fund,الاستثمار السيادي,Sovereign Investment,https://pif.gov.sa,finance,Presidency,1971
+REDF,صندوق التنمية العقارية,Real Estate Development Fund,التمويل العقاري,Real Estate Finance,https://redf.gov.sa,finance,Ministry of Finance,2017
+NHC,الشركة الوطنية للإسكان,National Housing Company,الإسكان والتطوير العقاري,Housing & Real Estate Development,https://nhc.sa,housing,Privatization,2017
+SASO,الهيئة السعودية للمواصفات والمقاييس والجودة,Saudi Standards Metrology & Quality Organization,المواصفات والمقاييس والجودة,Standards Metrology & Quality,https://saso.gov.sa,standards,Ministry of Commerce,1972
+Tadawul,السوق المالية السعودية (تداول),Saudi Stock Exchange (Tadawul),سوق الأسهم والأوراق المالية,Stock Market & Securities Trading,https://saudiexchange.sa,financial,Private (Regulated by CMA),2007
+IAIC,البنك المركزي السعودي - التأمين,Insurance Authority (under SAMA),التأمين وإعادة التأمين,Insurance & Reinsurance,https://sama.gov.sa,financial,SAMA,2020
+KACARE,مدينة الملك عبدالله للطاقة الذرية والمتجددة,King Abdullah City for Atomic & Renewable Energy,الطاقة النووية والمتجددة,Nuclear & Renewable Energy,https://kacare.gov.sa,energy,Presidency,2010
+SAFCSP,هيئة المحاسبين القانونيين السعودية,Saudi Organization for Certified Public Accountants,المحاسبة والمراجعة,Accounting & Auditing,https://socpa.org.sa,professional,Ministry of Commerce,1992
+MOJ,وزارة العدل,Ministry of Justice,العدالة والمحاكم والتوثيق,Justice Courts & Notarization,https://moj.gov.sa,legal,Ministry of Justice,1970
+MOI,وزارة الداخلية,Ministry of Interior,الأمن الداخلي والهوية الوطنية وأبشر,Interior Security National ID & Absher,https://moi.gov.sa,security,Ministry of Interior,1951

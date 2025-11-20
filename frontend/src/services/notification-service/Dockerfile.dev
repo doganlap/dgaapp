@@ -1,0 +1,25 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install nodemon
+RUN npm install -g nodemon
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies
+RUN npm install
+
+# Copy application code
+COPY . .
+
+# Create templates directory
+RUN mkdir -p templates
+
+# Expose port
+EXPOSE 3004
+
+# Start with nodemon
+CMD ["npm", "run", "dev"]
+

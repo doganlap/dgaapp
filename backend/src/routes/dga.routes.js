@@ -178,4 +178,19 @@ router.get('/finance/contracts', dgaController.getFinanceContracts);
 // @access  Private
 router.get('/finance/invoices', dgaController.getFinanceInvoices);
 
+// @route   GET /api/dga/finance/report
+// @desc    Generate comprehensive finance report
+// @access  Private
+router.get('/finance/report', dgaController.generateFinanceReport);
+
+// @route   GET /api/dga/finance/budget-trends
+// @desc    Get budget trends over time
+// @access  Private
+router.get('/finance/budget-trends', dgaController.getBudgetTrends);
+
+// @route   GET /api/dga/finance/contract-analysis
+// @desc    Get contract analysis by status
+// @access  Private
+router.get('/finance/contract-analysis', dgaController.getContractAnalysis);
+
 module.exports = router;

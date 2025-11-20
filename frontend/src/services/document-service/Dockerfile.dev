@@ -1,0 +1,35 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    cairo-dev \
+    jpeg-dev \
+    pango-dev \
+    giflib-dev
+
+# Install nodemon
+RUN npm install -g nodemon
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies
+RUN npm install
+
+# Copy application code
+COPY . .
+
+# Create directories
+RUN mkdir -p uploads storage
+
+# Expose port
+EXPOSE 3002
+
+# Start with nodemon
+CMD ["npm", "run", "dev"]
+

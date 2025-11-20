@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KSA IoT/IoMT Compliance - Unified Table View</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+
+        .controls {
+            padding: 30px;
+        }
+
+        .filter-section {
+            background: #f0f4ff;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .filter-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"], select {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .results-info {
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .results-count {
+            font-weight: 600;
+            color: #2e7d32;
+            font-size: 16px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        th:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #6639a3 100%);
+        }
+
+        th.sortable::after {
+            content: ' ⇅';
+            opacity: 0.5;
+            font-size: 12px;
+        }
+
+        th.asc::after {
+            content: ' ▲';
+            opacity: 1;
+        }
+
+        th.desc::after {
+            content: ' ▼';
+            opacity: 1;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            margin: 2px;
+            white-space: nowrap;
+        }
+
+        .badge-family {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-type-preventive {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .badge-type-detective {
+            background: #fff9c4;
+            color: #f57f17;
+        }
+
+        .badge-type-corrective {
+            background: #ffccbc;
+            color: #d84315;
+        }
+
+        .badge-regulator {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .badge-instrument {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .badge-evidence {
+            background: #e0f2f1;
+            color: #00695c;
+        }
+
+        .control-id {
+            font-weight: bold;
+            color: #667eea;
+            white-space: nowrap;
+        }
+
+        .expand-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .expand-btn:hover {
+            background: #5568d3;
+        }
+
+        .expanded-row {
+            display: none;
+        }
+
+        .expanded-row.show {
+            display: table-row;
+        }
+
+        .expanded-content {
+            padding: 20px;
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+        }
+
+        .expanded-section {
+            margin-bottom: 15px;
+        }
+
+        .expanded-section h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .evidence-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .evidence-item {
+            padding: 8px;
+            background: white;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            border-left: 3px solid #667eea;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .filter-section, .button-group {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px 6px;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #666;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            font-size: 16px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 KSA IoT/IoMT Healthcare Compliance - Unified View</h1>
+            <div class="stats">
+                <div class="stat">📋 36 Controls</div>
+                <div class="stat">📁 72 Evidence Items</div>
+                <div class="stat">🏛️ 7 Regulators</div>
+                <div class="stat">🌍 Saudi Arabia</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <!-- Advanced Filters -->
+            <div class="filter-section">
+                <div class="filter-title">🔍 Advanced Filters - All Data in One Table</div>
+                
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">🔎 Search All Fields</label>
+                        <input type="text" id="searchAll" placeholder="Search control ID, title, domain, evidence..." onkeyup="applyFilters()">
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">📂 Family</label>
+                        <select id="filterFamily" onchange="applyFilters()">
+                            <option value="">All Families</option>
+                            <option value="GOV">GOV - Governance & Risk</option>
+                            <option value="PRIV">PRIV - Privacy & PDPL</option>
+                            <option value="IOT">IOT - IoT/Device Security</option>
+                            <option value="NET">NET - Network Security</option>
+                            <option value="IDAM">IDAM - Identity & Access</option>
+                            <option value="LOG">LOG - Logging & Monitoring</option>
+                            <option value="VULN">VULN - Vulnerability Management</option>
+                            <option value="HIE">HIE - Health Info Exchange</option>
+                            <option value="OT">OT - OT/Clinical Network</option>
+                            <option value="DATA">DATA - Data Lifecycle</option>
+                            <option value="SUP">SUP - Supplier & Market Access</option>
+                            <option value="IR">IR - Incident Response</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">🎯 Control Type</label>
+                        <select id="filterType" onchange="applyFilters()">
+                            <option value="">All Types</option>
+                            <option value="Preventive">Preventive</option>
+                            <option value="Detective">Detective</option>
+                            <option value="Corrective">Corrective</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">🏛️ Regulator</label>
+                        <select id="filterRegulator" onchange="applyFilters()">
+                            <option value="">All Regulators</option>
+                            <option value="NCA">NCA - National Cybersecurity Authority</option>
+                            <option value="SDAIA/NDMO">SDAIA/NDMO - Data & AI Authority</option>
+                            <option value="SHC/MoH/CHI">SHC/MoH/CHI - Health Council</option>
+                            <option value="SFDA">SFDA - Food & Drug Authority</option>
+                            <option value="CST">CST - Communications & Tech Commission</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">📜 Instrument</label>
+                        <select id="filterInstrument" onchange="applyFilters()">
+                            <option value="">All Instruments</option>
+                            <option value="NCA-ECC">NCA-ECC - Essential Cybersecurity Controls</option>
+                            <option value="NCA-IoT">NCA-IoT - IoT Cybersecurity Guidelines</option>
+                            <option value="NCA-OTCC">NCA-OTCC - OT Cybersecurity Controls</option>
+                            <option value="PDPL">PDPL - Personal Data Protection Law</option>
+                            <option value="HIE-SEC">HIE-SEC - HIE Security Policies</option>
+                            <option value="NPHIES">NPHIES - National Health Insurance Platform</option>
+                            <option value="CST-IoT">CST-IoT - IoT Regulatory Framework</option>
+                            <option value="SFDA-Pre">SFDA-Pre - Pre-market Cybersecurity</option>
+                            <option value="SFDA-Post">SFDA-Post - Post-market Cybersecurity</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">📊 Evidence Type</label>
+                        <select id="filterEvidenceType" onchange="applyFilters()">
+                            <option value="">All Evidence Types</option>
+                            <option value="Policy">Policy</option>
+                            <option value="Config/Log/Report">Config/Log/Report</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="applyFilters()">🔍 Apply Filters</button>
+                    <button class="btn btn-secondary" onclick="resetFilters()">🔄 Reset All</button>
+                    <button class="btn btn-primary" onclick="exportToCSV()">📥 Export to CSV</button>
+                    <button class="btn btn-primary" onclick="exportToJSON()">📥 Export to JSON</button>
+                    <button class="btn btn-secondary" onclick="window.print()">🖨️ Print</button>
+                </div>
+            </div>
+
+            <!-- Results Info -->
+            <div class="results-info">
+                <div class="results-count" id="resultsCount">Showing 36 of 36 controls</div>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="expandAll()">📖 Expand All</button>
+                    <button class="btn btn-secondary" onclick="collapseAll()">📕 Collapse All</button>
+                </div>
+            </div>
+
+            <!-- Unified Data Table -->
+            <div class="table-container">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th class="sortable" onclick="sortTable(0)">Control ID</th>
+                            <th class="sortable" onclick="sortTable(1)">Family</th>
+                            <th class="sortable" onclick="sortTable(2)">Title</th>
+                            <th class="sortable" onclick="sortTable(3)">Domain</th>
+                            <th class="sortable" onclick="sortTable(4)">Type</th>
+                            <th>Regulators</th>
+                            <th>Instruments</th>
+                            <th>Evidence Count</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Complete data from JSON
+        const controlsData = [
+            {"id":"C-001","family":"GOV","title":"ISMS governance established (scope includes IoT/IoMT)","domain":"Governance & Risk","type":"Preventive","instruments":["NCA-ECC","NCA-IoT"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-002","family":"GOV","title":"Risk assessment for IoT/IoMT and HIE interfaces (annual)","domain":"Governance & Risk","type":"Detective","instruments":["NCA-IoT","HIE-SEC"],"regulators":["NCA","SHC/MoH/CHI"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-003","family":"GOV","title":"Third-line assurance / internal audit over IoT controls","domain":"Governance & Risk","type":"Detective","instruments":["NCA-ECC"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-004","family":"PRIV","title":"PDPL lawful basis & consent model for patient telemetry","domain":"Privacy & PDPL","type":"Preventive","instruments":["PDPL","HIE-SEC"],"regulators":["SDAIA/NDMO","SHC/MoH/CHI"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-005","family":"PRIV","title":"DPIA for connected devices & cross-border flows","domain":"Privacy & PDPL","type":"Detective","instruments":["PDPL"],"regulators":["SDAIA/NDMO"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-006","family":"PRIV","title":"DSR handling (access, rectification, deletion) incl. device data","domain":"Privacy & PDPL","type":"Corrective","instruments":["PDPL"],"regulators":["SDAIA/NDMO"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-007","family":"IOT","title":"Secure boot, code signing, and measured boot for devices","domain":"IoT/Device Security (firmware, crypto, OTA)","type":"Preventive","instruments":["NCA-IoT","SFDA-Pre"],"regulators":["NCA","SFDA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-008","family":"IOT","title":"Cryptography (TLS/mTLS, at-rest, keys in HSM/SE)","domain":"IoT/Device Security (firmware, crypto, OTA)","type":"Preventive","instruments":["NCA-IoT"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-009","family":"IOT","title":"OTA updates with rollback & SBOM-based impact analysis","domain":"IoT/Device Security (firmware, crypto, OTA)","type":"Corrective","instruments":["NCA-IoT","SFDA-Post"],"regulators":["NCA","SFDA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-010","family":"NET","title":"Network zoning for IoMT (patient, clinical, admin, guest)","domain":"Network, Segmentation & Zero Trust","type":"Preventive","instruments":["NCA-OTCC","NCA-IoT"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-011","family":"NET","title":"Gateway allowlists & egress filtering for device traffic","domain":"Network, Segmentation & Zero Trust","type":"Preventive","instruments":["NCA-IoT"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-012","family":"NET","title":"Zero Trust access between device, platform, cloud","domain":"Network, Segmentation & Zero Trust","type":"Preventive","instruments":["NCA-IoT","NCA-ECC"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-013","family":"IDAM","title":"Unique identities for devices & services (cert-based)","domain":"Identity & Access Management","type":"Preventive","instruments":["NCA-IoT"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-014","family":"IDAM","title":"MFA & least-privilege for admins of IoMT platforms","domain":"Identity & Access Management","type":"Preventive","instruments":["NCA-ECC"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-015","family":"IDAM","title":"Just-in-time privileged access with session recording","domain":"Identity & Access Management","type":"Detective","instruments":["NCA-ECC"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-016","family":"LOG","title":"Device/platform security logs centralized (SIEM)","domain":"Logging, Monitoring & Audit","type":"Detective","instruments":["NCA-IoT"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-017","family":"LOG","title":"Clinical audit trails (who accessed which record)","domain":"Logging, Monitoring & Audit","type":"Detective","instruments":["HIE-SEC","NHIC-SecPriv"],"regulators":["SHC/MoH/CHI"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-018","family":"LOG","title":"Time sync/NTP hardening across IoMT estate","domain":"Logging, Monitoring & Audit","type":"Preventive","instruments":["NCA-IoT"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-019","family":"VULN","title":"SBOM management & SCA for device firmware/apps","domain":"Vulnerability & Patch Management","type":"Detective","instruments":["NCA-IoT","SFDA-Pre"],"regulators":["NCA","SFDA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-020","family":"VULN","title":"Routine VA & prioritized patching (risk-based SLAs)","domain":"Vulnerability & Patch Management","type":"Corrective","instruments":["NCA-ECC"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-021","family":"VULN","title":"Coordinated vulnerability disclosure process","domain":"Vulnerability & Patch Management","type":"Corrective","instruments":["SFDA-Post"],"regulators":["SFDA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-022","family":"HIE","title":"Consent capture & enforcement for data sharing","domain":"Health Information Exchange (Consent & Audit)","type":"Preventive","instruments":["HIE-SEC","PDPL"],"regulators":["SHC/MoH/CHI","SDAIA/NDMO"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-023","family":"HIE","title":"NPHIES integration security (claims/eligibility)","domain":"Health Information Exchange (Consent & Audit)","type":"Preventive","instruments":["NPHIES"],"regulators":["SHC/MoH/CHI"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-024","family":"HIE","title":"End-to-end message protection & non-repudiation","domain":"Health Information Exchange (Consent & Audit)","type":"Preventive","instruments":["HIE-SEC"],"regulators":["SHC/MoH/CHI"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-025","family":"OT","title":"Asset inventory for clinical/OT devices (incl. IoMT)","domain":"OT/Clinical Network Protections","type":"Detective","instruments":["NCA-OTCC"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-026","family":"OT","title":"Segmentation firewalls & jump hosts for maintenance","domain":"OT/Clinical Network Protections","type":"Preventive","instruments":["NCA-OTCC"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-027","family":"OT","title":"Change control for clinical systems touching IoMT","domain":"OT/Clinical Network Protections","type":"Preventive","instruments":["NCA-OTCC","NCA-ECC"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-028","family":"DATA","title":"Data classification incl. sensor telemetry & PHI","domain":"Data Lifecycle & Localization","type":"Preventive","instruments":["PDPL"],"regulators":["SDAIA/NDMO"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-029","family":"DATA","title":"Localization & cross-border transfer register","domain":"Data Lifecycle & Localization","type":"Detective","instruments":["PDPL"],"regulators":["SDAIA/NDMO"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-030","family":"DATA","title":"Backup/DR for IoMT platforms & HIE bridges","domain":"Data Lifecycle & Localization","type":"Corrective","instruments":["NCA-ECC"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-031","family":"SUP","title":"CST device approval/type certification evidence on file","domain":"Supplier & Market Access (CST/SFDA)","type":"Preventive","instruments":["CST-IoT"],"regulators":["CST"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-032","family":"SUP","title":"Supplier security clauses (SBOM, updates, vuln SLAs)","domain":"Supplier & Market Access (CST/SFDA)","type":"Preventive","instruments":["NCA-IoT","SFDA-Pre"],"regulators":["NCA","SFDA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-033","family":"SUP","title":"eSIM/NB-IoT profiles managed & auditable","domain":"Supplier & Market Access (CST/SFDA)","type":"Detective","instruments":["CST-IoT"],"regulators":["CST"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-034","family":"IR","title":"24/7 incident response runbook for IoMT scenarios","domain":"Incident/Breach Response & PDPL Notifications","type":"Corrective","instruments":["NCA-ECC"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-035","family":"IR","title":"Breach assessment & PDPL notification workflow","domain":"Incident/Breach Response & PDPL Notifications","type":"Corrective","instruments":["PDPL"],"regulators":["SDAIA/NDMO"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"},
+            {"id":"C-036","family":"IR","title":"Post-incident lessons learned & control tuning","domain":"Incident/Breach Response & PDPL Notifications","type":"Corrective","instruments":["NCA-ECC"],"regulators":["NCA"],"owner":"CISO/Head of Clinical Engineering","review":"Annual"}
+        ];
+
+        const evidenceData = {
+            "C-001": [
+                {id: "E-001", title: "ISMS governance established - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-002", title: "ISMS governance established - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-002": [
+                {id: "E-003", title: "Risk assessment for IoT/IoMT - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-004", title: "Risk assessment for IoT/IoMT - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-003": [
+                {id: "E-005", title: "Internal audit over IoT controls - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-006", title: "Internal audit over IoT controls - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-004": [
+                {id: "E-007", title: "PDPL consent model - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-008", title: "PDPL consent model - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-005": [
+                {id: "E-009", title: "DPIA for connected devices - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-010", title: "DPIA for connected devices - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-006": [
+                {id: "E-011", title: "DSR handling - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-012", title: "DSR handling - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-007": [
+                {id: "E-013", title: "Secure boot - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-014", title: "Secure boot - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-008": [
+                {id: "E-015", title: "Cryptography - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-016", title: "Cryptography - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-009": [
+                {id: "E-017", title: "OTA updates - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-018", title: "OTA updates - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-010": [
+                {id: "E-019", title: "Network zoning - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-020", title: "Network zoning - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-011": [
+                {id: "E-021", title: "Gateway allowlists - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-022", title: "Gateway allowlists - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-012": [
+                {id: "E-023", title: "Zero Trust access - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-024", title: "Zero Trust access - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-013": [
+                {id: "E-025", title: "Unique identities - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-026", title: "Unique identities - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-014": [
+                {id: "E-027", title: "MFA & least-privilege - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-028", title: "MFA & least-privilege - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-015": [
+                {id: "E-029", title: "JIT privileged access - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-030", title: "JIT privileged access - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-016": [
+                {id: "E-031", title: "Security logs SIEM - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-032", title: "Security logs SIEM - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-017": [
+                {id: "E-033", title: "Clinical audit trails - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-034", title: "Clinical audit trails - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-018": [
+                {id: "E-035", title: "Time sync/NTP - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-036", title: "Time sync/NTP - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-019": [
+                {id: "E-037", title: "SBOM management - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-038", title: "SBOM management - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-020": [
+                {id: "E-039", title: "VA & patching - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-040", title: "VA & patching - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-021": [
+                {id: "E-041", title: "Vulnerability disclosure - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-042", title: "Vulnerability disclosure - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-022": [
+                {id: "E-043", title: "Consent capture - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-044", title: "Consent capture - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-023": [
+                {id: "E-045", title: "NPHIES integration - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-046", title: "NPHIES integration - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-024": [
+                {id: "E-047", title: "Message protection - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-048", title: "Message protection - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-025": [
+                {id: "E-049", title: "Asset inventory - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-050", title: "Asset inventory - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-026": [
+                {id: "E-051", title: "Segmentation firewalls - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-052", title: "Segmentation firewalls - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-027": [
+                {id: "E-053", title: "Change control - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-054", title: "Change control - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-028": [
+                {id: "E-055", title: "Data classification - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-056", title: "Data classification - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-029": [
+                {id: "E-057", title: "Cross-border transfer - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-058", title: "Cross-border transfer - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-030": [
+                {id: "E-059", title: "Backup/DR - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-060", title: "Backup/DR - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-031": [
+                {id: "E-061", title: "CST device approval - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-062", title: "CST device approval - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-032": [
+                {id: "E-063", title: "Supplier security - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-064", title: "Supplier security - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-033": [
+                {id: "E-065", title: "eSIM/NB-IoT - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-066", title: "eSIM/NB-IoT - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-034": [
+                {id: "E-067", title: "Incident response - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-068", title: "Incident response - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-035": [
+                {id: "E-069", title: "Breach assessment - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-070", title: "Breach assessment - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ],
+            "C-036": [
+                {id: "E-071", title: "Lessons learned - Evidence 1", type: "Policy", owner: "Security Governance"},
+                {id: "E-072", title: "Lessons learned - Evidence 2", type: "Config/Log/Report", owner: "SecOps/Clinical Eng."}
+            ]
+        };
+
+        let sortDirection = {};
+        let filteredData = [...controlsData];
+
+        // Initialize table
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable(controlsData);
+        });
+
+        // Render table
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            data.forEach((control, index) => {
+                const evidence = evidenceData[control.id] || [];
+                const evidenceTypes = [...new Set(evidence.map(e => e.type))];
+                
+                // Main row
+                const row = tbody.insertRow();
+                row.dataset.id = control.id;
+                row.dataset.family = control.family;
+                row.dataset.type = control.type;
+                row.dataset.regulators = control.regulators.join(',');
+                row.dataset.instruments = control.instruments.join(',');
+                row.dataset.evidenceTypes = evidenceTypes.join(',');
+                row.dataset.searchText = `${control.id} ${control.family} ${control.title} ${control.domain} ${control.type} ${control.regulators.join(' ')} ${control.instruments.join(' ')} ${evidence.map(e => e.id + ' ' + e.title + ' ' + e.type).join(' ')}`.toLowerCase();
+
+                row.innerHTML = `
+                    <td><span class="control-id">${control.id}</span></td>
+                    <td><span class="badge badge-family">${control.family}</span></td>
+                    <td>${control.title}</td>
+                    <td>${control.domain}</td>
+                    <td><span class="badge badge-type-${control.type.toLowerCase()}">${control.type}</span></td>
+                    <td>${control.regulators.map(r => `<span class="badge badge-regulator">${r}</span>`).join(' ')}</td>
+                    <td>${control.instruments.map(i => `<span class="badge badge-instrument">${i}</span>`).join(' ')}</td>
+                    <td><span class="badge badge-evidence">${evidence.length} items</span></td>
+                    <td><button class="expand-btn" onclick="toggleExpand('${control.id}')">📖 Details</button></td>
+                `;
+
+                // Expanded row
+                const expandRow = tbody.insertRow();
+                expandRow.className = 'expanded-row';
+                expandRow.id = `expand-${control.id}`;
+                expandRow.innerHTML = `
+                    <td colspan="9">
+                        <div class="expanded-content">
+                            <div class="expanded-section">
+                                <h4>📋 Control Details</h4>
+                                <p><strong>Control ID:</strong> ${control.id}</p>
+                                <p><strong>Family:</strong> ${control.family}</p>
+                                <p><strong>Title:</strong> ${control.title}</p>
+                                <p><strong>Domain:</strong> ${control.domain}</p>
+                                <p><strong>Type:</strong> ${control.type}</p>
+                                <p><strong>Owner:</strong> ${control.owner}</p>
+                                <p><strong>Review Frequency:</strong> ${control.review}</p>
+                            </div>
+
+                            <div class="expanded-section">
+                                <h4>🏛️ Regulators (${control.regulators.length})</h4>
+                                <p>${control.regulators.map(r => `<span class="badge badge-regulator">${r}</span>`).join(' ')}</p>
+                            </div>
+
+                            <div class="expanded-section">
+                                <h4>📜 Regulatory Instruments (${control.instruments.length})</h4>
+                                <p>${control.instruments.map(i => `<span class="badge badge-instrument">${i}</span>`).join(' ')}</p>
+                            </div>
+
+                            <div class="expanded-section">
+                                <h4>📁 Evidence Items (${evidence.length})</h4>
+                                <ul class="evidence-list">
+                                    ${evidence.map(e => `
+                                        <li class="evidence-item">
+                                            <strong>${e.id}:</strong> ${e.title}
+                                            <br><span class="badge badge-type-${e.type === 'Policy' ? 'preventive' : 'detective'}">${e.type}</span>
+                                            <span class="badge badge-evidence">Owner: ${e.owner}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                `;
+            });
+
+            updateResultsCount();
+        }
+
+        // Toggle expand/collapse
+        function toggleExpand(id) {
+            const expandRow = document.getElementById(`expand-${id}`);
+            expandRow.classList.toggle('show');
+        }
+
+        // Expand all
+        function expandAll() {
+            document.querySelectorAll('.expanded-row').forEach(row => {
+                if (row.closest('tbody').querySelector(`tr[data-id]`).style.display !== 'none') {
+                    row.classList.add('show');
+                }
+            });
+        }
+
+        // Collapse all
+        function collapseAll() {
+            document.querySelectorAll('.expanded-row').forEach(row => {
+                row.classList.remove('show');
+            });
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const searchAll = document.getElementById('searchAll').value.toLowerCase();
+            const filterFamily = document.getElementById('filterFamily').value;
+            const filterType = document.getElementById('filterType').value;
+            const filterRegulator = document.getElementById('filterRegulator').value;
+            const filterInstrument = document.getElementById('filterInstrument').value;
+            const filterEvidenceType = document.getElementById('filterEvidenceType').value;
+
+            const rows = document.querySelectorAll('#tableBody tr[data-id]');
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const expandRow = document.getElementById(`expand-${row.dataset.id}`);
+                
+                const matchesSearch = !searchAll || row.dataset.searchText.includes(searchAll);
+                const matchesFamily = !filterFamily || row.dataset.family === filterFamily;
+                const matchesType = !filterType || row.dataset.type === filterType;
+                const matchesRegulator = !filterRegulator || row.dataset.regulators.includes(filterRegulator);
+                const matchesInstrument = !filterInstrument || row.dataset.instruments.includes(filterInstrument);
+                const matchesEvidenceType = !filterEvidenceType || row.dataset.evidenceTypes.includes(filterEvidenceType);
+
+                const isVisible = matchesSearch && matchesFamily && matchesType && matchesRegulator && matchesInstrument && matchesEvidenceType;
+                
+                row.style.display = isVisible ? '' : 'none';
+                if (expandRow) {
+                    expandRow.style.display = isVisible ? '' : 'none';
+                    if (!isVisible) expandRow.classList.remove('show');
+                }
+                
+                if (isVisible) visibleCount++;
+            });
+
+            document.getElementById('resultsCount').textContent = `Showing ${visibleCount} of ${controlsData.length} controls`;
+        }
+
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('searchAll').value = '';
+            document.getElementById('filterFamily').value = '';
+            document.getElementById('filterType').value = '';
+            document.getElementById('filterRegulator').value = '';
+            document.getElementById('filterInstrument').value = '';
+            document.getElementById('filterEvidenceType').value = '';
+            applyFilters();
+        }
+
+        // Sort table
+        function sortTable(columnIndex) {
+            const table = document.getElementById('dataTable');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr[data-id]'));
+            
+            const th = table.querySelectorAll('th')[columnIndex];
+            const currentDir = sortDirection[columnIndex] || 'none';
+            const newDir = currentDir === 'asc' ? 'desc' : 'asc';
+            
+            // Clear all sort indicators
+            table.querySelectorAll('th').forEach(h => {
+                h.classList.remove('asc', 'desc');
+            });
+            
+            th.classList.add(newDir);
+            sortDirection[columnIndex] = newDir;
+
+            rows.sort((a, b) => {
+                let aVal = a.cells[columnIndex].textContent.trim();
+                let bVal = b.cells[columnIndex].textContent.trim();
+                
+                const comparison = aVal.localeCompare(bVal);
+                return newDir === 'asc' ? comparison : -comparison;
+            });
+
+            // Re-append rows
+            rows.forEach(row => {
+                const expandRow = document.getElementById(`expand-${row.dataset.id}`);
+                tbody.appendChild(row);
+                if (expandRow) tbody.appendChild(expandRow);
+            });
+        }
+
+        // Update results count
+        function updateResultsCount() {
+            const visible = Array.from(document.querySelectorAll('#tableBody tr[data-id]')).filter(r => r.style.display !== 'none').length;
+            document.getElementById('resultsCount').textContent = `Showing ${visible} of ${controlsData.length} controls`;
+        }
+
+        // Export to CSV
+        function exportToCSV() {
+            const rows = Array.from(document.querySelectorAll('#tableBody tr[data-id]')).filter(r => r.style.display !== 'none');
+            
+            const headers = ['Control ID', 'Family', 'Title', 'Domain', 'Type', 'Regulators', 'Instruments', 'Owner', 'Review Frequency', 'Evidence Count'];
+            const csvRows = [headers.join(',')];
+
+            rows.forEach(row => {
+                const control = controlsData.find(c => c.id === row.dataset.id);
+                const evidence = evidenceData[control.id] || [];
+                const rowData = [
+                    control.id,
+                    control.family,
+                    `"${control.title}"`,
+                    `"${control.domain}"`,
+                    control.type,
+                    `"${control.regulators.join('; ')}"`,
+                    `"${control.instruments.join('; ')}"`,
+                    `"${control.owner}"`,
+                    control.review,
+                    evidence.length
+                ];
+                csvRows.push(rowData.join(','));
+            });
+
+            const csv = csvRows.join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ksa_iot_iomt_compliance_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Export to JSON
+        function exportToJSON() {
+            const rows = Array.from(document.querySelectorAll('#tableBody tr[data-id]')).filter(r => r.style.display !== 'none');
+            const exportData = rows.map(row => {
+                const control = controlsData.find(c => c.id === row.dataset.id);
+                return {
+                    ...control,
+                    evidence: evidenceData[control.id] || []
+                };
+            });
+
+            const json = JSON.stringify(exportData, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ksa_iot_iomt_compliance_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
+

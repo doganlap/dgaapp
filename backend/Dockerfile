@@ -1,22 +1,29 @@
-FROM node:18-alpine
+# Backend Dockerfile (Multi-stage for production)
+FROM node:20-alpine AS base
 
-# Set working directory
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci --only=production && npm cache clean --force
 
-# Copy application code
+# Development stage
+FROM base AS development
+RUN npm ci
 COPY . .
+EXPOSE 5000
+CMD ["npm", "run", "dev"]
 
-# Create logs directory
-RUN mkdir -p logs
-
-# Expose port
+# Production stage
+FROM base AS production
+COPY . .
 EXPOSE 5000
 
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:5000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+
 # Start application
-CMD ["npm", "run", "dev"]
+CMD ["node", "src/server.js"]

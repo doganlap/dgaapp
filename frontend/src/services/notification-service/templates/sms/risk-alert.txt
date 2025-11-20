@@ -1,0 +1,9 @@
+🚨 RISK ALERT: {{riskLevel}} priority risk identified in {{assessmentTitle}}.
+
+Risk: {{riskTitle}}
+Impact: {{impactLevel}}
+Action Required: {{#if escalationRequired}}ESCALATION NEEDED{{else}}Review & Mitigate{{/if}}
+
+View details: {{shortUrl}}
+
+- GRC Platform

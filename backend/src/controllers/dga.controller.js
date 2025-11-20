@@ -862,6 +862,7 @@ exports.getFinanceContracts = async (req, res) => {
 
 exports.getFinanceInvoices = async (req, res) => {
   try {
+    const { format } = req.query;
     const invoices = await db('dga_invoices')
       .leftJoin('dga_contracts', 'dga_invoices.contract_number', 'dga_contracts.contract_number')
       .leftJoin('dga_entities', 'dga_contracts.entity_id', 'dga_entities.entity_id')
@@ -869,9 +870,97 @@ exports.getFinanceInvoices = async (req, res) => {
       .orderBy('dga_invoices.due_date', 'desc')
       .limit(20);
     
+    // CSV export
+    if (format === 'csv') {
+      const csvHeader = 'Invoice Number,Entity,Vendor,Amount,Due Date,Status\n';
+      const csvRows = invoices.map(i => 
+        `"${i.invoice_number}","${i.entity || 'N/A'}","${i.vendor || 'N/A'}","${i.amount}","${i.due_date}","${i.status}"`
+      ).join('\n');
+      const csv = csvHeader + csvRows;
+      
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename=finance_invoices.csv');
+      return res.send(csv);
+    }
+    
     res.json({ success: true, data: invoices });
   } catch (error) {
     logger.error('Finance invoices error:', error);
     res.status(500).json({ success: false, message: 'Failed to retrieve invoices', error: error.message });
+  }
+};
+
+// ========== FINANCE REPORTS ==========
+
+const financeService = require('../services/finance.service');
+
+exports.generateFinanceReport = async (req, res) => {
+  try {
+    const { entity_id, start_date, end_date, report_type = 'Summary' } = req.query;
+    
+    const report = await financeService.generateFinanceReport({
+      entity_id: entity_id || null,
+      start_date: start_date || null,
+      end_date: end_date || null,
+      report_type,
+    });
+    
+    res.json({
+      success: true,
+      message: 'Finance report generated successfully',
+      data: report,
+    });
+  } catch (error) {
+    logger.error('Generate finance report error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to generate finance report',
+      error: error.message,
+    });
+  }
+};
+
+exports.getBudgetTrends = async (req, res) => {
+  try {
+    const { entity_id, months = 12 } = req.query;
+    
+    const trends = await financeService.getBudgetTrends(
+      entity_id || null,
+      parseInt(months)
+    );
+    
+    res.json({
+      success: true,
+      message: 'Budget trends retrieved successfully',
+      data: trends,
+    });
+  } catch (error) {
+    logger.error('Get budget trends error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to retrieve budget trends',
+      error: error.message,
+    });
+  }
+};
+
+exports.getContractAnalysis = async (req, res) => {
+  try {
+    const { entity_id } = req.query;
+    
+    const analysis = await financeService.getContractAnalysis(entity_id || null);
+    
+    res.json({
+      success: true,
+      message: 'Contract analysis retrieved successfully',
+      data: analysis,
+    });
+  } catch (error) {
+    logger.error('Get contract analysis error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to retrieve contract analysis',
+      error: error.message,
+    });
   }
 };

@@ -1,0 +1,3 @@
+law_code,req_code,name_ar,name_en,file_name,checklist_ar,checklist_en,status,template_type,created_date
+PDPL,PDPL-01,نموذج سياسة حماية البيانات,Data Protection Policy Template,Policy-DataProtection-v{{date}}.pdf,- نطاق وسياسة واضحة - الأدوار والمسؤوليات - دورة المراجعة السنوية,- Clear scope and policy - Roles & responsibilities - Annual review cycle,active,document,2025-10-24
+NCA-ECC,ECC-01,سجل جرد الأصول,Asset Inventory Register,Asset-Inventory-{{quarter}}.xlsx,- مُعرّف أصل فريد - المالك - التصنيف - الأهمية,- Unique asset ID - Owner - Classification - Criticality,active,document,2025-10-24

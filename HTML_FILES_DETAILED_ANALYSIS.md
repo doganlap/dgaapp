@@ -3,8 +3,9 @@
 ## Executive Summary
 
 This document provides a comprehensive analysis of three HTML files from the Digital Government Authority (DGA) website:
+
 - **dga_document_1.html** (68 KB) - Homepage
-- **dga_document_2.html** (119 KB) - 404 Error Page  
+- **dga_document_2.html** (119 KB) - 404 Error Page
 - **dga_document_3.html** (67 KB) - 404 Error Page (similar to document_2)
 
 All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), built on Drupal CMS.
@@ -14,6 +15,7 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 ## 1. DOCUMENT STRUCTURE ANALYSIS
 
 ### 1.1 HTML5 Compliance
+
 - ✅ **DOCTYPE**: `<!DOCTYPE html>` - HTML5 standard
 - ✅ **Language**: `lang="ar"` (Arabic)
 - ✅ **Direction**: `dir="rtl"` (Right-to-Left) - Correct for Arabic
@@ -36,6 +38,7 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 ### 2.1 Meta Tags
 
 #### SEO Meta Tags
+
 ```html
 <meta name="description" content="...">
 <meta property="og:site_name" content="هيئة الحكومة الرقمية">
@@ -47,12 +50,14 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 ```
 
 **Issues Found:**
+
 - ⚠️ **Document 1**: Missing `og:title` value (shows only "|")
 - ✅ **Document 2**: Complete Open Graph tags
 - ✅ Canonical URLs properly set
 - ✅ Mobile optimization tags present
 
 #### Technical Meta Tags
+
 - `X-UA-Compatible`: IE=edge (for IE compatibility)
 - `MobileOptimized`: width
 - `HandheldFriendly`: true
@@ -61,6 +66,7 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 ### 2.2 CSS Resources
 
 #### Optimized CSS Files (Document 1)
+
 - **26 optimized CSS files** from `/sites/default/files/css/optimized/`
 - All files use cache-busting query parameters (`?t2zvd6`)
 - Font Awesome 4.7.0 from CDN
@@ -72,6 +78,7 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
   - `muneer.min.css` (accessibility tool)
 
 **Performance Concerns:**
+
 - ⚠️ **26 CSS files** - Could be combined for better performance
 - ⚠️ Multiple render-blocking stylesheets
 - ✅ Cache-busting implemented
@@ -80,6 +87,7 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 ### 2.3 JavaScript Libraries
 
 #### Analytics & Tracking
+
 1. **Google Analytics (gtag.js)**
    - ID: `G-JFSD2YQTV5`
    - Async loading ✅
@@ -94,16 +102,19 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
    - Arabic accessibility features
 
 #### Chat Widgets (Genesys)
+
 ```html
 <link id="genesys-widgets-styles" href="/themes/custom/dga/chat/widgets-ar.css">
 <script src="/themes/custom/dga/chat/cxbus.min_AR.js" defer>
 <script src="/themes/custom/dga/chat/chat_sidebtn_AR.js" defer>
 <script src="/themes/custom/dga/chat/widgetsAR1.min.js" defer>
 ```
+
 - ✅ All scripts use `defer` attribute
 - Arabic-specific chat interface
 
 #### Vendor Libraries
+
 - **jQuery** (minified)
 - **Slick** (carousel/slider)
 - **Fancybox** (lightbox)
@@ -114,12 +125,14 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 - **LazyLoad** (image lazy loading)
 
 #### Drupal Core Scripts
+
 - Multiple optimized JavaScript bundles
 - Drupal settings JSON embedded in page
 - AJAX form handling
 - Client-side validation (jQuery Validate)
 
 **Performance Concerns:**
+
 - ⚠️ **20+ JavaScript files** loaded
 - ⚠️ Some scripts loaded synchronously
 - ✅ Defer/async used where appropriate
@@ -134,6 +147,7 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 **Purpose**: Official government website verification
 
 **Components:**
+
 1. **Header Section**
    - Saudi Arabia flag icon
    - Text: "موقع حكومي رسمي تابع لحكومة المملكة العربية السعودية"
@@ -142,20 +156,22 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 2. **Body Section** (Expandable)
    - **Verification Point 1**: Official links end with `.gov.sa`
    - **Verification Point 2**: HTTPS encryption protocol
-   - **Registration Info**: 
+   - **Registration Info**:
      - DGA logo
      - Registration number: `20240520402`
-     - Link to certificate: `https://raqmi.dga.gov.sa/platforms/DigitalStamp/ShowCertificate/4990`
+     - Link to certificate: <https://raqmi.dga.gov.sa/platforms/DigitalStamp/ShowCertificate/4990>
 
 **Accessibility**: ✅ Proper alt text on images
 
 ### 3.2 Header Navigation
 
 #### Top Header
+
 - Language switcher (English link)
 - Search icon (triggers search popup)
 
 #### Bottom Header
+
 - **Logo**: DGA logo (desktop & mobile versions)
 - **Main Navigation Menu** (7 main items):
 
@@ -219,6 +235,7 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 7. **المعرفة الرقمية (Digital Knowledge)** - Direct link
 
 **Navigation Features:**
+
 - ✅ Multi-level dropdown menus
 - ✅ Mobile-responsive menu
 - ✅ Breadcrumb navigation (on detail pages)
@@ -227,14 +244,17 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 ### 3.3 Homepage Content (Document 1)
 
 #### A. National Day Banner (ND95)
+
 - Desktop image: `ND95-ar.png`
 - Mobile image: `ND95-Mobile-ar.png`
 - Celebrates 95th Saudi National Day
 
 #### B. Latest News Section
+
 **Title**: "آخر أخـــــبار الهيئـــــة"
 
 **News Items** (4 featured):
+
 1. "الحكومة الرقمية تعلن بدء التقديم على التأهيل الأولي للشركات التقنية..."
    - Date: 2025-09-11
    - Image with Arabic filename (URL encoded)
@@ -250,15 +270,18 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
    - Featured as "recently" class
 
 **Structure:**
+
 - 2-column layout (col-md-6)
 - News cards with images
 - Date/time metadata
 - Links to full articles
 
 #### C. Most Used Services Section
+
 **Title**: "الخدمات الأكثر استخداماً"
 
 **Services** (3 featured):
+
 1. **خدمة تصنيف المقاولين** (Vendor Classification Service)
    - Rating: 3.7/5 (370 votes)
    - Tag: "تجمع الحكومة الرقمية"
@@ -275,15 +298,18 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
    - Description: Request approval for new digital platform
 
 **Features:**
+
 - Service cards with ratings
 - Category tags
 - Click-to-navigate functionality
 - Slider/carousel implementation
 
 #### D. Authority Programs Section
+
 **Title**: "برامج الهيئة"
 
 **Programs** (6 featured):
+
 1. **برنامج الحكومة الشاملة** (Whole-of-Government Program)
    - Icon: SVG image
    - Description: Integration between government entities
@@ -311,14 +337,17 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
    - Link: `https://dga.gov.sa/programs/amer`
 
 **Features:**
+
 - Program cards with icons
 - External links (target="_blank")
 - Slider implementation
 
 #### E. Digital Knowledge Section
+
 **Title**: "المعرفة الرقمية"
 
 **Knowledge Items** (3 featured):
+
 1. **تحدي الابتكار GovJam 2025**
    - Type: "أدلة استرشادية" (Guidelines)
    - Link: `/ar/digital-knowledge/govjam25-guide`
@@ -332,12 +361,14 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
    - Link: `/ar/digital-knowledge/digital-guide-for-government-entities`
 
 **Layout:**
+
 - 2-column (col-md-5 title, col-md-7 content)
 - Knowledge cards with document icons
 - Category tags
 - "View All" button
 
 #### F. Indicators & Achievements Section
+
 **Title**: "أرقام وإنجازات"
 
 **9 Achievement Cards:**
@@ -378,6 +409,7 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
    - "مؤشر الإسكو في مجال توفر الخدمات الرقمية وتطورها"
 
 **Design:**
+
 - Grid layout (indicators-container)
 - Each card has:
   - Icon/image
@@ -386,24 +418,29 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 - Visual hierarchy with numbers
 
 #### G. Top Visited Pages Section
+
 **Title**: "الصفحات الأعلى زيارة"
 
 **Links:**
+
 - خدمات الهيئة (Services)
 - برامج الهيئة (Programs)
 - التحول الرقمي (Digital Transformation)
 - المعرفة الرقمية (Digital Knowledge)
 
 #### H. Most Read Topics Section
+
 **Title**: "المواضيع الأكثر قراءة"
 
 **Links:**
+
 - إصدار الختم الرقمي (Digital Stamp Issuance)
 - المعايير الأساسية للتحول الرقمي (Digital Transformation Standards)
 - إدارة المشروع الرقمي (Digital Project Management)
 - ضوابط المشاركة الإلكترونية (E-Participation Controls)
 
 #### I. Reports & Complaints Section
+
 **Title**: "البلاغات والشكاوى"
 
 - Contact form link
@@ -412,18 +449,21 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 ### 3.4 404 Error Page Content (Documents 2 & 3)
 
 #### Error Display
+
 - **Large "404" heading**
 - **Message**: "عذراً، الصفحة غير موجودة" (Sorry, page not found)
 - **Description**: "قد تكون الصفحة قديمة أو تم تغيير رابطها، يمكنكم الاستفادة من الروابط أدناه"
 - **Error illustration**: `error-book.svg`
 
 #### Navigation Options
+
 - "Back to Home Page" button
 - "بحث" (Search) button
 - "الخدمات" (Services) button
 - "البرامج" (Programs) button
 
 #### Feedback System
+
 1. **Comments & Suggestions Form**
    - Modal popup
    - Fields:
@@ -450,6 +490,7 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
    - Form ID: `webform-submission-rate-node-1475-add-form`
 
 **Technical Implementation:**
+
 - Drupal Webform module
 - AJAX form submission
 - Client-side validation (jQuery Validate)
@@ -462,6 +503,7 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 ### 4.1 Footer Structure
 
 #### Section 1: Related Links (روابط ذات صلة)
+
 - المنصة الوطنية (my.gov.sa)
 - منصة البيانات المفتوحة (od.data.gov.sa)
 - منصة المشاركة الإلكترونية (eparticipation.my.gov.sa)
@@ -469,6 +511,7 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 - تطبيق المنصة الوطنية GOV.SA
 
 #### Section 2: Important Sections (أقسام مهمة)
+
 - نبذة عن الهيئة
 - سياسة أمن المنصة
 - سياسة الاستخدام الآمن
@@ -476,6 +519,7 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 - سفراء التجربة الرقمية
 
 #### Section 3: Help & Support (المساعدة والدعم)
+
 - تواصل معنا / تقديم شكوى
 - التوظيف (career.dga.gov.sa)
 - الأسئلة الشائعة
@@ -484,29 +528,35 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 - الإبلاغ عن حالة فساد
 
 #### Section 4: Social Media & Accessibility
+
 **Social Media Links:**
+
 - Twitter: @DgaGovSa
 - LinkedIn: dgasaudi
 - YouTube: UC5qi3zB3Uy2XXNnJQpYfAMw
 - Facebook: DGAGOVSA
 
 **Accessibility Tools:**
+
 - Font size increase (تكبير الخط)
 - Audio reader (ear-icon)
 - Sign language support (دعم لغة الاشارة الحية)
-  - Link: https://deaf.dga.gov.sa/
+  - Link: <https://deaf.dga.gov.sa/>
 
 ### 4.2 Footer Policy Section
 
 **Copyright:**
+
 - "جميع الحقوق محفوظة لهيئة الحكومة الرقمية © 2025"
 
 **Legal Links:**
+
 - الشروط والأحكام (Terms & Conditions)
 - سياسة الخصوصية (Privacy Policy)
 - خريطة الموقع (Sitemap)
 
 **Branding:**
+
 - ND95 logo (National Day 95)
 - Vision 2030 logo
 
@@ -515,6 +565,7 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 ## 5. SEARCH FUNCTIONALITY
 
 ### 5.1 Search Popup
+
 - Triggered by search icon in header
 - Full-screen overlay
 - Search form:
@@ -528,6 +579,7 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
   - المعايير
 
 **Implementation:**
+
 - Drupal search module
 - AJAX submission
 - Search path: `/ar/search/node`
@@ -537,13 +589,16 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 ## 6. SOCIAL SHARING
 
 ### 6.1 Share Buttons
+
 **Platforms:**
+
 - Facebook
 - X (Twitter)
 - WhatsApp
 - LinkedIn
 
 **Implementation:**
+
 - SVG icons (sprites)
 - Proper `rel="noopener"` for security
 - URL encoding for Arabic text
@@ -554,7 +609,9 @@ All files are Arabic (RTL) pages from the official DGA website (dga.gov.sa), bui
 ## 7. DRUPAL-SPECIFIC FEATURES
 
 ### 7.1 Drupal Settings JSON
+
 Embedded configuration includes:
+
 - Path information
 - AJAX settings
 - Form validation messages
@@ -563,12 +620,14 @@ Embedded configuration includes:
 - Language settings
 
 ### 7.2 Content Management
+
 - Node-based content structure
 - Field system (field--name-body, etc.)
 - View modes (node--view-mode-full)
 - Taxonomy/classification system
 
 ### 7.3 Form Handling
+
 - Webform module for contact forms
 - AJAX form submission
 - Client-side validation
@@ -580,19 +639,18 @@ Embedded configuration includes:
 ## 8. ACCESSIBILITY FEATURES
 
 ### 8.1 Implemented Features
+
 ✅ **ARIA Labels**: Proper aria-label attributes
 ✅ **Alt Text**: Images have descriptive alt text
 ✅ **Semantic HTML**: Proper use of headings, sections, articles
 ✅ **Language Declaration**: `lang="ar"` attribute
 ✅ **RTL Support**: `dir="rtl"` for Arabic
-✅ **Accessibility Tools**: 
-   - Font size adjustment
-   - Audio reader
-   - Sign language support
+✅ **Accessibility Tools**: Font size adjustment, audio reader, sign language support
 ✅ **Keyboard Navigation**: Form elements properly labeled
 ✅ **Screen Reader Support**: Visually hidden labels where appropriate
 
 ### 8.2 Areas for Improvement
+
 ⚠️ Some images may need more descriptive alt text
 ⚠️ Complex navigation structure may be challenging for screen readers
 ⚠️ Color contrast should be verified (WCAG AA compliance)
@@ -604,32 +662,37 @@ Embedded configuration includes:
 ### 9.1 Resource Loading
 
 **CSS Files:**
+
 - 26 optimized CSS files (Document 1)
 - Multiple render-blocking stylesheets
 - **Recommendation**: Combine and minify further
 
 **JavaScript Files:**
+
 - 20+ JavaScript files
 - Mix of async, defer, and blocking scripts
-- **Recommendation**: 
+- **Recommendation**:
   - Move non-critical scripts to bottom
   - Use async/defer more consistently
   - Consider code splitting
 
 **Images:**
+
 - Lazy loading implemented (lazyload.min.js)
 - Some images use URL-encoded Arabic filenames
-- **Recommendation**: 
+- **Recommendation**:
   - Optimize image sizes
   - Use modern formats (WebP)
   - Implement responsive images
 
 ### 9.2 Caching Strategy
+
 ✅ Cache-busting query parameters
 ✅ Version numbers in CSS/JS filenames
 ✅ CDN usage for some resources (Font Awesome, Muneer)
 
 ### 9.3 Third-Party Scripts
+
 - Google Analytics (async) ✅
 - ContentSquare (async) ✅
 - Muneer (external) ⚠️
@@ -640,15 +703,14 @@ Embedded configuration includes:
 ## 10. SECURITY FEATURES
 
 ### 10.1 Implemented Security
+
 ✅ **HTTPS**: All links use HTTPS
-✅ **Form Security**: 
-   - CSRF tokens (form_build_id)
-   - CAPTCHA on forms
-   - Input validation
+✅ **Form Security**: CSRF tokens (form_build_id), CAPTCHA on forms, input validation
 ✅ **External Links**: `rel="noopener"` on social links
 ✅ **Content Security**: Drupal security features
 
 ### 10.2 Security Considerations
+
 ⚠️ Cloudflare challenge script (may indicate DDoS protection)
 ⚠️ Multiple third-party scripts (potential attack vectors)
 ⚠️ Form tokens should be validated server-side
@@ -658,6 +720,7 @@ Embedded configuration includes:
 ## 11. MOBILE RESPONSIVENESS
 
 ### 11.1 Responsive Design
+
 ✅ **Viewport Meta Tag**: Present
 ✅ **Mobile Menu**: Separate mobile navigation
 ✅ **Responsive Images**: Desktop/mobile variants
@@ -665,6 +728,7 @@ Embedded configuration includes:
 ✅ **Touch-Friendly**: Button sizes appropriate
 
 ### 11.2 Mobile-Specific Features
+
 - Mobile logo variant
 - Mobile menu toggle
 - Mobile share box
@@ -675,6 +739,7 @@ Embedded configuration includes:
 ## 12. CONTENT ANALYSIS
 
 ### 12.1 Language & Localization
+
 - **Primary Language**: Arabic (ar)
 - **RTL Layout**: Properly implemented
 - **English Option**: Language switcher available
@@ -682,12 +747,14 @@ Embedded configuration includes:
 - **Number Format**: Arabic numerals in some contexts
 
 ### 12.2 Content Structure
+
 - **Hierarchical Organization**: Clear information architecture
 - **Breadcrumbs**: Present on detail pages
 - **Related Content**: Top visited pages, most read topics
 - **Call-to-Actions**: Clear and prominent
 
 ### 12.3 Content Freshness
+
 - **Homepage**: Last updated 23/09/2025
 - **404 Page**: Last updated 22/10/2023
 - **News Items**: Recent (August-September 2025)
@@ -698,12 +765,14 @@ Embedded configuration includes:
 ## 13. TECHNICAL ISSUES & RECOMMENDATIONS
 
 ### 13.1 Critical Issues
+
 1. ⚠️ **Missing og:title** in Document 1 (shows only "|")
 2. ⚠️ **Too many CSS files** (26 files) - Should be combined
 3. ⚠️ **Too many JavaScript files** (20+ files) - Should be optimized
 4. ⚠️ **Mixed loading strategies** - Some scripts blocking render
 
 ### 13.2 Performance Recommendations
+
 1. **Combine CSS files** into 2-3 files max
 2. **Code splitting** for JavaScript
 3. **Lazy load** below-the-fold content
@@ -712,6 +781,7 @@ Embedded configuration includes:
 6. **Minify HTML** (remove unnecessary whitespace)
 
 ### 13.3 SEO Recommendations
+
 1. Fix missing og:title in homepage
 2. Add structured data (JSON-LD)
 3. Implement proper heading hierarchy
@@ -719,6 +789,7 @@ Embedded configuration includes:
 5. Optimize image alt text
 
 ### 13.4 Accessibility Recommendations
+
 1. Add skip navigation link
 2. Improve focus indicators
 3. Test with screen readers
@@ -726,6 +797,7 @@ Embedded configuration includes:
 5. Add ARIA landmarks
 
 ### 13.5 Code Quality Recommendations
+
 1. **Remove inline styles** where possible
 2. **Consolidate JavaScript** into modules
 3. **Use semantic HTML5** elements more consistently
@@ -737,11 +809,13 @@ Embedded configuration includes:
 ## 14. BROWSER COMPATIBILITY
 
 ### 14.1 Supported Browsers
+
 - **IE Compatibility**: X-UA-Compatible for IE
 - **Modern Browsers**: HTML5 features used
 - **Mobile Browsers**: Responsive design
 
 ### 14.2 Polyfills & Fallbacks
+
 - jQuery (provides cross-browser compatibility)
 - Modernizr or similar may be needed for some features
 
@@ -750,12 +824,14 @@ Embedded configuration includes:
 ## 15. ANALYTICS & TRACKING
 
 ### 15.1 Tracking Implemented
+
 1. **Google Analytics**: Page views, events
 2. **ContentSquare**: User experience analytics
 3. **Drupal Statistics**: Built-in tracking
 4. **Form Analytics**: Webform submissions tracked
 
 ### 15.2 Privacy Considerations
+
 - Analytics scripts load asynchronously
 - No obvious PII collection in client-side code
 - GDPR compliance should be verified
@@ -765,12 +841,14 @@ Embedded configuration includes:
 ## 16. COMPARISON: DOCUMENT 2 vs DOCUMENT 3
 
 ### 16.1 Similarities
+
 - Both are 404 error pages
 - Same node ID (1475)
 - Same structure and content
 - Same last update date
 
 ### 16.2 Differences
+
 - **File Size**: Document 2 (119 KB) vs Document 3 (67 KB)
 - **Possible Reasons**:
   - Different Drupal cache states
@@ -785,6 +863,7 @@ Embedded configuration includes:
 ## 17. SUMMARY STATISTICS
 
 ### Document 1 (Homepage)
+
 - **Lines of Code**: ~2,095
 - **File Size**: 68 KB
 - **CSS Files**: 26
@@ -798,12 +877,14 @@ Embedded configuration includes:
 - **Achievement Indicators**: 9
 
 ### Document 2 (404 Page)
+
 - **Lines of Code**: ~1,551
 - **File Size**: 119 KB
 - **Forms**: 2 (comments, rating)
 - **Feedback Statistics**: 5,830/6,101 positive
 
 ### Document 3 (404 Page)
+
 - **Lines of Code**: ~1,551
 - **File Size**: 67 KB
 - **Similar to Document 2**
@@ -813,18 +894,21 @@ Embedded configuration includes:
 ## 18. FINAL RECOMMENDATIONS
 
 ### Priority 1 (Critical)
+
 1. Fix missing og:title meta tag
 2. Combine CSS files (reduce from 26 to 2-3)
 3. Optimize JavaScript loading
 4. Investigate Document 2 vs 3 size difference
 
 ### Priority 2 (Important)
+
 1. Implement structured data (Schema.org)
 2. Optimize images (WebP, compression)
 3. Add skip navigation for accessibility
 4. Improve mobile performance
 
 ### Priority 3 (Enhancement)
+
 1. Implement service worker
 2. Add progressive web app features
 3. Enhance error handling
@@ -835,6 +919,7 @@ Embedded configuration includes:
 ## 19. CONCLUSION
 
 The DGA website HTML files demonstrate:
+
 - ✅ **Strong foundation**: Well-structured, semantic HTML
 - ✅ **Accessibility focus**: Multiple accessibility tools and features
 - ✅ **Rich content**: Comprehensive information architecture
@@ -849,4 +934,3 @@ The DGA website HTML files demonstrate:
 **Analysis Date**: 2025-01-23
 **Analyst**: AI Code Assistant
 **Files Analyzed**: 3 HTML documents from dga.gov.sa
-

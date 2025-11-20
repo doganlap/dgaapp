@@ -1,0 +1,9 @@
+code,name_ar,name_en,notes,status,created_date
+GOV,القطاع الحكومي,Government,,active,2025-10-24
+FIN,المالية والمصارف,Financial & Banking,,active,2025-10-24
+HEALTH,الصحة,Healthcare,,active,2025-10-24
+TELCO,الاتصالات والتقنية,Telecommunications & ICT,,active,2025-10-24
+ENERGY,الطاقة والبتروكيماويات,Energy & Petrochemicals,,active,2025-10-24
+RETAIL,التجزئة,Retail,,active,2025-10-24
+EDU,التعليم,Education,,active,2025-10-24
+LOG,النقل والخدمات اللوجستية,Logistics & Transport,,active,2025-10-24

@@ -1,0 +1,109 @@
+sector_code,sector_name_en,sector_name_ar,regulator_code,regulator_name_en,framework_code,framework_name_en,applicability,mandatory,priority,notes
+banking,Banking,البنوك,SAMA,Saudi Central Bank,SAMA-CSF,SAMA Cybersecurity Framework,all,yes,critical,Mandatory for all banks and financial institutions
+banking,Banking,البنوك,SAMA,Saudi Central Bank,SAMA-AML,SAMA AML-CFT Framework,all,yes,critical,Mandatory anti-money laundering compliance
+banking,Banking,البنوك,SAMA,Saudi Central Bank,SAMA-PSR,SAMA Payment Systems Regulations,payment_processors,yes,high,For payment service providers
+banking,Banking,البنوك,SDAIA,Saudi Data & AI Authority,PDPL,Personal Data Protection Law,all,yes,critical,Mandatory for customer data protection
+banking,Banking,البنوك,NCA,National Cybersecurity Authority,NCA-ECC,Essential Cybersecurity Controls,essential_entities,yes,critical,If designated as essential entity
+banking,Banking,البنوك,ZATCA,Zakat Tax and Customs Authority,ZATCA-EINV,E-Invoicing Regulations,all,yes,high,Mandatory e-invoicing compliance
+banking,Banking,البنوك,SDAIA,Saudi Data & AI Authority,DGA-DG,Data Governance Framework,all,yes,high,Data governance requirements
+banking,Banking,البنوك,CMA,Capital Market Authority,CMA-CG,Corporate Governance,listed_banks,yes,high,For listed banks only
+capital_markets,Capital Markets,الأسواق المالية,CMA,Capital Market Authority,CMA-CG,Corporate Governance Regulations,all,yes,critical,Mandatory for all listed companies
+capital_markets,Capital Markets,الأسواق المالية,CMA,Capital Market Authority,CMA-LR,Listing Rules,listed,yes,critical,For companies listing on Saudi Exchange
+capital_markets,Capital Markets,الأسواق المالية,CMA,Capital Market Authority,CMA-CML,Capital Market Law,all,yes,critical,Core regulatory framework
+capital_markets,Capital Markets,الأسواق المالية,SDAIA,Saudi Data & AI Authority,PDPL,Personal Data Protection Law,all,yes,critical,Investor data protection
+capital_markets,Capital Markets,الأسواق المالية,NCA,National Cybersecurity Authority,NCA-ECC,Essential Cybersecurity Controls,essential_entities,yes,critical,For critical infrastructure
+capital_markets,Capital Markets,الأسواق المالية,ZATCA,Zakat Tax and Customs Authority,ZATCA-EINV,E-Invoicing Regulations,all,yes,medium,E-invoicing compliance
+capital_markets,Capital Markets,الأسواق المالية,SDAIA,Saudi Data & AI Authority,DGA-DG,Data Governance Framework,all,yes,high,Data management standards
+insurance,Insurance,التأمين,SAMA,Saudi Central Bank,SAMA-CSF,SAMA Cybersecurity Framework,all,yes,critical,Cybersecurity requirements for insurance
+insurance,Insurance,التأمين,SAMA,Saudi Central Bank,SAMA-INS,Insurance Regulations,all,yes,critical,Insurance-specific regulations
+insurance,Insurance,التأمين,SDAIA,Saudi Data & AI Authority,PDPL,Personal Data Protection Law,all,yes,critical,Policyholder data protection
+insurance,Insurance,التأمين,NCA,National Cybersecurity Authority,NCA-ECC,Essential Cybersecurity Controls,essential_entities,yes,critical,If designated essential
+insurance,Insurance,التأمين,ZATCA,Zakat Tax and Customs Authority,ZATCA-EINV,E-Invoicing Regulations,all,yes,medium,E-invoicing compliance
+insurance,Insurance,التأمين,SDAIA,Saudi Data & AI Authority,DGA-DG,Data Governance Framework,all,yes,high,Data governance
+healthcare,Healthcare,الرعاية الصحية,MOH,Ministry of Health,MOH-HIS,Health Information Systems Security,all,yes,critical,Healthcare data security
+healthcare,Healthcare,الرعاية الصحية,MOH,Ministry of Health,MOH-EHR,Electronic Health Records,all,yes,critical,EHR standards and security
+healthcare,Healthcare,الرعاية الصحية,SFDA,Food and Drug Authority,SFDA-GMP,Good Manufacturing Practice,pharma,yes,critical,For pharmaceutical manufacturers
+healthcare,Healthcare,الرعاية الصحية,CBAHI,Health Accreditation,CBAHI-STD,Healthcare Accreditation Standards,facilities,yes,critical,For healthcare facilities seeking accreditation
+healthcare,Healthcare,الرعاية الصحية,SDAIA,Saudi Data & AI Authority,PDPL,Personal Data Protection Law,all,yes,critical,Patient data protection (special category)
+healthcare,Healthcare,الرعاية الصحية,NCA,National Cybersecurity Authority,NCA-ECC,Essential Cybersecurity Controls,essential_entities,yes,critical,Critical healthcare infrastructure
+healthcare,Healthcare,الرعاية الصحية,ZATCA,Zakat Tax and Customs Authority,ZATCA-EINV,E-Invoicing Regulations,all,yes,medium,Billing and invoicing
+healthcare,Healthcare,الرعاية الصحية,SDAIA,Saudi Data & AI Authority,DGA-DG,Data Governance Framework,all,yes,high,Health data governance
+telecom,Telecommunications,الاتصالات,CITC,Communications and IT Commission,CITC-LIC,Licensing Regulations,all,yes,critical,Telecom licensing requirements
+telecom,Telecommunications,الاتصالات,CITC,Communications and IT Commission,CITC-NET,Network Security,all,yes,critical,Network infrastructure security
+telecom,Telecommunications,الاتصالات,NCA,National Cybersecurity Authority,NCA-ECC,Essential Cybersecurity Controls,all,yes,critical,All telecom are essential entities
+telecom,Telecommunications,الاتصالات,SDAIA,Saudi Data & AI Authority,PDPL,Personal Data Protection Law,all,yes,critical,Subscriber data protection
+telecom,Telecommunications,الاتصالات,ZATCA,Zakat Tax and Customs Authority,ZATCA-EINV,E-Invoicing Regulations,all,yes,high,Billing compliance
+telecom,Telecommunications,الاتصالات,SDAIA,Saudi Data & AI Authority,DGA-DG,Data Governance Framework,all,yes,high,Communications data governance
+energy,Energy & Utilities,الطاقة والمرافق,ECRA,Energy & Cogeneration Regulatory Authority,ECRA-LIC,Energy Licensing,all,yes,critical,Energy sector licensing
+energy,Energy & Utilities,الطاقة والمرافق,ECRA,Energy & Cogeneration Regulatory Authority,ECRA-SEC,Energy Security Standards,all,yes,critical,Critical infrastructure protection
+energy,Energy & Utilities,الطاقة والمرافق,NCA,National Cybersecurity Authority,NCA-ECC,Essential Cybersecurity Controls,all,yes,critical,All energy sector is essential
+energy,Energy & Utilities,الطاقة والمرافق,WEC,Water & Electricity Regulatory Authority,WEC-STD,Water & Electricity Standards,water_electric,yes,critical,For water and electricity providers
+energy,Energy & Utilities,الطاقة والمرافق,SDAIA,Saudi Data & AI Authority,PDPL,Personal Data Protection Law,all,yes,high,Customer data protection
+energy,Energy & Utilities,الطاقة والمرافق,ZATCA,Zakat Tax and Customs Authority,ZATCA-EINV,E-Invoicing Regulations,all,yes,medium,Billing compliance
+energy,Energy & Utilities,الطاقة والمرافق,SDAIA,Saudi Data & AI Authority,DGA-DG,Data Governance Framework,all,yes,high,Energy data management
+transportation,Transportation,النقل,GACA,General Authority of Civil Aviation,GACA-SEC,Aviation Security,aviation,yes,critical,Aviation cybersecurity
+transportation,Transportation,النقل,MOT,Ministry of Transport,MOT-ITS,Intelligent Transport Systems,all,yes,high,Smart transport security
+transportation,Transportation,النقل,PPA,Public Transport Authority,PPA-STD,Public Transport Standards,public_transport,yes,high,Public transport systems
+transportation,Transportation,النقل,NCA,National Cybersecurity Authority,NCA-ECC,Essential Cybersecurity Controls,essential_entities,yes,critical,Critical transport infrastructure
+transportation,Transportation,النقل,SDAIA,Saudi Data & AI Authority,PDPL,Personal Data Protection Law,all,yes,high,Passenger data protection
+transportation,Transportation,النقل,ZATCA,Zakat Tax and Customs Authority,ZATCA-EINV,E-Invoicing Regulations,all,yes,medium,Service billing
+transportation,Transportation,النقل,SDAIA,Saudi Data & AI Authority,DGA-DG,Data Governance Framework,all,yes,high,Transport data governance
+education,Education,التعليم,MOE,Ministry of Education,MOE-EDU,Education Standards,k12,yes,high,K-12 education standards
+education,Education,التعليم,MOHE,Ministry of Higher Education,MOHE-HE,Higher Education Standards,universities,yes,high,University standards
+education,Education,التعليم,ETEC,Education & Training Evaluation Commission,ETEC-QA,Quality Assurance,all,yes,high,Educational quality standards
+education,Education,التعليم,SDAIA,Saudi Data & AI Authority,PDPL,Personal Data Protection Law,all,yes,critical,Student data protection
+education,Education,التعليم,NCA,National Cybersecurity Authority,NCA-ECC,Essential Cybersecurity Controls,universities,yes,high,Higher education cybersecurity
+education,Education,التعليم,ZATCA,Zakat Tax and Customs Authority,ZATCA-EINV,E-Invoicing Regulations,private,yes,medium,Private education billing
+education,Education,التعليم,SDAIA,Saudi Data & AI Authority,DGA-DG,Data Governance Framework,all,yes,high,Educational data management
+government,Government,الحكومة,NCA,National Cybersecurity Authority,NCA-ECC,Essential Cybersecurity Controls,all,yes,critical,All government entities are essential
+government,Government,الحكومة,SDAIA,Saudi Data & AI Authority,PDPL,Personal Data Protection Law,all,yes,critical,Citizen data protection
+government,Government,الحكومة,SDAIA,Saudi Data & AI Authority,DGA-DG,Data Governance Framework,all,yes,critical,Government data governance
+government,Government,الحكومة,SDAIA,Saudi Data & AI Authority,CST-CLOUD,Cloud Security Controls,cloud_users,yes,high,For government cloud usage
+government,Government,الحكومة,YESSER,eGovernment Program,YESSER-STD,eGovernment Standards,all,yes,high,Digital government standards
+government,Government,الحكومة,ZATCA,Zakat Tax and Customs Authority,ZATCA-EINV,E-Invoicing Regulations,all,yes,high,Government billing
+retail,Retail & eCommerce,التجزئة والتجارة الإلكترونية,CITC,Communications and IT Commission,CITC-EC,eCommerce Regulations,ecommerce,yes,high,Online retail regulations
+retail,Retail & eCommerce,التجزئة والتجارة الإلكترونية,MOCI,Ministry of Commerce,MOCI-CR,Commercial Registration,all,yes,critical,Business licensing
+retail,Retail & eCommerce,التجزئة والتجارة الإلكترونية,SDAIA,Saudi Data & AI Authority,PDPL,Personal Data Protection Law,all,yes,critical,Customer data protection
+retail,Retail & eCommerce,التجزئة والتجارة الإلكترونية,ZATCA,Zakat Tax and Customs Authority,ZATCA-EINV,E-Invoicing Regulations,all,yes,critical,Mandatory e-invoicing
+retail,Retail & eCommerce,التجزئة والتجارة الإلكترونية,NCA,National Cybersecurity Authority,NCA-ECC,Essential Cybersecurity Controls,large_retailers,yes,high,For major retailers
+retail,Retail & eCommerce,التجزئة والتجارة الإلكترونية,SDAIA,Saudi Data & AI Authority,DGA-DG,Data Governance Framework,all,yes,medium,Customer data management
+manufacturing,Manufacturing,التصنيع,MOIM,Ministry of Industry and Mineral Resources,MOIM-LIC,Industrial Licensing,all,yes,high,Manufacturing licenses
+manufacturing,Manufacturing,التصنيع,SDAIA,Saudi Data & AI Authority,PDPL,Personal Data Protection Law,all,yes,high,Employee and customer data
+manufacturing,Manufacturing,التصنيع,ZATCA,Zakat Tax and Customs Authority,ZATCA-EINV,E-Invoicing Regulations,all,yes,critical,Supply chain invoicing
+manufacturing,Manufacturing,التصنيع,SDAIA,Saudi Data & AI Authority,DGA-DG,Data Governance Framework,all,yes,medium,Manufacturing data management
+oil_gas,Oil & Gas,النفط والغاز,MOENR,Ministry of Energy,MOENR-OG,Oil & Gas Regulations,all,yes,critical,Sector-specific regulations
+oil_gas,Oil & Gas,النفط والغاز,NCA,National Cybersecurity Authority,NCA-ECC,Essential Cybersecurity Controls,all,yes,critical,All oil & gas is critical infrastructure
+oil_gas,Oil & Gas,النفط والغاز,SDAIA,Saudi Data & AI Authority,PDPL,Personal Data Protection Law,all,yes,high,Employee data protection
+oil_gas,Oil & Gas,النفط والغاز,ZATCA,Zakat Tax and Customs Authority,ZATCA-EINV,E-Invoicing Regulations,all,yes,medium,Commercial transactions
+oil_gas,Oil & Gas,النفط والغاز,ECRA,Energy & Cogeneration Regulatory Authority,ECRA-SEC,Energy Security Standards,all,yes,critical,Infrastructure security
+oil_gas,Oil & Gas,النفط والغاز,SDAIA,Saudi Data & AI Authority,DGA-DG,Data Governance Framework,all,yes,high,Operational data management
+technology,Technology & IT Services,التقنية وخدمات تقنية المعلومات,CITC,Communications and IT Commission,CITC-LIC,IT Services Licensing,service_providers,yes,high,IT service provider licensing
+technology,Technology & IT Services,التقنية وخدمات تقنية المعلومات,SDAIA,Saudi Data & AI Authority,PDPL,Personal Data Protection Law,all,yes,critical,Customer and user data protection
+technology,Technology & IT Services,التقنية وخدمات تقنية المعلومات,SDAIA,Saudi Data & AI Authority,DGA-DG,Data Governance Framework,all,yes,critical,Data governance for IT services
+technology,Technology & IT Services,التقنية وخدمات تقنية المعلومات,SDAIA,Saudi Data & AI Authority,CST-CLOUD,Cloud Security Controls,cloud_providers,yes,critical,For cloud service providers
+technology,Technology & IT Services,التقنية وخدمات تقنية المعلومات,NCA,National Cybersecurity Authority,NCA-ECC,Essential Cybersecurity Controls,large_providers,yes,high,Major IT service providers
+technology,Technology & IT Services,التقنية وخدمات تقنية المعلومات,ZATCA,Zakat Tax and Customs Authority,ZATCA-EINV,E-Invoicing Regulations,all,yes,critical,Service billing
+real_estate,Real Estate,العقارات,REGA,Real Estate General Authority,REGA-LIC,Real Estate Licensing,all,yes,high,Real estate licensing
+real_estate,Real Estate,العقارات,MHRE,Municipal & Rural Affairs & Housing,MHRE-BLD,Building Standards,developers,yes,high,Construction standards
+real_estate,Real Estate,العقارات,SDAIA,Saudi Data & AI Authority,PDPL,Personal Data Protection Law,all,yes,high,Customer data protection
+real_estate,Real Estate,العقارات,ZATCA,Zakat Tax and Customs Authority,ZATCA-EINV,E-Invoicing Regulations,all,yes,critical,Transaction invoicing
+real_estate,Real Estate,العقارات,NCA,National Cybersecurity Authority,NCA-ECC,Essential Cybersecurity Controls,large_developers,no,medium,For major development companies
+real_estate,Real Estate,العقارات,SDAIA,Saudi Data & AI Authority,DGA-DG,Data Governance Framework,all,yes,medium,Property data management
+hospitality,Hospitality & Tourism,الضيافة والسياحة,SCT,Saudi Commission for Tourism,SCT-LIC,Tourism Licensing,all,yes,high,Tourism facility licensing
+hospitality,Hospitality & Tourism,الضيافة والسياحة,SCT,Saudi Commission for Tourism,SCT-STD,Tourism Standards,all,yes,high,Service quality standards
+hospitality,Hospitality & Tourism,الضيافة والسياحة,SDAIA,Saudi Data & AI Authority,PDPL,Personal Data Protection Law,all,yes,critical,Guest data protection
+hospitality,Hospitality & Tourism,الضيافة والسياحة,ZATCA,Zakat Tax and Customs Authority,ZATCA-EINV,E-Invoicing Regulations,all,yes,critical,Guest billing
+hospitality,Hospitality & Tourism,الضيافة والسياحة,NCA,National Cybersecurity Authority,NCA-ECC,Essential Cybersecurity Controls,large_chains,no,medium,Major hotel chains
+hospitality,Hospitality & Tourism,الضيافة والسياحة,SDAIA,Saudi Data & AI Authority,DGA-DG,Data Governance Framework,all,yes,medium,Guest data management
+media,Media & Entertainment,الإعلام والترفيه,GEA,General Entertainment Authority,GEA-LIC,Entertainment Licensing,all,yes,high,Entertainment venue licensing
+media,Media & Entertainment,الإعلام والترفيه,GCAM,General Commission for Audiovisual Media,GCAM-BC,Broadcasting Standards,broadcasters,yes,critical,Broadcasting regulations
+media,Media & Entertainment,الإعلام والترفيه,SDAIA,Saudi Data & AI Authority,PDPL,Personal Data Protection Law,all,yes,critical,User and audience data
+media,Media & Entertainment,الإعلام والترفيه,CITC,Communications and IT Commission,CITC-OTT,OTT Services,streaming,yes,high,Streaming service regulations
+media,Media & Entertainment,الإعلام والترفيه,ZATCA,Zakat Tax and Customs Authority,ZATCA-EINV,E-Invoicing Regulations,all,yes,medium,Subscription billing
+media,Media & Entertainment,الإعلام والترفيه,SDAIA,Saudi Data & AI Authority,DGA-DG,Data Governance Framework,all,yes,medium,Content data management
+all_sectors,All Sectors,جميع القطاعات,SDAIA,Saudi Data & AI Authority,PDPL,Personal Data Protection Law,all,yes,critical,Universal data protection law
+all_sectors,All Sectors,جميع القطاعات,ZATCA,Zakat Tax and Customs Authority,ZATCA-EINV,E-Invoicing Regulations,all,yes,critical,Universal e-invoicing requirement
+all_sectors,All Sectors,جميع القطاعات,SDAIA,Saudi Data & AI Authority,DGA-DG,Data Governance Framework,all,yes,high,Data governance best practices
+all_sectors,All Sectors,جميع القطاعات,NCA,National Cybersecurity Authority,NCA-ECC,Essential Cybersecurity Controls,essential_entities,yes,critical,If designated as essential entity
+all_sectors,All Sectors,جميع القطاعات,MHRSD,Human Resources & Social Development,LABOR-LAW,Labor Law,all,yes,critical,Employment regulations
+all_sectors,All Sectors,جميع القطاعات,GOSI,General Organization for Social Insurance,GOSI-SOC,Social Insurance,all,yes,critical,Social insurance compliance

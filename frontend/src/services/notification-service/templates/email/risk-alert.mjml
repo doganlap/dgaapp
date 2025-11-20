@@ -1,0 +1,140 @@
+<mjml>
+  <mj-head>
+    <mj-title>Risk Assessment Alert - GRC Platform</mj-title>
+    <mj-font name="Inter" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" />
+    <mj-attributes>
+      <mj-all font-family="Inter, Arial, sans-serif" />
+      <mj-text font-size="16px" line-height="1.5" color="#374151" />
+      <mj-section background-color="#ffffff" padding="20px" />
+    </mj-attributes>
+    <mj-style inline="inline">
+      .risk-high { background-color: #fef2f2; border-left: 4px solid #dc2626; }
+      .risk-medium { background-color: #fffbeb; border-left: 4px solid #f59e0b; }
+      .risk-low { background-color: #f0fdf4; border-left: 4px solid #16a34a; }
+    </mj-style>
+  </mj-head>
+  <mj-body background-color="#f8fafc">
+    <!-- Header -->
+    <mj-section background-color="#1e40af" padding="30px 20px">
+      <mj-column>
+        <mj-text color="#ffffff" font-size="28px" font-weight="600" align="center">
+          🛡️ GRC Risk Alert
+        </mj-text>
+        <mj-text color="#bfdbfe" font-size="16px" align="center">
+          Risk Assessment Notification System
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <!-- Main Content -->
+    <mj-section background-color="#ffffff" padding="40px 20px">
+      <mj-column>
+        <mj-text font-size="20px" font-weight="600" color="#1f2937">
+          Risk Alert: {{riskTitle}}
+        </mj-text>
+
+        <mj-text color="#6b7280">
+          Hello {{recipientName}},
+        </mj-text>
+
+        <mj-text>
+          A {{riskLevel}} priority risk has been identified in your GRC assessment that requires immediate attention.
+        </mj-text>
+
+        <!-- Risk Details Box -->
+        <mj-section css-class="risk-{{riskLevel}}" padding="20px" border-radius="8px">
+          <mj-column>
+            <mj-text font-weight="600" font-size="18px">
+              Risk Details
+            </mj-text>
+            <mj-text>
+              <strong>Risk ID:</strong> {{riskId}}<br>
+              <strong>Category:</strong> {{riskCategory}}<br>
+              <strong>Assessment:</strong> {{assessmentTitle}}<br>
+              <strong>Identified:</strong> {{identifiedDate}}<br>
+              <strong>Impact Level:</strong> {{impactLevel}}
+            </mj-text>
+          </mj-column>
+        </mj-section>
+
+        <!-- Description -->
+        <mj-text font-weight="600" font-size="16px">
+          Description:
+        </mj-text>
+        <mj-text>
+          {{riskDescription}}
+        </mj-text>
+
+        <!-- Recommended Actions -->
+        <mj-text font-weight="600" font-size="16px">
+          Recommended Actions:
+        </mj-text>
+        <mj-text>
+          {{#each recommendedActions}}
+          • {{this}}<br>
+          {{/each}}
+        </mj-text>
+
+        <!-- Action Buttons -->
+        <mj-section padding="30px 0">
+          <mj-group>
+            <mj-column>
+              <mj-button background-color="#dc2626" color="#ffffff" href="{{riskUrl}}" border-radius="6px" padding="12px 24px">
+                View Risk Details
+              </mj-button>
+            </mj-column>
+            <mj-column>
+              <mj-button background-color="#059669" color="#ffffff" href="{{mitigationUrl}}" border-radius="6px" padding="12px 24px">
+                Create Mitigation Plan
+              </mj-button>
+            </mj-column>
+          </mj-group>
+        </mj-section>
+
+        <!-- Compliance Framework Info -->
+        {{#if complianceFramework}}
+        <mj-section background-color="#f9fafb" border-radius="8px" padding="20px">
+          <mj-column>
+            <mj-text font-weight="600" color="#374151">
+              Compliance Framework Impact
+            </mj-text>
+            <mj-text color="#6b7280">
+              <strong>Framework:</strong> {{complianceFramework}}<br>
+              <strong>Control:</strong> {{affectedControl}}<br>
+              <strong>Requirement:</strong> {{requirement}}
+            </mj-text>
+          </mj-column>
+        </mj-section>
+        {{/if}}
+
+        <!-- Escalation Notice -->
+        {{#if escalationRequired}}
+        <mj-section background-color="#fef2f2" border="2px solid #fecaca" border-radius="8px" padding="20px">
+          <mj-column>
+            <mj-text color="#dc2626" font-weight="600">
+              ⚠️ Escalation Required
+            </mj-text>
+            <mj-text color="#7f1d1d">
+              This risk requires escalation to senior management due to its {{escalationReason}}.
+              Please review and assign appropriate resources within {{escalationTimeframe}}.
+            </mj-text>
+          </mj-column>
+        </mj-section>
+        {{/if}}
+      </mj-column>
+    </mj-section>
+
+    <!-- Footer -->
+    <mj-section background-color="#f3f4f6" padding="30px 20px">
+      <mj-column>
+        <mj-text color="#6b7280" font-size="14px" align="center">
+          This is an automated notification from the GRC Risk Management System.<br>
+          Please do not reply to this email. For support, contact <a href="mailto:support@grc-platform.com" style="color: #3b82f6;">support@grc-platform.com</a>
+        </mj-text>
+        <mj-text color="#9ca3af" font-size="12px" align="center">
+          {{tenantName}} | GRC Platform | {{timestamp}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

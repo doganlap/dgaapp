@@ -1,0 +1,12 @@
+sector_code,regulator_code,status,mandatory,created_date
+FIN,SAMA,active,True,2025-10-24
+FIN,NCA,active,True,2025-10-24
+FIN,SDAIA,active,True,2025-10-24
+HEALTH,SFDA,active,True,2025-10-24
+HEALTH,NCA,active,True,2025-10-24
+HEALTH,SDAIA,active,True,2025-10-24
+GOV,DGA,active,True,2025-10-24
+TELCO,CST,active,True,2025-10-24
+TELCO,NCA,active,True,2025-10-24
+ENERGY,NCA,active,True,2025-10-24
+RETAIL,ZATCA,active,True,2025-10-24

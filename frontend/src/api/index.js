@@ -66,6 +66,16 @@ export const budgetAPI = {
   getEntityBudget: (entityId) => api.get(`/dga/budget/entity/${entityId}`),
 }
 
+// Finance APIs
+export const financeAPI = {
+  getSummary: () => api.get('/dga/finance/summary'),
+  getContracts: () => api.get('/dga/finance/contracts'),
+  getInvoices: (params) => api.get('/dga/finance/invoices', { params }),
+  generateReport: (params) => api.get('/dga/finance/report', { params }),
+  getBudgetTrends: (params) => api.get('/dga/finance/budget-trends', { params }),
+  getContractAnalysis: (params) => api.get('/dga/finance/contract-analysis', { params }),
+}
+
 // Reporting APIs
 export const reportingAPI = {
   getNationalOverview: () => api.get('/dga/reporting/overview'),
@@ -127,6 +137,67 @@ export const grcAPI = {
   
   // Insights
   getRiskPredictions: () => api.get('/grc/insights/risk-predictions'),
+}
+
+// Comprehensive GRC APIs
+export const comprehensiveGrcAPI = {
+  // Regulators
+  getAllRegulators: (params) => api.get('/grc/comprehensive/regulators', { params }),
+  getRegulatorById: (id) => api.get(`/grc/comprehensive/regulators/${id}`),
+  
+  // Sectors
+  getAllSectors: () => api.get('/grc/comprehensive/sectors'),
+  
+  // Frameworks
+  getAllFrameworks: (params) => api.get('/grc/comprehensive/frameworks', { params }),
+  getFrameworkById: (id) => api.get(`/grc/comprehensive/frameworks/${id}`),
+  createFramework: (data) => api.post('/grc/comprehensive/frameworks', data),
+  
+  // Controls
+  getAllControls: (params) => api.get('/grc/comprehensive/controls', { params }),
+  getControlById: (id) => api.get(`/grc/comprehensive/controls/${id}`),
+  createControl: (data) => api.post('/grc/comprehensive/controls', data),
+  
+  // Organization-Regulator Mapping
+  getOrganizationRegulators: (entityId) => api.get(`/grc/comprehensive/organizations/${entityId}/regulators`),
+  mapOrganizationToRegulator: (entityId, data) => api.post(`/grc/comprehensive/organizations/${entityId}/regulators`, data),
+  autoMapRegulators: (entityId) => api.post(`/grc/comprehensive/organizations/${entityId}/regulators/auto-map`),
+  
+  // Control Assessments
+  getControlAssessments: (params) => api.get('/grc/comprehensive/assessments', { params }),
+  createControlAssessment: (data) => api.post('/grc/comprehensive/assessments', data),
+  updateControlAssessment: (id, data) => api.put(`/grc/comprehensive/assessments/${id}`, data),
+  
+  // Evidence
+  getEvidence: (params) => api.get('/grc/comprehensive/evidence', { params }),
+  createEvidence: (data) => api.post('/grc/comprehensive/evidence', data),
+  
+  // Implementation Plans
+  getImplementationPlans: (params) => api.get('/grc/comprehensive/plans', { params }),
+  createImplementationPlan: (data) => api.post('/grc/comprehensive/plans', data),
+  
+  // Compliance Reports
+  getComplianceReports: (params) => api.get('/grc/comprehensive/reports', { params }),
+  createComplianceReport: (data) => api.post('/grc/comprehensive/reports', data),
+  generateComplianceReport: (data) => api.post('/grc/comprehensive/reports/generate', data),
+}
+
+// GRC Scoring, Leading Indicators & Guidance APIs
+export const grcScoringAPI = {
+  // Scoring
+  getComplianceScore: (params) => api.get('/grc/scoring/compliance', { params }),
+  getRiskScore: (params) => api.get('/grc/scoring/risk', { params }),
+  getMaturityScore: (entityId) => api.get(`/grc/scoring/maturity/${entityId}`),
+  
+  // Leading Indicators
+  getLeadingIndicators: (params) => api.get('/grc/indicators/leading', { params }),
+  
+  // Guidance
+  getGuidance: (params) => api.get('/grc/guidance', { params }),
+}
+
+// Additional GRC Insights APIs (if needed separately)
+export const grcInsightsAPI = {
   getComplianceTrends: (params) => api.get('/grc/insights/compliance-trends', { params }),
   getRecommendations: () => api.get('/grc/insights/recommendations'),
   getHeatmap: () => api.get('/grc/insights/heatmap'),

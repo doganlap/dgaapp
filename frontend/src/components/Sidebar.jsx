@@ -11,7 +11,9 @@ import {
   FiShield,
   FiAlertTriangle,
   FiCheckCircle,
-  FiTarget
+  FiTarget,
+  FiFileText,
+  FiCheckSquare
 } from 'react-icons/fi'
 
 function Sidebar() {
@@ -19,7 +21,8 @@ function Sidebar() {
   const isAr = locale === 'ar'
   
   const dgaNavItems = [
-    { path: '/', label: isAr ? 'لوحة التحكم' : 'Dashboard', icon: FiHome },
+    { path: '/', label: isAr ? 'الصفحة الرئيسية' : 'Home', icon: FiHome },
+    { path: '/dashboard', label: isAr ? 'لوحة التحكم' : 'Dashboard', icon: FiBarChart2 },
     { path: '/entities', label: isAr ? 'الجهات' : 'Entities', icon: FiDatabase },
     { path: '/programs', label: isAr ? 'البرامج' : 'Programs', icon: FiBox },
     { path: '/budget', label: isAr ? 'الميزانية' : 'Budget', icon: FiDollarSign },
@@ -30,6 +33,12 @@ function Sidebar() {
 
   const grcNavItems = [
     { path: '/grc', label: isAr ? 'لوحة تحكم GRC' : 'GRC Dashboard', icon: FiShield },
+    { path: '/grc/regulators', label: isAr ? 'الجهات التنظيمية' : 'Regulators', icon: FiShield },
+    { path: '/grc/frameworks', label: isAr ? 'الأطر والقواعد' : 'Frameworks', icon: FiFileText },
+    { path: '/grc/controls', label: isAr ? 'الضوابط' : 'Controls', icon: FiCheckSquare },
+    { path: '/grc/reports', label: isAr ? 'التقارير' : 'Reports', icon: FiFileText },
+    { path: '/grc/scoring', label: isAr ? 'التقييم والإرشاد' : 'Scoring & Guidance', icon: FiBarChart2 },
+    { path: '/grc/journey', label: isAr ? 'الرحلة المرئية' : 'Visual Journey', icon: FiTarget },
     { path: '/grc/risks', label: isAr ? 'المخاطر' : 'Risks', icon: FiAlertTriangle },
     { path: '/grc/compliance', label: isAr ? 'الامتثال' : 'Compliance', icon: FiCheckCircle },
     { path: '/grc/insights', label: isAr ? 'الرؤى' : 'Insights', icon: FiTarget },
@@ -46,11 +55,14 @@ function Sidebar() {
       </div>
       
       <nav className="flex-1 p-4 space-y-4 overflow-y-auto">
-        {/* DGA Section */}
+        {/* DGA Section - Performance Monitoring */}
         <div>
           <h3 className="text-xs font-semibold text-gray-400 uppercase mb-2 px-4">
-            {isAr ? 'هيئة الحكومة الرقمية' : 'DGA'}
+            {isAr ? 'المراقبة والأداء' : 'Performance Monitoring'}
           </h3>
+          <p className="text-xs text-gray-500 mb-3 px-4">
+            {isAr ? 'هيئة الحكومة الرقمية' : 'DGA Oversight'}
+          </p>
           <div className="space-y-2">
             {dgaNavItems.map((item) => (
               <NavLink
@@ -72,11 +84,14 @@ function Sidebar() {
           </div>
         </div>
 
-        {/* GRC Section */}
+        {/* GRC Section - Governance, Risk & Compliance */}
         <div>
           <h3 className="text-xs font-semibold text-gray-400 uppercase mb-2 px-4">
             {isAr ? 'الحوكمة والمخاطر والامتثال' : 'GRC'}
           </h3>
+          <p className="text-xs text-gray-500 mb-3 px-4">
+            {isAr ? 'إنتاج - جاهز للاستخدام' : 'Production - Ready'}
+          </p>
           <div className="space-y-2">
             {grcNavItems.map((item) => (
               <NavLink

@@ -1,114 +1,65 @@
 #!/bin/bash
 
-echo "========================================"
-echo "DGA Oversight Platform - Vercel Deployment"
-echo "========================================"
-echo ""
+# Production Deployment Script
+set -e
 
-# Stop any running processes
-echo "Step 1: Stopping running processes..."
-pkill -f "npm run dev" || true
-pkill -f "node src/server.js" || true
+echo "🚀 Starting Production Deployment..."
 
-# Deploy Backend First
-echo ""
-echo "Step 2: Deploying Backend to Vercel..."
-cd backend
+# Check if .env.production exists
+if [ ! -f .env.production ]; then
+    echo "❌ Error: .env.production file not found!"
+    echo "📝 Please copy .env.production.example to .env.production and configure it"
+    exit 1
+fi
 
-# Create vercel.json for backend
-cat > vercel.json << 'EOF'
-{
-  "version": 2,
-  "builds": [
-    {
-      "src": "src/server.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "src/server.js"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production",
-    "DATABASE_URL": "@dga-database-url",
-    "JWT_SECRET": "@dga-jwt-secret",
-    "CORS_ORIGIN": "https://dga-oversight-frontend.vercel.app"
-  }
-}
-EOF
+# Load environment variables
+export $(cat .env.production | grep -v '^#' | xargs)
 
-# Deploy backend
-echo "Deploying backend..."
-vercel --prod --yes
+# Validate required variables
+if [ -z "$DATABASE_URL" ]; then
+    echo "❌ Error: DATABASE_URL is not set in .env.production"
+    exit 1
+fi
 
-# Get backend URL
-BACKEND_URL=$(vercel ls | grep -o 'https://[^[:space:]]*.vercel.app' | head -1)
-echo "Backend deployed to: $BACKEND_URL"
+if [ -z "$JWT_SECRET" ]; then
+    echo "❌ Error: JWT_SECRET is not set in .env.production"
+    exit 1
+fi
 
-cd ..
+echo "✅ Environment variables loaded"
 
-# Deploy Frontend
-echo ""
-echo "Step 3: Deploying Frontend to Vercel..."
-cd frontend
+# Stop existing containers
+echo "🛑 Stopping existing containers..."
+docker-compose -f docker-compose.prod.yml down
 
-# Create vercel.json for frontend
-cat > vercel.json << 'EOF'
-{
-  "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
-  "env": {
-    "VITE_API_URL": "https://dga-oversight-backend.vercel.app/api"
-  }
-}
-EOF
+# Build images
+echo "🔨 Building Docker images..."
+docker-compose -f docker-compose.prod.yml build --no-cache
 
-# Build frontend
-echo "Building frontend..."
-npm run build
+# Run database migrations
+echo "📊 Running database migrations..."
+docker-compose -f docker-compose.prod.yml run --rm backend npm run migrate
 
-# Deploy frontend
-echo "Deploying frontend..."
-vercel --prod --yes
+# Start services
+echo "🚀 Starting production services..."
+docker-compose -f docker-compose.prod.yml up -d
 
-# Get frontend URL
-FRONTEND_URL=$(vercel ls | grep -o 'https://[^[:space:]]*.vercel.app' | head -1)
-echo "Frontend deployed to: $FRONTEND_URL"
+# Wait for services to be healthy
+echo "⏳ Waiting for services to be healthy..."
+sleep 10
 
-cd ..
+# Check health
+echo "❤️  Checking service health..."
+docker-compose -f docker-compose.prod.yml ps
 
 echo ""
-echo "========================================"
-echo "Deployment Complete!"
-echo "========================================"
-echo "Frontend URL: $FRONTEND_URL"
-echo "Backend URL: $BACKEND_URL"
+echo "✅ Production deployment complete!"
 echo ""
-echo "Next Steps:"
-echo "1. Set up environment variables in Vercel dashboard"
-echo "2. Configure database connection"
-echo "3. Test the deployed application"
-echo "4. Monitor performance and logs"
+echo "🌐 Frontend: http://localhost:${FRONTEND_PORT:-80}"
+echo "🔧 Backend:  http://localhost:${BACKEND_PORT:-5000}"
+echo "❤️  Health:  http://localhost:${BACKEND_PORT:-5000}/health"
 echo ""
-echo "For production deployment, update the environment variables:"
-echo "- DATABASE_URL: Your production PostgreSQL database"
-echo "- JWT_SECRET: A secure random string"
-echo "- CORS_ORIGIN: Your frontend URL"
-echo "========================================"
+echo "📋 Useful commands:"
+echo "  docker-compose -f docker-compose.prod.yml logs -f"
+echo "  docker-compose -f docker-compose.prod.yml restart"
+echo "  docker-compose -f docker-compose.prod.yml down"

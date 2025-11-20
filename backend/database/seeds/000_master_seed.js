@@ -52,6 +52,32 @@ exports.seed = async function(knex) {
     // 8. Seed Stakeholder Consensus (depends on entities)
     console.log('\n🤝 Step 8: Seeding stakeholder consensus...');
     const seedStakeholders = require('./008_seed_stakeholder_consensus');
+    
+    // 9. Seed GRC Regulators and Sectors
+    console.log('\n🏛️ Step 9: Seeding GRC regulators and sectors...');
+    const seedGRCRegulators = require('./012_seed_grc_regulators_sectors');
+    await seedGRCRegulators.seed(knex);
+    
+    // 10. Seed GRC Frameworks
+    console.log('\n📜 Step 10: Seeding GRC frameworks...');
+    const seedGRCFrameworks = require('./013_seed_grc_frameworks');
+    await seedGRCFrameworks.seed(knex);
+    
+    // 11. Seed GRC Controls
+    console.log('\n🛡️ Step 11: Seeding GRC controls...');
+    const seedGRCControls = require('./014_seed_grc_controls');
+    await seedGRCControls.seed(knex);
+    
+    // 12. Seed GRC Evidence (depends on assessments, which depend on controls)
+    console.log('\n📎 Step 12: Seeding GRC evidence...');
+    const seedGRCEvidence = require('./015_seed_grc_evidence');
+    await seedGRCEvidence.seed(knex);
+    
+    // 13. Seed GRC Role Actions
+    console.log('\n⚙️ Step 13: Seeding GRC role actions...');
+    const seedRoleActions = require('./016_seed_role_actions');
+    await seedRoleActions.seed(knex);
+    
     await seedStakeholders.seed(knex);
     
     // 9. Seed Digital Maturity Scores (depends on entities)

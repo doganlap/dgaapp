@@ -1,0 +1,4428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consolidated 14-Table Database Schema Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* =================== ENTERPRISE LAYOUT SYSTEM =================== */
+        .app-wrapper {
+            display: grid;
+            grid-template-areas: 
+                "sidebar header header"
+                "sidebar main main"
+                "sidebar footer footer";
+            grid-template-columns: 280px 1fr;
+            grid-template-rows: 70px 1fr 60px;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        .app-wrapper.sidebar-collapsed {
+            grid-template-columns: 60px 1fr;
+        }
+
+        /* =================== ENHANCED HEADER =================== */
+        .enterprise-header {
+            grid-area: header;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            position: relative;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .sidebar-toggle {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        .header-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .header-subtitle {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 20px;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        .header-stat {
+            text-align: center;
+        }
+
+        .header-stat-number {
+            display: block;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .header-stat-label {
+            font-size: 0.7em;
+            opacity: 0.8;
+        }
+
+        /* =================== SIDE NAVIGATION =================== */
+        .sidebar {
+            grid-area: sidebar;
+            background: #2c3e50;
+            color: white;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        .sidebar-logo {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-brand {
+            font-size: 0.9em;
+            opacity: 0.7;
+            margin: 0;
+        }
+
+        .sidebar-nav {
+            padding: 20px 0;
+        }
+
+        .nav-section {
+            margin-bottom: 30px;
+        }
+
+        .nav-section-title {
+            padding: 0 20px;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            opacity: 0.6;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .nav-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            padding-left: 25px;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-right: 3px solid #fff;
+        }
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        .nav-text {
+            flex: 1;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar.collapsed .nav-text,
+        .sidebar.collapsed .sidebar-brand,
+        .sidebar.collapsed .nav-section-title {
+            opacity: 0;
+        }
+
+        /* =================== MAIN CONTENT AREA =================== */
+        .main-content {
+            grid-area: main;
+            background: #f8f9fa;
+            padding: 30px;
+            overflow: auto;
+        }
+
+        .content-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .page-title {
+            font-size: 2em;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .page-breadcrumb {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        /* =================== DUAL CONTAINER SYSTEM =================== */
+        .dual-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            height: calc(100vh - 200px);
+        }
+
+        .dual-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .dual-panel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .panel-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            font-weight: 600;
+        }
+
+        .panel-content {
+            padding: 20px;
+            height: calc(100% - 60px);
+            overflow: auto;
+        }
+
+        /* =================== ENHANCED FOOTER =================== */
+        .enterprise-footer {
+            grid-area: footer;
+            background: #2c3e50;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .footer-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 0.85em;
+        }
+
+        .footer-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #27ae60;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* =================== SMOOTH TRANSITIONS =================== */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.4s ease-out;
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* =================== ADDITIONAL ENTERPRISE STYLES =================== */
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a6fd8, #6a4c96);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+            transform: translateY(-1px);
+        }
+
+        .btn-light {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-light:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Enhanced table cards for the main dashboard */
+        .dashboard-content .table-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .dashboard-content .table-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        /* Loading states */
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Enhanced notification system */
+        .notification-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 10001;
+            max-width: 350px;
+        }
+
+        .enterprise-notification {
+            background: white;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            animation: slideInRight 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .enterprise-notification.success {
+            border-left-color: #28a745;
+        }
+
+        .enterprise-notification.error {
+            border-left-color: #dc3545;
+        }
+
+        .enterprise-notification.warning {
+            border-left-color: #ffc107;
+        }
+
+        /* =================== RESPONSIVE DESIGN =================== */
+        @media (max-width: 1024px) {
+            .dual-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .app-wrapper {
+                grid-template-columns: 60px 1fr;
+            }
+            
+            .sidebar .nav-text {
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-wrapper {
+                grid-template-areas: 
+                    "header header"
+                    "main main"
+                    "footer footer";
+                grid-template-columns: 1fr;
+                grid-template-rows: 70px 1fr 60px;
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                top: 70px;
+                height: calc(100vh - 130px);
+                width: 280px;
+                z-index: 999;
+                transition: left 0.3s ease;
+            }
+            
+            .sidebar.mobile-open {
+                left: 0;
+            }
+            
+            .main-content {
+                padding: 15px;
+            }
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .tables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .table-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .table-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        
+        .table-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .table-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .table-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .table-info {
+            margin-bottom: 15px;
+        }
+        
+        .replaces-count {
+            background: #e8f4f8;
+            color: #2c5aa0;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin-right: 10px;
+            display: inline-block;
+        }
+        
+        .columns-count {
+            background: #f0f8e8;
+            color: #4a7c59;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            display: inline-block;
+        }
+        
+        .table-purpose {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .table-actions {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .table-actions .btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .table-actions .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .record-types {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .record-type {
+            background: #fff3cd;
+            color: #856404;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .benefits-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .benefit-item {
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            background: #f8f9ff;
+            border-radius: 5px;
+        }
+        
+        .benefit-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 30px;
+            border: none;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: #000;
+        }
+        
+        .column-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .column-item {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 5px;
+            border-left: 3px solid #667eea;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+        }
+        
+        .search-bar {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .search-input {
+            width: 300px;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        
+        .search-input:focus {
+            border-color: #667eea;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .tables-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-wrapper" id="appWrapper">
+        <!-- =================== ENTERPRISE HEADER =================== -->
+        <header class="enterprise-header">
+            <div class="header-left">
+                <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+                    ☰
+                </button>
+                <div>
+                    <h1 class="header-title">🎯 Saudi GRC Dashboard</h1>
+                    <p class="header-subtitle">Enterprise Database Management System</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="header-stats">
+                    <div class="header-stat">
+                        <span class="header-stat-number">14</span>
+                        <span class="header-stat-label">Tables</span>
+                    </div>
+                    <div class="header-stat">
+                        <span class="header-stat-number">50+</span>
+                        <span class="header-stat-label">Replaced</span>
+                    </div>
+                    <div class="header-stat">
+                        <span class="header-stat-number">72%</span>
+                        <span class="header-stat-label">Optimized</span>
+                    </div>
+                </div>
+                <button class="btn btn-light" onclick="showSystemInfo()" title="System Information">
+                    ℹ️
+                </button>
+            </div>
+        </header>
+
+        <!-- =================== SIDE NAVIGATION =================== -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">⚡</div>
+                <p class="sidebar-brand">GRC Enterprise</p>
+            </div>
+            
+            <div class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Dashboard</div>
+                    <div class="nav-item active" onclick="showDashboard()">
+                        <div class="nav-icon">🏠</div>
+                        <div class="nav-text">Overview</div>
+                    </div>
+                    <div class="nav-item" onclick="showAnalytics()">
+                        <div class="nav-icon">📊</div>
+                        <div class="nav-text">Analytics</div>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Database Tables</div>
+                    <div class="nav-item" onclick="openTableManagement('users_consolidated')">
+                        <div class="nav-icon">👥</div>
+                        <div class="nav-text">Users</div>
+                    </div>
+                    <div class="nav-item" onclick="openTableManagement('organizations_consolidated')">
+                        <div class="nav-icon">🏢</div>
+                        <div class="nav-text">Organizations</div>
+                    </div>
+                    <div class="nav-item" onclick="openTableManagement('security_access_consolidated')">
+                        <div class="nav-icon">🔒</div>
+                        <div class="nav-text">Security</div>
+                    </div>
+                    <div class="nav-item" onclick="openTableManagement('compliance_frameworks')">
+                        <div class="nav-icon">📋</div>
+                        <div class="nav-text">Frameworks</div>
+                    </div>
+                    <div class="nav-item" onclick="openTableManagement('regulatory_authorities')">
+                        <div class="nav-icon">🏛️</div>
+                        <div class="nav-text">Authorities</div>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Tools</div>
+                    <div class="nav-item" onclick="showDataImport()">
+                        <div class="nav-icon">📁</div>
+                        <div class="nav-text">Import Data</div>
+                    </div>
+                    <div class="nav-item" onclick="showReports()">
+                        <div class="nav-icon">📄</div>
+                        <div class="nav-text">Reports</div>
+                    </div>
+                    <div class="nav-item" onclick="showSettings()">
+                        <div class="nav-icon">⚙️</div>
+                        <div class="nav-text">Settings</div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- =================== MAIN CONTENT =================== -->
+        <main class="main-content">
+            <div class="content-header fade-in">
+                <h1 class="page-title">Database Overview</h1>
+                <p class="page-breadcrumb">Home > Dashboard > Consolidated Schema</p>
+            </div>
+
+            <!-- Dashboard Content Based on Current View -->
+            <div id="mainContent" class="slide-in-right">
+                <!-- Dashboard Overview -->
+                <div id="dashboardContent" class="dashboard-content">
+        
+        <div class="stats-overview">
+            <div class="stat-card">
+                <div class="stat-number">14</div>
+                <div class="stat-label">Consolidated Tables</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Original Tables</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">600+</div>
+                <div class="stat-label">Total Columns</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">72%</div>
+                <div class="stat-label">Complexity Reduction</div>
+            </div>
+        </div>
+        
+        <div class="search-bar">
+            <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search tables by name or purpose...">
+        </div>
+        
+        <div class="tables-grid" id="tablesGrid">
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-number">1</div>
+                    <div class="table-name">users_consolidated</div>
+                </div>
+                <div class="table-info">
+                    <span class="replaces-count">Replaces 6 tables</span>
+                    <span class="columns-count">45 columns</span>
+                </div>
+                <div class="table-purpose">
+                    Complete user management system including authentication, sessions, roles, permissions, and preferences. Handles API tokens, password history, and user metadata.
+                </div>
+                <div class="table-actions">
+                    <button class="btn btn-primary" onclick="event.stopPropagation(); openTableManagement('users_consolidated')">📊 Manage Data</button>
+                    <button class="btn btn-secondary" onclick="event.stopPropagation(); showTableDetails('users_consolidated')">📋 View Details</button>
+                </div>
+            </div>
+            
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-number">2</div>
+                    <div class="table-name">organizations_consolidated</div>
+                </div>
+                <div class="table-info">
+                    <span class="replaces-count">Replaces 2 tables</span>
+                    <span class="columns-count">40 columns</span>
+                </div>
+                <div class="table-purpose">
+                    Organization hierarchy, compliance framework assignments, legal information, and business details. Supports parent-child relationships and Saudi regulatory requirements.
+                </div>
+                <div class="table-actions">
+                    <button class="btn btn-primary" onclick="event.stopPropagation(); openTableManagement('organizations_consolidated')">📊 Manage Data</button>
+                    <button class="btn btn-secondary" onclick="event.stopPropagation(); showTableDetails('organizations_consolidated')">📋 View Details</button>
+                </div>
+            </div>
+            
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-number">3</div>
+                    <div class="table-name">security_access_consolidated</div>
+                </div>
+                <div class="table-info">
+                    <span class="replaces-count">Replaces 4 tables</span>
+                    <span class="columns-count">35 columns</span>
+                </div>
+                <div class="table-purpose">
+                    Unified security and access control covering roles, permissions, sessions, and audit logs. Single table for all security-related operations.
+                </div>
+                <div class="record-types">
+                    <span class="record-type">role</span>
+                    <span class="record-type">permission</span>
+                    <span class="record-type">session</span>
+                    <span class="record-type">audit</span>
+                </div>
+                <div class="table-actions">
+                    <button class="btn btn-primary" onclick="event.stopPropagation(); openTableManagement('security_access_consolidated')">📊 Manage Data</button>
+                    <button class="btn btn-secondary" onclick="event.stopPropagation(); showTableDetails('security_access_consolidated')">📋 View Details</button>
+                </div>
+            </div>
+            
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-number">4</div>
+                    <div class="table-name">workflow_consolidated</div>
+                </div>
+                <div class="table-info">
+                    <span class="replaces-count">Replaces 5 tables</span>
+                    <span class="columns-count">42 columns</span>
+                </div>
+                <div class="table-purpose">
+                    Complete workflow management including work orders, assignments, comments, attachments, and notifications. Handles time tracking and task management.
+                </div>
+                <div class="record-types">
+                    <span class="record-type">work_order</span>
+                    <span class="record-type">assignment</span>
+                    <span class="record-type">comment</span>
+                    <span class="record-type">notification</span>
+                </div>
+                <div class="table-actions">
+                    <button class="btn btn-primary" onclick="event.stopPropagation(); openTableManagement('workflow_consolidated')">📊 Manage Data</button>
+                    <button class="btn btn-secondary" onclick="event.stopPropagation(); showTableDetails('workflow_consolidated')">📋 View Details</button>
+                </div>
+            </div>
+            
+            <div class="table-card" onclick="showTableDetails('saudi_regulatory_consolidated')">
+                <div class="table-header">
+                    <div class="table-number">5</div>
+                    <div class="table-name">saudi_regulatory_consolidated</div>
+                </div>
+                <div class="table-info">
+                    <span class="replaces-count">Replaces 4 tables</span>
+                    <span class="columns-count">48 columns</span>
+                </div>
+                <div class="table-purpose">
+                    Saudi regulatory framework master data including authorities (NCA, SDAIA, SHC), frameworks, sectors, and mappings. Bilingual support for Arabic/English.
+                </div>
+                <div class="record-types">
+                    <span class="record-type">authority</span>
+                    <span class="record-type">framework</span>
+                    <span class="record-type">sector</span>
+                    <span class="record-type">mapping</span>
+                </div>
+            </div>
+            
+            <div class="table-card" onclick="showTableDetails('compliance_controls_consolidated')">
+                <div class="table-header">
+                    <div class="table-number">6</div>
+                    <div class="table-name">compliance_controls_consolidated</div>
+                </div>
+                <div class="table-info">
+                    <span class="replaces-count">Replaces 6 tables</span>
+                    <span class="columns-count">52 columns</span>
+                </div>
+                <div class="table-purpose">
+                    Master compliance controls, implementations, CCM mappings, and ownership assignments. Handles control lifecycle and effectiveness tracking.
+                </div>
+                <div class="record-types">
+                    <span class="record-type">master_control</span>
+                    <span class="record-type">implementation</span>
+                    <span class="record-type">ccm_control</span>
+                </div>
+            </div>
+            
+            <div class="table-card" onclick="showTableDetails('requirements_evidence_consolidated')">
+                <div class="table-header">
+                    <div class="table-number">7</div>
+                    <div class="table-name">requirements_evidence_consolidated</div>
+                </div>
+                <div class="table-info">
+                    <span class="replaces-count">Replaces 3 tables</span>
+                    <span class="columns-count">46 columns</span>
+                </div>
+                <div class="table-purpose">
+                    Requirements management and evidence collection including templates, evidence items, and validation workflows for compliance documentation.
+                </div>
+                <div class="record-types">
+                    <span class="record-type">requirement</span>
+                    <span class="record-type">evidence_template</span>
+                    <span class="record-type">evidence_item</span>
+                </div>
+            </div>
+            
+            <div class="table-card" onclick="showTableDetails('assessment_evaluation_consolidated')">
+                <div class="table-header">
+                    <div class="table-number">8</div>
+                    <div class="table-name">assessment_evaluation_consolidated</div>
+                </div>
+                <div class="table-info">
+                    <span class="replaces-count">Replaces 4 tables</span>
+                    <span class="columns-count">44 columns</span>
+                </div>
+                <div class="table-purpose">
+                    Assessment and evaluation workflows including responses, findings, compliance scoring, and gap analysis for regulatory assessments.
+                </div>
+                <div class="record-types">
+                    <span class="record-type">assessment</span>
+                    <span class="record-type">response</span>
+                    <span class="record-type">finding</span>
+                    <span class="record-type">evaluation</span>
+                </div>
+            </div>
+            
+            <div class="table-card" onclick="showTableDetails('risk_management_consolidated')">
+                <div class="table-header">
+                    <div class="table-number">9</div>
+                    <div class="table-name">risk_management_consolidated</div>
+                </div>
+                <div class="table-info">
+                    <span class="replaces-count">Replaces 3 tables</span>
+                    <span class="columns-count">41 columns</span>
+                </div>
+                <div class="table-purpose">
+                    Risk assessment and management including treatments, mitigation strategies, and risk monitoring for comprehensive risk governance.
+                </div>
+                <div class="record-types">
+                    <span class="record-type">risk_assessment</span>
+                    <span class="record-type">treatment</span>
+                    <span class="record-type">mitigation</span>
+                </div>
+            </div>
+            
+            <div class="table-card" onclick="showTableDetails('framework_mapping_consolidated')">
+                <div class="table-header">
+                    <div class="table-number">10</div>
+                    <div class="table-name">framework_mapping_consolidated</div>
+                </div>
+                <div class="table-info">
+                    <span class="replaces-count">Replaces 4 tables</span>
+                    <span class="columns-count">38 columns</span>
+                </div>
+                <div class="table-purpose">
+                    Cross-framework mapping definitions and relationships between different regulatory frameworks, enabling unified compliance management.
+                </div>
+                <div class="record-types">
+                    <span class="record-type">framework_def</span>
+                    <span class="record-type">cross_mapping</span>
+                    <span class="record-type">sector_mapping</span>
+                </div>
+            </div>
+            
+            <div class="table-card" onclick="showTableDetails('document_content_consolidated')">
+                <div class="table-header">
+                    <div class="table-number">11</div>
+                    <div class="table-name">document_content_consolidated</div>
+                </div>
+                <div class="table-info">
+                    <span class="replaces-count">Replaces 2 tables</span>
+                    <span class="columns-count">43 columns</span>
+                </div>
+                <div class="table-purpose">
+                    Document management and incident tracking with file storage, version control, and content organization for regulatory documentation.
+                </div>
+                <div class="record-types">
+                    <span class="record-type">document</span>
+                    <span class="record-type">incident</span>
+                </div>
+            </div>
+            
+            <div class="table-card" onclick="showTableDetails('vendor_management_consolidated')">
+                <div class="table-header">
+                    <div class="table-number">12</div>
+                    <div class="table-name">vendor_management_consolidated</div>
+                </div>
+                <div class="table-info">
+                    <span class="replaces-count">Replaces 1 table</span>
+                    <span class="columns-count">47 columns</span>
+                </div>
+                <div class="table-purpose">
+                    Complete vendor lifecycle management including onboarding, compliance tracking, risk assessment, and performance monitoring.
+                </div>
+            </div>
+            
+            <div class="table-card" onclick="showTableDetails('ui_system_consolidated')">
+                <div class="table-header">
+                    <div class="table-number">13</div>
+                    <div class="table-name">ui_system_consolidated</div>
+                </div>
+                <div class="table-info">
+                    <span class="replaces-count">Replaces 3 tables</span>
+                    <span class="columns-count">39 columns</span>
+                </div>
+                <div class="table-purpose">
+                    User interface components, dynamic widgets, and system configuration settings for customizable dashboard experiences.
+                </div>
+                <div class="record-types">
+                    <span class="record-type">ui_component</span>
+                    <span class="record-type">widget</span>
+                    <span class="record-type">system_config</span>
+                </div>
+            </div>
+            
+            <div class="table-card" onclick="showTableDetails('logging_monitoring_consolidated')">
+                <div class="table-header">
+                    <div class="table-number">14</div>
+                    <div class="table-name">logging_monitoring_consolidated</div>
+                </div>
+                <div class="table-info">
+                    <span class="replaces-count">Replaces 2 tables</span>
+                    <span class="columns-count">36 columns</span>
+                </div>
+                <div class="table-purpose">
+                    System logging, performance monitoring, and operational metrics collection for system health and compliance reporting.
+                </div>
+                <div class="record-types">
+                    <span class="record-type">system_log</span>
+                    <span class="record-type">performance_metric</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="benefits-section">
+            <h2>🚀 Key Benefits of 14-Table Consolidation</h2>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-title">📉 72% Complexity Reduction</div>
+                    <div>Dramatically simplified database structure while maintaining all functionality</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-title">⚡ Better Performance</div>
+                    <div>Fewer JOINs needed, optimized indexes, single-table queries</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-title">🛠️ Easier Management</div>
+                    <div>One table per business domain, consistent patterns, simplified maintenance</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-title">🔧 Flexible Data Model</div>
+                    <div>JSONB fields for dynamic data, array columns, future-proof design</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-title">🇸🇦 Saudi GRC Ready</div>
+                    <div>Full support for Saudi regulatory frameworks with Arabic/English content</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-title">🔄 Easy Migration</div>
+                    <div>Complete migration script provided to transfer all existing data</div>
+                </div>
+            </div>
+        </div>
+                </div>
+
+                <!-- Analytics View (Hidden by default) -->
+                <div id="analyticsContent" class="analytics-content" style="display: none;">
+                    <div class="dual-container fade-in">
+                        <div class="dual-panel slide-in-left">
+                            <div class="panel-header">
+                                📊 Database Performance Metrics
+                            </div>
+                            <div class="panel-content">
+                                <div style="padding: 20px; text-align: center;">
+                                    <h3>Query Performance</h3>
+                                    <div style="margin: 20px 0;">
+                                        <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                                            <strong>Average Query Time:</strong> 2.3ms
+                                        </div>
+                                        <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                                            <strong>Total Records:</strong> 15,847
+                                        </div>
+                                        <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                                            <strong>Active Connections:</strong> 23
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dual-panel slide-in-right">
+                            <div class="panel-header">
+                                📈 Compliance Statistics
+                            </div>
+                            <div class="panel-content">
+                                <div style="padding: 20px; text-align: center;">
+                                    <h3>Saudi GRC Compliance</h3>
+                                    <div style="margin: 20px 0;">
+                                        <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                                            <strong>SAMA Compliance:</strong> 94%
+                                        </div>
+                                        <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                                            <strong>NCA Frameworks:</strong> 12 Active
+                                        </div>
+                                        <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                                            <strong>Assessment Results:</strong> 847 Complete
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- =================== ENHANCED FOOTER =================== -->
+        <footer class="enterprise-footer">
+            <div class="footer-info">
+                <div class="footer-status">
+                    <div class="status-indicator"></div>
+                    <span>System Online</span>
+                </div>
+                <div>
+                    Last Updated: <span id="lastUpdated">Loading...</span>
+                </div>
+                <div>
+                    Version 2.1.0 Enterprise
+                </div>
+            </div>
+            <div class="footer-info">
+                <div>
+                    © 2024 Saudi GRC Enterprise Dashboard
+                </div>
+                <div>
+                    Users Active: <span id="activeUsers">12</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Modal for Table Details -->
+    <div id="tableModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTableName"></h2>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+    
+    <!-- Advanced Table Management Modal -->
+    <div id="tableManagementModal" class="modal">
+        <div class="modal-content enhanced-modal">
+            <div class="enhanced-layout">
+                <!-- Left Sidebar Navigation -->
+                <div class="sidebar-navigation">
+                    <div class="sidebar-header">
+                        <h3>📊 Tables</h3>
+                        <button class="btn btn-sm sidebar-toggle" onclick="toggleSidebar()">⬅</button>
+                    </div>
+                    <div class="table-nav-list" id="tableNavList">
+                        <!-- Dynamic table navigation will be populated here -->
+                    </div>
+                    <div class="sidebar-tools">
+                        <button class="btn btn-primary btn-block" onclick="quickTableSwitch()">🔀 Quick Switch</button>
+                        <button class="btn btn-secondary btn-block" onclick="showTableSchema()">📋 Schema</button>
+                        <button class="btn btn-info btn-block" onclick="showTableStats()">📈 Stats</button>
+                    </div>
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="main-content-area">
+                    <div class="content-header">
+                        <div class="header-left">
+                            <span class="close" onclick="closeTableManagement()">&times;</span>
+                            <h2 id="managementTableName"></h2>
+                            <span class="table-badge" id="tableBadge"></span>
+                        </div>
+                        <div class="header-right">
+                            <div class="view-switcher">
+                                <button class="view-btn active" data-view="table" onclick="switchView('table')">📋 Table</button>
+                                <button class="view-btn" data-view="cards" onclick="switchView('cards')">🃏 Cards</button>
+                                <button class="view-btn" data-view="split" onclick="switchView('split')">⚡ Split</button>
+                                <button class="view-btn" data-view="pivot" onclick="switchView('pivot')">🔄 Pivot</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Toolbar -->
+                    <div class="enhanced-toolbar">
+                        <div class="toolbar-section">
+                            <div class="action-buttons">
+                                <button class="btn btn-primary" onclick="addRecord()">➕ Add</button>
+                                <button class="btn btn-secondary" onclick="toggleBulkMode()" id="bulkModeBtn">☑ Bulk</button>
+                                <button class="btn btn-danger" onclick="deleteSelected()" id="deleteSelectedBtn" style="display:none;">🗑 Delete</button>
+                                <button class="btn btn-warning" onclick="exportData()">💾 Export</button>
+                                <button class="btn btn-info" onclick="refreshData()">🔄 Refresh</button>
+                            </div>
+                        </div>
+                        <div class="toolbar-section">
+                            <div class="search-controls">
+                                <input type="text" id="quickFilter" placeholder="🔍 Search all fields..." onkeyup="applyQuickFilter()">
+                                <button class="btn btn-secondary" onclick="toggleAdvancedFilters()">🔧 Advanced</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Filters Panel -->
+                    <div id="advancedFiltersPanel" class="advanced-filters-panel" style="display:none;">
+                        <div class="filters-header">
+                            <h4>🎯 Advanced Filters</h4>
+                            <div class="filter-presets">
+                                <button class="btn btn-sm" onclick="applyFilterPreset('active')">Active Only</button>
+                                <button class="btn btn-sm" onclick="applyFilterPreset('recent')">Recent</button>
+                                <button class="btn btn-sm" onclick="applyFilterPreset('modified')">Modified</button>
+                            </div>
+                        </div>
+                        <div class="filter-builder">
+                            <div class="filter-row">
+                                <select id="columnFilter" class="filter-select">
+                                    <option value="">Select Column</option>
+                                </select>
+                                <select id="operatorFilter" class="filter-select">
+                                    <option value="contains">Contains</option>
+                                    <option value="equals">Equals</option>
+                                    <option value="startswith">Starts With</option>
+                                    <option value="endswith">Ends With</option>
+                                    <option value="gt">Greater Than</option>
+                                    <option value="lt">Less Than</option>
+                                    <option value="empty">Is Empty</option>
+                                    <option value="notempty">Not Empty</option>
+                                </select>
+                                <input type="text" id="valueFilter" placeholder="Filter value..." class="filter-input">
+                                <button class="btn btn-primary" onclick="addFilter()">➕ Add</button>
+                                <button class="btn btn-secondary" onclick="clearFilters()">🗑 Clear</button>
+                            </div>
+                            <div id="activeFilters" class="active-filters-enhanced"></div>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Content Views -->
+                    <div class="content-views">
+                        <!-- Table View -->
+                        <div id="tableView" class="view-container active">
+                            <div class="table-wrapper">
+                                <div class="table-controls">
+                                    <div class="table-info">
+                                        <span id="recordCount">0 records</span>
+                                        <select id="pageSize" onchange="changePageSize()" class="page-size-select">
+                                            <option value="10">10 per page</option>
+                                            <option value="25" selected>25 per page</option>
+                                            <option value="50">50 per page</option>
+                                            <option value="100">100 per page</option>
+                                            <option value="all">Show All</option>
+                                        </select>
+                                    </div>
+                                    <div class="table-actions">
+                                        <button class="btn btn-sm" onclick="selectAllVisible()">Select All</button>
+                                        <button class="btn btn-sm" onclick="selectNone()">Select None</button>
+                                        <button class="btn btn-sm" onclick="invertSelection()">Invert</button>
+                                    </div>
+                                </div>
+                                <div class="table-scroll-container">
+                                    <table id="dataTable" class="enhanced-data-table">
+                                        <thead id="dataTableHead"></thead>
+                                        <tbody id="dataTableBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cards View -->
+                        <div id="cardsView" class="view-container">
+                            <div class="cards-wrapper">
+                                <div class="cards-controls">
+                                    <div class="cards-layout-options">
+                                        <button class="btn btn-sm" onclick="setCardsLayout('grid')">🔲 Grid</button>
+                                        <button class="btn btn-sm" onclick="setCardsLayout('list')">📋 List</button>
+                                        <button class="btn btn-sm" onclick="setCardsLayout('compact')">⚡ Compact</button>
+                                    </div>
+                                    <div class="cards-size">
+                                        <input type="range" id="cardSizeSlider" min="250" max="400" value="300" onchange="adjustCardSize(this.value)">
+                                        <span>Card Size</span>
+                                    </div>
+                                </div>
+                                <div id="cardsContainer" class="enhanced-cards-container"></div>
+                            </div>
+                        </div>
+
+                        <!-- Split View (Table + Cards) -->
+                        <div id="splitView" class="view-container">
+                            <div class="split-layout">
+                                <div class="split-table-panel">
+                                    <h4>📋 Table View</h4>
+                                    <div class="split-table-wrapper">
+                                        <table id="splitDataTable" class="enhanced-data-table compact">
+                                            <thead id="splitTableHead"></thead>
+                                            <tbody id="splitTableBody"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="split-cards-panel">
+                                    <h4>🃏 Selected Record</h4>
+                                    <div id="splitCardDetail" class="split-card-detail">
+                                        <p>Select a record from the table to view details</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pivot View -->
+                        <div id="pivotView" class="view-container">
+                            <div class="pivot-enhanced">
+                                <div class="pivot-controls">
+                                    <div class="pivot-section">
+                                        <h4>📊 Rows</h4>
+                                        <div id="pivotRows" class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                                    </div>
+                                    <div class="pivot-section">
+                                        <h4>📈 Columns</h4>
+                                        <div id="pivotColumns" class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                                    </div>
+                                    <div class="pivot-section">
+                                        <h4>🔢 Values</h4>
+                                        <div id="pivotValues" class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                                    </div>
+                                    <div class="pivot-section">
+                                        <h4>🏷 Available Fields</h4>
+                                        <div id="availableFields" class="available-fields"></div>
+                                    </div>
+                                </div>
+                                <div id="pivotTableContainer" class="pivot-result"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Pagination -->
+                    <div class="enhanced-pagination">
+                        <div class="pagination-info">
+                            <span id="paginationInfo">Showing 0 of 0 records</span>
+                        </div>
+                        <div class="pagination-controls" id="paginationControls"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Record Edit Modal -->
+    <div id="recordEditModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeRecordEdit()">&times;</span>
+            <h2 id="editRecordTitle">Edit Record</h2>
+            <form id="recordEditForm">
+                <div id="recordEditFields"></div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeRecordEdit()">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteRecord()" id="deleteRecordBtn">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        .management-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .toolbar-left, .toolbar-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary { background: #667eea; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        .btn-success { background: #28a745; color: white; }
+        
+        .btn:hover { opacity: 0.8; }
+        
+        .filters-panel {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .filter-row select, .filter-row input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .filter-tag {
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .filter-tag .remove {
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .data-table th {
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .data-table th:hover {
+            background: #5a6fd8;
+        }
+        
+        .data-table th.sortable:after {
+            content: ' ⇅';
+            opacity: 0.5;
+        }
+        
+        .data-table th.sort-asc:after {
+            content: ' ↑';
+            opacity: 1;
+        }
+        
+        .data-table th.sort-desc:after {
+            content: ' ↓';
+            opacity: 1;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .data-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .bulk-checkbox {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .record-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .record-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .record-card h4 {
+            margin: 0 0 10px 0;
+            color: #667eea;
+        }
+        
+        .record-field {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .record-field strong {
+            color: #333;
+        }
+        
+        .pivot-container {
+            margin: 15px 0;
+        }
+        
+        .pivot-controls {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .pivot-section h4 {
+            margin: 0 0 10px 0;
+            color: #667eea;
+        }
+        
+        .drop-zone {
+            min-height: 60px;
+            border: 2px dashed #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            background: white;
+        }
+        
+        .drop-zone.drag-over {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .available-fields {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .field-tag {
+            background: #e9ecef;
+            border: 1px solid #ccc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: grab;
+            font-size: 12px;
+        }
+        
+        .field-tag:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .field-tag.dragging {
+            opacity: 0.5;
+        }
+        
+        .pivot-areas {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .pivot-area-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .pivot-area {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 120px;
+        }
+        
+        .pivot-area h5 {
+            margin: 0 0 10px 0;
+            color: #495057;
+            font-weight: 600;
+        }
+        
+        .pivot-field-tag {
+            background: #667eea;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            margin: 5px;
+            display: inline-block;
+            font-size: 12px;
+            position: relative;
+        }
+        
+        .pivot-field-tag .remove-field {
+            margin-left: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 2px 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+        }
+        
+        .pivot-field-tag .remove-field:hover {
+            background: rgba(255,255,255,0.4);
+        }
+        
+        .pivot-controls {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+        }
+        
+        .pivot-controls .btn {
+            margin: 0 10px;
+        }
+        
+        .pivot-table {
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .pivot-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .pivot-table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .pivot-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        /* Enhanced Form Styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        
+        .form-control:focus {
+            outline: 0;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.25);
+        }
+        
+        .form-actions {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            text-align: right;
+        }
+        
+        .form-actions .btn {
+            margin-left: 10px;
+        }
+        
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .pagination-controls {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .page-btn {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .page-btn:hover, .page-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        #recordEditFields {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 15px 0;
+        }
+        
+        .form-field {
+            margin-bottom: 15px;
+        }
+        
+        .form-field label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-field input, .form-field textarea, .form-field select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .form-field textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        /* Enhanced Modal Styles */
+        .enhanced-modal {
+            max-width: 98% !important;
+            height: 95vh !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .enhanced-layout {
+            display: flex;
+            height: 100%;
+        }
+
+        /* Sidebar Navigation Styles */
+        .sidebar-navigation {
+            width: 280px;
+            background: #2c3e50;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar-navigation.collapsed {
+            width: 60px;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #34495e;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-header h3 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+
+        .sidebar-toggle {
+            background: transparent !important;
+            border: 1px solid #ecf0f1 !important;
+            color: white !important;
+            padding: 5px 8px !important;
+            font-size: 12px !important;
+        }
+
+        .table-nav-list {
+            flex: 1;
+            padding: 10px 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item:hover {
+            background: #34495e;
+            border-left-color: #3498db;
+        }
+
+        .nav-item.active {
+            background: #3498db;
+            border-left-color: #ecf0f1;
+        }
+
+        .nav-item-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-item-text {
+            font-size: 14px;
+        }
+
+        .nav-item-count {
+            margin-left: auto;
+            background: rgba(255,255,255,0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        .sidebar-tools {
+            padding: 15px;
+            border-top: 1px solid #34495e;
+        }
+
+        .btn-block {
+            width: 100%;
+            margin-bottom: 8px;
+            font-size: 12px !important;
+            padding: 8px 12px !important;
+        }
+
+        /* Main Content Area Styles */
+        .main-content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .content-header {
+            padding: 20px;
+            border-bottom: 1px solid #ecf0f1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-left .close {
+            color: white !important;
+            font-size: 24px;
+        }
+
+        .header-left h2 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        .table-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+        }
+
+        .view-switcher {
+            display: flex;
+            gap: 5px;
+            background: rgba(255,255,255,0.1);
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        .view-btn {
+            background: transparent !important;
+            border: 1px solid transparent !important;
+            color: rgba(255,255,255,0.8) !important;
+            padding: 8px 15px !important;
+            border-radius: 5px !important;
+            transition: all 0.2s ease !important;
+            font-size: 13px !important;
+        }
+
+        .view-btn:hover {
+            background: rgba(255,255,255,0.1) !important;
+            color: white !important;
+        }
+
+        .view-btn.active {
+            background: rgba(255,255,255,0.2) !important;
+            color: white !important;
+            border-color: rgba(255,255,255,0.3) !important;
+        }
+
+        /* Enhanced Toolbar Styles */
+        .enhanced-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .toolbar-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        #quickFilter {
+            width: 300px;
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+        }
+
+        #quickFilter:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        /* Advanced Filters Panel */
+        .advanced-filters-panel {
+            padding: 15px 20px;
+            background: #f1f3f4;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .filters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .filters-header h4 {
+            margin: 0;
+            color: #495057;
+        }
+
+        .filter-presets {
+            display: flex;
+            gap: 8px;
+        }
+
+        .filter-builder {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select, .filter-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .filter-select {
+            min-width: 150px;
+        }
+
+        .filter-input {
+            min-width: 200px;
+        }
+
+        .active-filters-enhanced {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-tag {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: slideIn 0.2s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-10px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .filter-tag .remove {
+            cursor: pointer;
+            font-weight: bold;
+            width: 16px;
+            height: 16px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .filter-tag .remove:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Content Views Styles */
+        .content-views {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .view-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.3s ease;
+            overflow: auto;
+            display: none;
+        }
+
+        .view-container.active {
+            opacity: 1;
+            transform: translateX(0);
+            display: block;
+        }
+
+        /* Enhanced Table Styles */
+        .table-wrapper {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .table-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .table-scroll-container {
+            flex: 1;
+            overflow: auto;
+            padding: 0 20px;
+        }
+
+        .enhanced-data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .enhanced-data-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            border: none;
+            transition: background 0.2s ease;
+        }
+
+        .enhanced-data-table th:hover {
+            background: linear-gradient(135deg, #5a6fd8, #6a4c96);
+        }
+
+        .enhanced-data-table th.sort-asc:after {
+            content: ' ↑';
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .enhanced-data-table th.sort-desc:after {
+            content: ' ↓';
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .enhanced-data-table th.sortable:after {
+            content: ' ⇅';
+            opacity: 0.6;
+        }
+
+        .enhanced-data-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f1f3f4;
+            vertical-align: middle;
+        }
+
+        .enhanced-data-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .enhanced-data-table tr.selected {
+            background-color: #e3f2fd;
+        }
+
+        /* Cards View Styles */
+        .cards-wrapper {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cards-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .cards-layout-options {
+            display: flex;
+            gap: 8px;
+        }
+
+        .cards-size {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .enhanced-cards-container {
+            flex: 1;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        .enhanced-cards-container.grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(var(--card-width, 300px), 1fr));
+            gap: 20px;
+        }
+
+        .enhanced-cards-container.list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .enhanced-cards-container.compact {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .enhanced-record-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .enhanced-record-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .enhanced-record-card.selected {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Split View Styles */
+        .split-layout {
+            display: flex;
+            height: 100%;
+        }
+
+        .split-table-panel {
+            width: 60%;
+            border-right: 1px solid #e9ecef;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .split-table-panel h4 {
+            margin: 0;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 16px;
+            color: #495057;
+        }
+
+        .split-table-wrapper {
+            flex: 1;
+            overflow: auto;
+            padding: 0 20px;
+        }
+
+        .split-cards-panel {
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .split-cards-panel h4 {
+            margin: 0;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 16px;
+            color: #495057;
+        }
+
+        .split-card-detail {
+            flex: 1;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        .enhanced-data-table.compact {
+            font-size: 13px;
+        }
+
+        .enhanced-data-table.compact th, 
+        .enhanced-data-table.compact td {
+            padding: 8px 10px;
+        }
+
+        /* Enhanced Pagination */
+        .enhanced-pagination {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-size-select {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            font-size: 13px;
+        }
+
+        .btn-sm {
+            padding: 6px 12px !important;
+            font-size: 12px !important;
+        }
+
+        @media (max-width: 768px) {
+            .enhanced-layout {
+                flex-direction: column;
+            }
+            
+            .sidebar-navigation {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                overflow-x: auto;
+            }
+            
+            .table-nav-list {
+                display: flex;
+                flex: 1;
+                padding: 0;
+            }
+            
+            .enhanced-toolbar {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+            
+            .toolbar-section {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .split-layout {
+                flex-direction: column;
+            }
+            
+            .split-table-panel,
+            .split-cards-panel {
+                width: 100%;
+                height: 50%;
+            }
+            
+            #quickFilter {
+                width: 100%;
+            }
+        }
+
+        /* Animation keyframes for notifications */
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    </style>
+
+    <script>
+        // =================== ENTERPRISE FUNCTIONALITY =================== //
+
+        // Initialize the enterprise dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeEnterpriseDashboard();
+        });
+
+        function initializeEnterpriseDashboard() {
+            updateFooterInfo();
+            showDashboard();
+            
+            // Set up keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey || e.metaKey) {
+                    switch(e.key) {
+                        case 'b':
+                            e.preventDefault();
+                            toggleSidebar();
+                            break;
+                        case '1':
+                            e.preventDefault();
+                            showDashboard();
+                            break;
+                        case '2':
+                            e.preventDefault();
+                            showAnalytics();
+                            break;
+                    }
+                }
+            });
+        }
+
+        // Sidebar functionality
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const appWrapper = document.getElementById('appWrapper');
+            
+            if (sidebar.classList.contains('collapsed')) {
+                sidebar.classList.remove('collapsed');
+                appWrapper.classList.remove('sidebar-collapsed');
+            } else {
+                sidebar.classList.add('collapsed');
+                appWrapper.classList.add('sidebar-collapsed');
+            }
+        }
+
+        // Navigation functions
+        function showDashboard() {
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            
+            // Add active class to dashboard
+            document.querySelectorAll('.nav-item')[0].classList.add('active');
+            
+            // Show dashboard content
+            document.getElementById('dashboardContent').style.display = 'block';
+            document.getElementById('analyticsContent').style.display = 'none';
+            
+            // Update header
+            document.querySelector('.page-title').textContent = 'Database Overview';
+            document.querySelector('.page-breadcrumb').textContent = 'Home > Dashboard > Consolidated Schema';
+            
+            // Add smooth animations
+            document.getElementById('dashboardContent').classList.add('fade-in');
+        }
+
+        function showAnalytics() {
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            
+            // Add active class to analytics
+            document.querySelectorAll('.nav-item')[1].classList.add('active');
+            
+            // Show analytics content
+            document.getElementById('dashboardContent').style.display = 'none';
+            document.getElementById('analyticsContent').style.display = 'block';
+            
+            // Update header
+            document.querySelector('.page-title').textContent = 'Analytics Dashboard';
+            document.querySelector('.page-breadcrumb').textContent = 'Home > Dashboard > Analytics';
+            
+            // Add smooth animations
+            document.getElementById('analyticsContent').classList.add('fade-in');
+        }
+
+        // Tool functions (placeholders for future implementation)
+        function showDataImport() {
+            alert('📁 Data Import Tool - Coming Soon!\n\nThis feature will allow you to:\n- Import CSV files\n- Bulk data operations\n- Data validation\n- Migration tools');
+        }
+
+        function showReports() {
+            alert('📄 Reports Module - Coming Soon!\n\nThis feature will include:\n- Compliance reports\n- Data analytics\n- Export capabilities\n- Scheduled reports');
+        }
+
+        function showSettings() {
+            alert('⚙️ Settings Panel - Coming Soon!\n\nThis feature will provide:\n- User preferences\n- System configuration\n- Security settings\n- Theme customization');
+        }
+
+        function showSystemInfo() {
+            const info = `
+🔧 System Information:
+
+Database Version: PostgreSQL 15.2
+Node.js Version: 18.17.0
+Dashboard Version: 2.1.0 Enterprise
+Uptime: 24 days, 6 hours
+Memory Usage: 2.3GB / 8GB
+CPU Usage: 15%
+Active Sessions: 23
+Total Users: 847
+            `;
+            alert(info);
+        }
+
+        // Update footer information
+        function updateFooterInfo() {
+            const now = new Date();
+            document.getElementById('lastUpdated').textContent = now.toLocaleString();
+            
+            // Simulate active users count
+            const activeUsers = Math.floor(Math.random() * 20) + 5;
+            document.getElementById('activeUsers').textContent = activeUsers;
+        }
+
+        // Update footer info every 30 seconds
+        setInterval(updateFooterInfo, 30000);
+
+        // Sample data for demonstration
+        const sampleData = {
+            users_consolidated: [
+                { id: '1', email: 'admin@example.com', name: 'System Admin', role: 'admin', status: 'active', department: 'IT', position: 'Administrator', created_at: '2024-01-01', organization_id: 'org1' },
+                { id: '2', email: 'user1@example.com', name: 'John Doe', role: 'user', status: 'active', department: 'Compliance', position: 'Analyst', created_at: '2024-01-15', organization_id: 'org1' },
+                { id: '3', email: 'user2@example.com', name: 'Jane Smith', role: 'manager', status: 'active', department: 'Risk', position: 'Manager', created_at: '2024-01-20', organization_id: 'org2' }
+            ],
+            organizations_consolidated: [
+                { id: 'org1', name: 'Tech Corp Saudi', name_ar: 'شركة التكنولوجيا السعودية', type: 'Private', industry: 'Technology', country: 'Saudi Arabia', city: 'Riyadh', status: 'active' },
+                { id: 'org2', name: 'Healthcare Plus', name_ar: 'الرعاية الصحية بلس', type: 'Private', industry: 'Healthcare', country: 'Saudi Arabia', city: 'Jeddah', status: 'active' }
+            ]
+        };
+        
+        // Global variables
+        let currentTable = '';
+        let currentData = [];
+        let filteredData = [];
+        let currentPage = 1;
+        let pageSize = 25;
+        let sortColumn = '';
+        let sortDirection = 'asc';
+        let activeFilters = [];
+        let bulkMode = false;
+        let selectedRecords = new Set();
+        
+        // Table details data
+        const tableDetails = {
+            'users_consolidated': {
+                purpose: 'Complete user management system including authentication, sessions, roles, permissions, and preferences',
+                replaces: 6,
+                columns: [
+                    'id (UUID PRIMARY KEY)',
+                    'email (VARCHAR UNIQUE NOT NULL)',
+                    'password (VARCHAR NOT NULL)',
+                    'name, phone, department, position',
+                    'profile_picture (VARCHAR 500)',
+                    'role, status, last_login',
+                    'password_reset_token, password_reset_expires',
+                    'email_verified, email_verification_token',
+                    'failed_login_attempts, locked_until',
+                    'permissions (JSONB)',
+                    'assigned_roles (JSONB)',
+                    'role_assignments (JSONB)',
+                    'current_session_id, session_data (JSONB)',
+                    'active_sessions (JSONB)',
+                    'api_tokens (JSONB)',
+                    'refresh_token, token_expires',
+                    'password_history (JSONB)',
+                    'password_changed_at, force_password_change',
+                    'preferences (JSONB)',
+                    'notification_settings (JSONB)',
+                    'dashboard_config (JSONB)',
+                    'ui_theme, language, timezone',
+                    'metadata (JSONB)',
+                    'created_at, updated_at, created_by, updated_by',
+                    'organization_id, organization_permissions',
+                    'custom_field_1 through custom_field_5'
+                ],
+                features: [
+                    'Multi-session support with IP tracking',
+                    'API token management with permissions',
+                    'Password history and security policies',
+                    'Customizable dashboard configurations',
+                    'Multi-language and timezone support'
+                ]
+            },
+            'organizations_consolidated': {
+                purpose: 'Organization hierarchy, compliance framework assignments, legal information, and business details',
+                replaces: 2,
+                columns: [
+                    'id (UUID PRIMARY KEY)',
+                    'name, name_ar (bilingual support)',
+                    'description, description_ar',
+                    'type, industry, size',
+                    'country, city, address, postal_code',
+                    'website, contact_email, contact_phone',
+                    'license_number, tax_id, regulatory_id',
+                    'commercial_registration, vat_number',
+                    'parent_id (self-reference)',
+                    'hierarchy_level, organization_path',
+                    'subsidiaries (JSONB)',
+                    'assigned_frameworks (JSONB)',
+                    'compliance_status (JSONB)',
+                    'compliance_scores (JSONB)',
+                    'status, logo_url',
+                    'business_hours (JSONB)',
+                    'operating_countries (TEXT[])',
+                    'employee_count, annual_revenue',
+                    'metadata (JSONB)',
+                    'created_at, updated_at, created_by, updated_by'
+                ],
+                features: [
+                    'Hierarchical organization structure',
+                    'Saudi regulatory compliance tracking',
+                    'Multi-subsidiary management',
+                    'Framework assignment and scoring'
+                ]
+            },
+            'security_access_consolidated': {
+                purpose: 'Unified security and access control covering roles, permissions, sessions, and audit logs',
+                replaces: 4,
+                recordTypes: ['role', 'permission', 'session', 'audit'],
+                columns: [
+                    'id (UUID PRIMARY KEY)',
+                    'record_type (role/permission/session/audit)',
+                    'record_name (VARCHAR 255)',
+                    'role_code, role_description, role_level',
+                    'role_permissions (JSONB)',
+                    'is_system_role (BOOLEAN)',
+                    'permission_code, permission_resource',
+                    'permission_action (read/write/delete/admin)',
+                    'permission_scope (global/organization/user)',
+                    'session_id, user_id, ip_address',
+                    'user_agent, session_start, session_end',
+                    'session_data (JSONB)',
+                    'audit_action, audit_entity_type, audit_entity_id',
+                    'old_values, new_values (JSONB)',
+                    'audit_timestamp',
+                    'organization_id, related_user_id',
+                    'security_level, access_granted',
+                    'status, details, metadata (JSONB)'
+                ],
+                features: [
+                    'Unified security model',
+                    'Comprehensive audit trail',
+                    'Flexible permission system',
+                    'Session management and tracking'
+                ]
+            }
+        };
+        
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const tableCards = document.querySelectorAll('.table-card');
+            
+            tableCards.forEach(card => {
+                const tableName = card.querySelector('.table-name').textContent.toLowerCase();
+                const purpose = card.querySelector('.table-purpose').textContent.toLowerCase();
+                
+                if (tableName.includes(searchTerm) || purpose.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+        
+        // Enhanced Table Management Functions
+        function openTableManagement(tableName) {
+            currentTable = tableName;
+            currentData = sampleData[tableName] || [];
+            filteredData = [...currentData];
+            
+            document.getElementById('managementTableName').textContent = tableName;
+            document.getElementById('tableBadge').textContent = `${filteredData.length} records`;
+            document.getElementById('tableManagementModal').style.display = 'block';
+            
+            initializeSidebarNavigation();
+            initializeTableView();
+            switchView('table');
+        }
+
+        // Initialize Sidebar Navigation
+        function initializeSidebarNavigation() {
+            const navList = document.getElementById('tableNavList');
+            const allTables = [
+                { name: 'users_consolidated', icon: '👥', count: (sampleData['users_consolidated'] || []).length },
+                { name: 'organizations_consolidated', icon: '🏢', count: (sampleData['organizations_consolidated'] || []).length },
+                { name: 'security_access_consolidated', icon: '🔒', count: 0 },
+                { name: 'compliance_frameworks', icon: '📋', count: 0 },
+                { name: 'regulatory_authorities', icon: '🏛️', count: 0 },
+                { name: 'compliance_controls', icon: '🎯', count: 0 },
+                { name: 'assessment_results', icon: '📊', count: 0 },
+                { name: 'audit_evidence', icon: '📁', count: 0 },
+                { name: 'work_orders', icon: '⚙️', count: 0 },
+                { name: 'dashboard_configurations', icon: '📈', count: 0 },
+                { name: 'system_logs', icon: '📝', count: 0 },
+                { name: 'notifications', icon: '🔔', count: 0 },
+                { name: 'integration_endpoints', icon: '🔌', count: 0 },
+                { name: 'data_exports', icon: '💾', count: 0 }
+            ];
+
+            let navHTML = '';
+            allTables.forEach(table => {
+                const isActive = table.name === currentTable ? 'active' : '';
+                navHTML += `
+                    <div class="nav-item ${isActive}" onclick="switchTable('${table.name}')">
+                        <div class="nav-item-icon">${table.icon}</div>
+                        <div class="nav-item-text">${table.name.replace(/_/g, ' ')}</div>
+                        <div class="nav-item-count">${table.count}</div>
+                    </div>
+                `;
+            });
+
+            navList.innerHTML = navHTML;
+        }
+
+        // Switch Table Function
+        function switchTable(tableName) {
+            if (tableName !== currentTable) {
+                openTableManagement(tableName);
+            }
+        }
+
+        // Toggle Sidebar
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar-navigation');
+            sidebar.classList.toggle('collapsed');
+        }
+        
+        function closeTableManagement() {
+            document.getElementById('tableManagementModal').style.display = 'none';
+            resetTableState();
+        }
+        
+        function resetTableState() {
+            currentTable = '';
+            currentData = [];
+            filteredData = [];
+            activeFilters = [];
+            selectedRecords.clear();
+            bulkMode = false;
+            currentPage = 1;
+            updateBulkModeUI();
+        }
+        
+        function initializeTableView() {
+            if (filteredData.length > 0) {
+                populateColumnFilter();
+                updateRecordCount();
+                renderCurrentView();
+            }
+        }
+        
+        function populateColumnFilter() {
+            const select = document.getElementById('columnFilter');
+            select.innerHTML = '<option value="">All Columns</option>';
+            
+            if (filteredData.length > 0) {
+                Object.keys(filteredData[0]).forEach(column => {
+                    const option = document.createElement('option');
+                    option.value = column;
+                    option.textContent = column;
+                    select.appendChild(option);
+                });
+            }
+        }
+        
+        // Enhanced View Switching
+        let currentView = 'table';
+        
+        function switchView(viewType) {
+            // Update active view button
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.view === viewType) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Hide all view containers
+            document.querySelectorAll('.view-container').forEach(container => {
+                container.classList.remove('active');
+            });
+
+            // Show selected view
+            currentView = viewType;
+            const targetView = document.getElementById(`${viewType}View`);
+            if (targetView) {
+                targetView.classList.add('active');
+            }
+
+            // Render appropriate content
+            switch(viewType) {
+                case 'table':
+                    renderEnhancedTableView();
+                    break;
+                case 'cards':
+                    renderEnhancedCardsView();
+                    break;
+                case 'split':
+                    renderSplitView();
+                    break;
+                case 'pivot':
+                    renderPivotView();
+                    break;
+            }
+        }
+
+        // Enhanced Table Rendering
+        function renderEnhancedTableView() {
+            const thead = document.getElementById('dataTableHead');
+            const tbody = document.getElementById('dataTableBody');
+            
+            if (filteredData.length === 0) {
+                thead.innerHTML = '';
+                tbody.innerHTML = '<tr><td colspan="100%" style="text-align:center;padding:40px;color:#666;">No data available</td></tr>';
+                return;
+            }
+            
+            // Create header
+            const columns = Object.keys(filteredData[0]);
+            let headerHTML = '';
+            
+            if (bulkMode) {
+                headerHTML += '<th><input type="checkbox" class="bulk-checkbox" onchange="toggleSelectAll(this)"></th>';
+            }
+            
+            columns.forEach(column => {
+                const sortClass = sortColumn === column ? `sort-${sortDirection}` : 'sortable';
+                headerHTML += `<th class="${sortClass}" onclick="sortTable('${column}')">${column.replace(/_/g, ' ').toUpperCase()}</th>`;
+            });
+            
+            headerHTML += '<th style="width:120px;">Actions</th>';
+            thead.innerHTML = headerHTML;
+            
+            // Create body with pagination
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = pageSize === 'all' ? filteredData.length : startIndex + parseInt(pageSize);
+            const pageData = filteredData.slice(startIndex, endIndex);
+            
+            let bodyHTML = '';
+            pageData.forEach(record => {
+                let rowHTML = '';
+                const isSelected = selectedRecords.has(record.id);
+                
+                if (bulkMode) {
+                    const checked = isSelected ? 'checked' : '';
+                    rowHTML += `<td><input type="checkbox" class="bulk-checkbox" ${checked} onchange="toggleSelect('${record.id}', this)"></td>`;
+                }
+                
+                columns.forEach(column => {
+                    let value = record[column];
+                    if (typeof value === 'object') {
+                        value = JSON.stringify(value);
+                    }
+                    if (value && String(value).length > 50) {
+                        value = String(value).substring(0, 50) + '...';
+                    }
+                    rowHTML += `<td title="${String(value || '').replace(/"/g, '&quot;')}">${value || ''}</td>`;
+                });
+                
+                rowHTML += `<td>
+                    <div style="display:flex;gap:5px;">
+                        <button class="btn btn-primary btn-sm" onclick="editRecord('${record.id}')" title="Edit">✏️</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteRecordDirect('${record.id}')" title="Delete">🗑️</button>
+                        <button class="btn btn-info btn-sm" onclick="viewRecordDetails('${record.id}')" title="View">👁️</button>
+                    </div>
+                </td>`;
+                
+                const rowClass = isSelected ? 'selected' : '';
+                bodyHTML += `<tr class="${rowClass}" onclick="highlightRow(this)">${rowHTML}</tr>`;
+            });
+            
+            tbody.innerHTML = bodyHTML;
+            updatePagination();
+            updatePaginationInfo();
+        }
+
+        // Enhanced Cards Rendering
+        function renderEnhancedCardsView() {
+            const container = document.getElementById('cardsContainer');
+            
+            if (filteredData.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">No data available</div>';
+                return;
+            }
+            
+            // Create cards with pagination
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = pageSize === 'all' ? filteredData.length : startIndex + parseInt(pageSize);
+            const pageData = filteredData.slice(startIndex, endIndex);
+            
+            let cardsHTML = '';
+            pageData.forEach(record => {
+                const columns = Object.keys(record);
+                let cardContent = '';
+                
+                // Show key fields
+                const keyFields = columns.slice(0, 6);
+                keyFields.forEach(column => {
+                    let value = record[column];
+                    if (typeof value === 'object') {
+                        value = JSON.stringify(value);
+                    }
+                    if (value && String(value).length > 100) {
+                        value = String(value).substring(0, 100) + '...';
+                    }
+                    cardContent += `
+                        <div class="record-field">
+                            <strong>${column.replace(/_/g, ' ').toUpperCase()}:</strong> 
+                            <span>${value || 'N/A'}</span>
+                        </div>`;
+                });
+                
+                const isSelected = selectedRecords.has(record.id);
+                const selectedClass = isSelected ? 'selected' : '';
+                
+                cardsHTML += `
+                    <div class="enhanced-record-card ${selectedClass}" onclick="selectCard('${record.id}', this)">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+                            <h4 style="margin:0;">${record.name || record.email || record.id || 'Record'}</h4>
+                            ${bulkMode ? `<input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelect('${record.id}', this)" onclick="event.stopPropagation()">` : ''}
+                        </div>
+                        ${cardContent}
+                        <div style="margin-top: 15px; display: flex; gap: 8px;">
+                            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); editRecord('${record.id}')">✏️ Edit</button>
+                            <button class="btn btn-info btn-sm" onclick="event.stopPropagation(); viewRecordDetails('${record.id}')">👁️ View</button>
+                            <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); deleteRecordDirect('${record.id}')">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = cardsHTML;
+            updatePagination();
+        }
+
+        // Split View Rendering
+        function renderSplitView() {
+            renderSplitTableView();
+            document.getElementById('splitCardDetail').innerHTML = '<p>Select a record from the table to view details</p>';
+        }
+
+        function renderSplitTableView() {
+            const thead = document.getElementById('splitTableHead');
+            const tbody = document.getElementById('splitTableBody');
+            
+            if (filteredData.length === 0) {
+                thead.innerHTML = '';
+                tbody.innerHTML = '<tr><td colspan="100%" style="text-align:center;padding:20px;color:#666;">No data available</td></tr>';
+                return;
+            }
+            
+            // Create compact header (first 4 columns only)
+            const columns = Object.keys(filteredData[0]).slice(0, 4);
+            let headerHTML = columns.map(col => 
+                `<th onclick="sortTable('${col}')" style="cursor:pointer;">${col.replace(/_/g, ' ').toUpperCase()}</th>`
+            ).join('');
+            thead.innerHTML = headerHTML;
+            
+            // Create compact body
+            let bodyHTML = '';
+            filteredData.slice(0, 100).forEach(record => { // Show first 100 for performance
+                let rowHTML = columns.map(col => {
+                    let value = record[col];
+                    if (typeof value === 'object') value = JSON.stringify(value);
+                    if (value && String(value).length > 30) value = String(value).substring(0, 30) + '...';
+                    return `<td>${value || ''}</td>`;
+                }).join('');
+                
+                bodyHTML += `<tr onclick="showSplitDetail('${record.id}')" style="cursor:pointer;">${rowHTML}</tr>`;
+            });
+            
+            tbody.innerHTML = bodyHTML;
+        }
+
+        function showSplitDetail(recordId) {
+            const record = filteredData.find(r => r.id === recordId);
+            if (!record) return;
+            
+            const detailContainer = document.getElementById('splitCardDetail');
+            const columns = Object.keys(record);
+            
+            let detailHTML = `<h4>${record.name || record.email || record.id || 'Record Details'}</h4>`;
+            columns.forEach(column => {
+                let value = record[column];
+                if (typeof value === 'object') value = JSON.stringify(value, null, 2);
+                detailHTML += `
+                    <div class="detail-field" style="margin:10px 0;padding:10px;background:#f8f9fa;border-radius:5px;">
+                        <strong style="color:#495057;">${column.replace(/_/g, ' ').toUpperCase()}:</strong>
+                        <div style="margin-top:5px;word-break:break-word;">${value || 'N/A'}</div>
+                    </div>
+                `;
+            });
+            
+            detailHTML += `
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="editRecord('${recordId}')">✏️ Edit Record</button>
+                    <button class="btn btn-danger" onclick="deleteRecordDirect('${recordId}')">🗑️ Delete Record</button>
+                </div>
+            `;
+            
+            detailContainer.innerHTML = detailHTML;
+        }
+        
+        function renderTableView() {
+            const thead = document.getElementById('dataTableHead');
+            const tbody = document.getElementById('dataTableBody');
+            
+            if (filteredData.length === 0) {
+                thead.innerHTML = '';
+                tbody.innerHTML = '<tr><td colspan="100%">No data available</td></tr>';
+                return;
+            }
+            
+            // Create header
+            const columns = Object.keys(filteredData[0]);
+            let headerHTML = '';
+            
+            if (bulkMode) {
+                headerHTML += '<th><input type="checkbox" class="bulk-checkbox" onchange="toggleSelectAll(this)"></th>';
+            }
+            
+            columns.forEach(column => {
+                const sortClass = sortColumn === column ? `sort-${sortDirection}` : 'sortable';
+                headerHTML += `<th class="${sortClass}" onclick="sortTable('${column}')">${column}</th>`;
+            });
+            
+            headerHTML += '<th>Actions</th>';
+            thead.innerHTML = headerHTML;
+            
+            // Create body with pagination
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = pageSize === 'all' ? filteredData.length : startIndex + parseInt(pageSize);
+            const pageData = filteredData.slice(startIndex, endIndex);
+            
+            let bodyHTML = '';
+            pageData.forEach(record => {
+                let rowHTML = '';
+                
+                if (bulkMode) {
+                    const checked = selectedRecords.has(record.id) ? 'checked' : '';
+                    rowHTML += `<td><input type="checkbox" class="bulk-checkbox" ${checked} onchange="toggleSelect('${record.id}', this)"></td>`;
+                }
+                
+                columns.forEach(column => {
+                    let value = record[column];
+                    if (typeof value === 'object') {
+                        value = JSON.stringify(value);
+                    }
+                    if (value && value.length > 50) {
+                        value = value.substring(0, 50) + '...';
+                    }
+                    rowHTML += `<td>${value || ''}</td>`;
+                });
+                
+                rowHTML += `<td>
+                    <button class="btn btn-primary btn-sm" onclick="editRecord('${record.id}')">Edit</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteRecordDirect('${record.id}')">Delete</button>
+                </td>`;
+                
+                bodyHTML += `<tr>${rowHTML}</tr>`;
+            });
+            
+            tbody.innerHTML = bodyHTML;
+            updatePagination();
+        }
+        
+        function renderCardsView() {
+            const container = document.getElementById('cardsContainer');
+            
+            if (filteredData.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px;">No data available</div>';
+                return;
+            }
+            
+            // Create cards with pagination
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = pageSize === 'all' ? filteredData.length : startIndex + parseInt(pageSize);
+            const pageData = filteredData.slice(startIndex, endIndex);
+            
+            let cardsHTML = '';
+            pageData.forEach(record => {
+                const columns = Object.keys(record);
+                let cardContent = '';
+                
+                // Show first few key fields
+                columns.slice(0, 6).forEach(column => {
+                    let value = record[column];
+                    if (typeof value === 'object') {
+                        value = JSON.stringify(value);
+                    }
+                    if (value && value.length > 100) {
+                        value = value.substring(0, 100) + '...';
+                    }
+                    cardContent += `<div class="record-field"><strong>${column}:</strong> ${value || 'N/A'}</div>`;
+                });
+                
+                cardsHTML += `
+                    <div class="record-card">
+                        <h4>${record.name || record.email || record.id || 'Record'}</h4>
+                        ${cardContent}
+                        <div style="margin-top: 10px;">
+                            <button class="btn btn-primary btn-sm" onclick="editRecord('${record.id}')">Edit</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteRecordDirect('${record.id}')">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = cardsHTML;
+            updatePagination();
+        }
+        
+        // Add Record Function
+        function addRecord() {
+            editRecord(null); // Call editRecord with null to indicate new record
+        }
+        
+        function editRecord(recordId) {
+            const modal = document.getElementById('recordEditModal');
+            const form = document.getElementById('recordEditForm');
+            const modalTitle = document.getElementById('recordEditModalTitle');
+            
+            // Clear form
+            form.innerHTML = '';
+            form.dataset.recordId = recordId || '';
+            
+            if (recordId) {
+                modalTitle.textContent = 'Edit Record';
+                const record = currentData.find(r => r.id === recordId);
+                if (record) {
+                    Object.keys(record).forEach(key => {
+                        const div = document.createElement('div');
+                        div.className = 'form-group';
+                        div.innerHTML = `
+                            <label for="${key}">${key.replace(/_/g, ' ').toUpperCase()}:</label>
+                            <input type="text" id="${key}" name="${key}" value="${record[key] || ''}" class="form-control">
+                        `;
+                        form.appendChild(div);
+                    });
+                }
+            } else {
+                modalTitle.textContent = 'Add New Record';
+                // Create form fields based on first record structure
+                if (filteredData.length > 0) {
+                    Object.keys(filteredData[0]).forEach(key => {
+                        if (key !== 'id') { // Skip ID field for new records
+                            const div = document.createElement('div');
+                            div.className = 'form-group';
+                            div.innerHTML = `
+                                <label for="${key}">${key.replace(/_/g, ' ').toUpperCase()}:</label>
+                                <input type="text" id="${key}" name="${key}" value="" class="form-control">
+                            `;
+                            form.appendChild(div);
+                        }
+                    });
+                }
+            }
+            
+            // Add form buttons
+            const buttonDiv = document.createElement('div');
+            buttonDiv.className = 'form-actions';
+            buttonDiv.innerHTML = `
+                <button type="button" class="btn btn-primary" onclick="saveRecord('${recordId || ''}')">Save</button>
+                <button type="button" class="btn btn-secondary" onclick="closeRecordEdit()">Cancel</button>
+                ${recordId ? '<button type="button" class="btn btn-danger" onclick="deleteRecord()" id="deleteRecordBtn">Delete</button>' : ''}
+            `;
+            form.appendChild(buttonDiv);
+            
+            document.getElementById('deleteRecordBtn') && (document.getElementById('deleteRecordBtn').style.display = recordId ? 'inline-block' : 'none');
+            modal.style.display = 'block';
+        }
+
+        // Complete Pivot View Implementation
+        function renderPivotView() {
+            const availableFields = document.getElementById('availableFields');
+            const pivotResult = document.getElementById('pivotResult');
+            
+            if (filteredData.length === 0) {
+                availableFields.innerHTML = '<div>No data available for pivot</div>';
+                pivotResult.innerHTML = '<div>No data to display</div>';
+                return;
+            }
+            
+            // Populate available fields for drag and drop
+            const columns = Object.keys(filteredData[0]);
+            let fieldsHTML = '<h4>Available Fields (Drag to areas below)</h4>';
+            
+            columns.forEach(column => {
+                fieldsHTML += `<div class="field-tag" draggable="true" ondragstart="dragStart(event)" data-field="${column}">${column.replace(/_/g, ' ').toUpperCase()}</div>`;
+            });
+            
+            availableFields.innerHTML = fieldsHTML;
+            
+            // Initialize pivot areas if not already done
+            initializePivotAreas();
+            
+            // Generate initial pivot table
+            generatePivotTable();
+        }
+        
+        function initializePivotAreas() {
+            const pivotContainer = document.getElementById('pivotResult');
+            if (!pivotContainer.querySelector('.pivot-areas')) {
+                pivotContainer.innerHTML = `
+                    <div class="pivot-areas" style="margin-bottom: 20px;">
+                        <div class="pivot-area-container">
+                            <div class="pivot-area" id="rowArea" ondrop="drop(event, 'row')" ondragover="allowDrop(event)">
+                                <h5>📊 Rows</h5>
+                                <div class="drop-zone">Drop fields here for row grouping</div>
+                            </div>
+                            <div class="pivot-area" id="columnArea" ondrop="drop(event, 'column')" ondragover="allowDrop(event)">
+                                <h5>📈 Columns</h5>
+                                <div class="drop-zone">Drop fields here for column grouping</div>
+                            </div>
+                            <div class="pivot-area" id="valueArea" ondrop="drop(event, 'value')" ondragover="allowDrop(event)">
+                                <h5>🔢 Values</h5>
+                                <div class="drop-zone">Drop fields here for aggregation</div>
+                            </div>
+                        </div>
+                        <div class="pivot-controls">
+                            <button class="btn btn-primary" onclick="generatePivotTable()">🔄 Generate Pivot</button>
+                            <button class="btn btn-secondary" onclick="clearPivotAreas()">🗑️ Clear All</button>
+                        </div>
+                    </div>
+                    <div id="pivotTableContainer"></div>
+                `;
+            }
+        }
+        
+        // Pivot Drag and Drop Functions
+        let draggedField = null;
+        let pivotConfig = { rows: [], columns: [], values: [] };
+        
+        function dragStart(event) {
+            draggedField = event.target.dataset.field;
+            event.dataTransfer.setData('text/plain', draggedField);
+        }
+        
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+        
+        function drop(event, areaType) {
+            event.preventDefault();
+            if (!draggedField) return;
+            
+            // Add field to appropriate pivot config array
+            if (!pivotConfig[areaType + 's'].includes(draggedField)) {
+                pivotConfig[areaType + 's'].push(draggedField);
+                
+                // Update UI
+                const area = event.currentTarget;
+                const fieldTag = document.createElement('div');
+                fieldTag.className = 'pivot-field-tag';
+                fieldTag.innerHTML = `
+                    ${draggedField.replace(/_/g, ' ').toUpperCase()}
+                    <span class="remove-field" onclick="removeFromPivot('${areaType}s', '${draggedField}', this.parentElement)">×</span>
+                `;
+                
+                // Remove "drop zone" message if present
+                const dropZone = area.querySelector('.drop-zone');
+                if (dropZone && dropZone.textContent.includes('Drop fields')) {
+                    dropZone.style.display = 'none';
+                }
+                
+                area.appendChild(fieldTag);
+            }
+            
+            draggedField = null;
+        }
+        
+        function removeFromPivot(areaType, field, element) {
+            // Remove from config
+            const index = pivotConfig[areaType].indexOf(field);
+            if (index > -1) {
+                pivotConfig[areaType].splice(index, 1);
+            }
+            
+            // Remove from UI
+            element.remove();
+            
+            // Show drop zone message if area is empty
+            const area = element.parentElement;
+            if (area.children.length === 1) { // Only h5 left
+                const dropZone = area.querySelector('.drop-zone');
+                if (dropZone) dropZone.style.display = 'block';
+            }
+        }
+        
+        function clearPivotAreas() {
+            pivotConfig = { rows: [], columns: [], values: [] };
+            ['rowArea', 'columnArea', 'valueArea'].forEach(areaId => {
+                const area = document.getElementById(areaId);
+                const fields = area.querySelectorAll('.pivot-field-tag');
+                fields.forEach(field => field.remove());
+                const dropZone = area.querySelector('.drop-zone');
+                if (dropZone) dropZone.style.display = 'block';
+            });
+            document.getElementById('pivotTableContainer').innerHTML = '';
+        }
+        
+        function generatePivotTable() {
+            const container = document.getElementById('pivotTableContainer');
+            
+            if (pivotConfig.rows.length === 0 && pivotConfig.columns.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">Please drag fields to Rows or Columns to create a pivot table</div>';
+                return;
+            }
+            
+            // Generate pivot table data
+            const pivotData = createPivotData();
+            
+            // Render pivot table
+            let tableHTML = '<table class="table table-bordered pivot-table"><thead><tr>';
+            
+            // Header row
+            pivotConfig.rows.forEach(row => {
+                tableHTML += `<th>${row.replace(/_/g, ' ').toUpperCase()}</th>`;
+            });
+            
+            if (pivotConfig.columns.length > 0) {
+                Object.keys(pivotData.columns).forEach(col => {
+                    tableHTML += `<th>${col}</th>`;
+                });
+            } else if (pivotConfig.values.length > 0) {
+                pivotConfig.values.forEach(val => {
+                    tableHTML += `<th>${val.replace(/_/g, ' ').toUpperCase()}</th>`;
+                });
+            } else {
+                tableHTML += '<th>COUNT</th>';
+            }
+            
+            tableHTML += '</tr></thead><tbody>';
+            
+            // Data rows
+            Object.keys(pivotData.rows).forEach(rowKey => {
+                tableHTML += '<tr>';
+                rowKey.split('|').forEach(cell => {
+                    tableHTML += `<td>${cell}</td>`;
+                });
+                
+                if (pivotConfig.columns.length > 0) {
+                    Object.keys(pivotData.columns).forEach(col => {
+                        const value = pivotData.data[rowKey] && pivotData.data[rowKey][col] ? pivotData.data[rowKey][col] : 0;
+                        tableHTML += `<td>${value}</td>`;
+                    });
+                } else {
+                    const value = pivotData.data[rowKey] || 0;
+                    tableHTML += `<td>${value}</td>`;
+                }
+                
+                tableHTML += '</tr>';
+            });
+            
+            tableHTML += '</tbody></table>';
+            container.innerHTML = tableHTML;
+        }
+        
+        function createPivotData() {
+            const pivotData = { rows: {}, columns: {}, data: {} };
+            
+            filteredData.forEach(record => {
+                // Build row key
+                const rowKey = pivotConfig.rows.map(field => record[field] || '').join('|');
+                if (rowKey) pivotData.rows[rowKey] = true;
+                
+                // Build column key
+                const colKey = pivotConfig.columns.map(field => record[field] || '').join('|');
+                if (colKey) pivotData.columns[colKey] = true;
+                
+                // Initialize data structure
+                if (!pivotData.data[rowKey]) pivotData.data[rowKey] = {};
+                
+                if (pivotConfig.columns.length > 0) {
+                    if (!pivotData.data[rowKey][colKey]) pivotData.data[rowKey][colKey] = 0;
+                    pivotData.data[rowKey][colKey]++;
+                } else {
+                    if (!pivotData.data[rowKey]) pivotData.data[rowKey] = 0;
+                    pivotData.data[rowKey]++;
+                }
+            });
+            
+            return pivotData;
+        }
+        
+        function sortTable(column) {
+            if (sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                sortDirection = 'asc';
+            }
+            
+            filteredData.sort((a, b) => {
+                let aVal = a[column];
+                let bVal = b[column];
+                
+                // Handle null/undefined values
+                if (aVal == null) aVal = '';
+                if (bVal == null) bVal = '';
+                
+                // Convert to strings for comparison
+                aVal = String(aVal).toLowerCase();
+                bVal = String(bVal).toLowerCase();
+                
+                if (sortDirection === 'asc') {
+                    return aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
+                } else {
+                    return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
+                }
+            });
+            
+            renderCurrentView();
+        }
+        
+        function applyQuickFilter() {
+            const searchTerm = document.getElementById('quickFilter').value.toLowerCase();
+            
+            if (!searchTerm) {
+                filteredData = [...currentData];
+            } else {
+                filteredData = currentData.filter(record => {
+                    return Object.values(record).some(value => {
+                        return String(value).toLowerCase().includes(searchTerm);
+                    });
+                });
+            }
+            
+            // Apply existing filters
+            applyAllFilters();
+            currentPage = 1;
+            updateRecordCount();
+            renderCurrentView();
+        }
+        
+        function addFilter() {
+            const column = document.getElementById('columnFilter').value;
+            const operator = document.getElementById('operatorFilter').value;
+            const value = document.getElementById('valueFilter').value;
+            
+            if (!column || !value) return;
+            
+            const filter = { column, operator, value };
+            activeFilters.push(filter);
+            
+            // Clear input
+            document.getElementById('valueFilter').value = '';
+            
+            applyAllFilters();
+            renderActiveFilters();
+            renderCurrentView();
+        }
+        
+        function applyAllFilters() {
+            filteredData = currentData.filter(record => {
+                return activeFilters.every(filter => {
+                    const fieldValue = String(record[filter.column] || '').toLowerCase();
+                    const filterValue = filter.value.toLowerCase();
+                    
+                    switch(filter.operator) {
+                        case 'contains':
+                            return fieldValue.includes(filterValue);
+                        case 'equals':
+                            return fieldValue === filterValue;
+                        case 'startswith':
+                            return fieldValue.startsWith(filterValue);
+                        case 'endswith':
+                            return fieldValue.endsWith(filterValue);
+                        default:
+                            return true;
+                    }
+                });
+            });
+            
+            updateRecordCount();
+        }
+        
+        function renderActiveFilters() {
+            const container = document.getElementById('activeFilters');
+            let filtersHTML = '';
+            
+            activeFilters.forEach((filter, index) => {
+                filtersHTML += `
+                    <div class="filter-tag">
+                        ${filter.column} ${filter.operator} "${filter.value}"
+                        <span class="remove" onclick="removeFilter(${index})">×</span>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = filtersHTML;
+        }
+        
+        function removeFilter(index) {
+            activeFilters.splice(index, 1);
+            applyAllFilters();
+            renderActiveFilters();
+            renderCurrentView();
+        }
+        
+        function clearFilters() {
+            activeFilters = [];
+            filteredData = [...currentData];
+            renderActiveFilters();
+            updateRecordCount();
+            renderCurrentView();
+        }
+        
+        function toggleBulkMode() {
+            bulkMode = !bulkMode;
+            selectedRecords.clear();
+            updateBulkModeUI();
+            renderCurrentView();
+        }
+        
+        function updateBulkModeUI() {
+            const bulkModeBtn = document.getElementById('bulkModeBtn');
+            const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+            
+            bulkModeBtn.textContent = bulkMode ? 'Exit Bulk Mode' : 'Bulk Mode';
+            deleteSelectedBtn.style.display = bulkMode ? 'inline-block' : 'none';
+        }
+        
+        function toggleSelectAll(checkbox) {
+            const checkboxes = document.querySelectorAll('.data-table .bulk-checkbox:not(:first-child)');
+            checkboxes.forEach(cb => {
+                cb.checked = checkbox.checked;
+                const recordId = cb.parentElement.parentElement.querySelector('td:nth-last-child(2)').textContent;
+                if (checkbox.checked) {
+                    selectedRecords.add(recordId);
+                } else {
+                    selectedRecords.delete(recordId);
+                }
+            });
+        }
+        
+        function toggleSelect(recordId, checkbox) {
+            if (checkbox.checked) {
+                selectedRecords.add(recordId);
+            } else {
+                selectedRecords.delete(recordId);
+            }
+        }
+        
+        function deleteSelected() {
+            if (selectedRecords.size === 0) {
+                alert('No records selected');
+                return;
+            }
+            
+            if (confirm(`Delete ${selectedRecords.size} selected record(s)?`)) {
+                selectedRecords.forEach(id => {
+                    const index = currentData.findIndex(record => record.id === id);
+                    if (index > -1) {
+                        currentData.splice(index, 1);
+                    }
+                });
+                
+                selectedRecords.clear();
+                applyQuickFilter();
+                renderCurrentView();
+            }
+        }
+        
+        function addNewRecord() {
+            editRecord(null);
+        }
+        
+        function editRecord(recordId) {
+            const record = recordId ? currentData.find(r => r.id === recordId) : {};
+            const modal = document.getElementById('recordEditModal');
+            const title = document.getElementById('editRecordTitle');
+            const form = document.getElementById('recordEditForm');
+            const fieldsContainer = document.getElementById('recordEditFields');
+            
+            title.textContent = recordId ? 'Edit Record' : 'Add New Record';
+            
+            // Get all possible fields from the table
+            const allFields = new Set();
+            currentData.forEach(r => Object.keys(r).forEach(k => allFields.add(k)));
+            
+            let fieldsHTML = '';
+            [...allFields].forEach(field => {
+                const value = record[field] || '';
+                const fieldType = typeof value === 'boolean' ? 'checkbox' : 
+                                 field.includes('date') || field.includes('_at') ? 'datetime-local' : 
+                                 field.includes('email') ? 'email' : 'text';
+                
+                fieldsHTML += `
+                    <div class="form-field">
+                        <label for="field_${field}">${field}</label>
+                        ${fieldType === 'textarea' ? 
+                            `<textarea id="field_${field}" name="${field}">${value}</textarea>` :
+                            fieldType === 'checkbox' ? 
+                                `<input type="checkbox" id="field_${field}" name="${field}" ${value ? 'checked' : ''}>` :
+                                `<input type="${fieldType}" id="field_${field}" name="${field}" value="${value}">`
+                        }
+                    </div>
+                `;
+            });
+            
+            fieldsContainer.innerHTML = fieldsHTML;
+            
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                saveRecord(recordId);
+            };
+            
+            document.getElementById('deleteRecordBtn').style.display = recordId ? 'inline-block' : 'none';
+            modal.style.display = 'block';
+        }
+        
+        function saveRecord(recordId) {
+            const form = document.getElementById('recordEditForm');
+            const formData = new FormData(form);
+            const record = {};
+            
+            // Basic validation
+            let hasData = false;
+            for (let [key, value] of formData.entries()) {
+                if (value.trim()) hasData = true;
+                record[key] = value.trim();
+            }
+            
+            if (!hasData) {
+                showNotification('Please fill in at least one field!', 'error');
+                return;
+            }
+            
+            if (recordId) {
+                // Update existing record
+                const index = currentData.findIndex(r => r.id === recordId);
+                if (index > -1) {
+                    currentData[index] = { ...currentData[index], ...record };
+                    showNotification('Record updated successfully!', 'success');
+                }
+            } else {
+                // Add new record
+                record.id = 'new_' + Date.now();
+                record.created_at = new Date().toISOString();
+                currentData.push(record);
+                showNotification('New record added successfully!', 'success');
+            }
+            
+            applyQuickFilter();
+            renderCurrentView();
+            closeRecordEdit();
+        }
+        
+        function deleteRecord() {
+            const recordId = document.getElementById('recordEditForm').dataset.recordId;
+            deleteRecordDirect(recordId);
+        }
+        
+        function deleteRecordDirect(recordId) {
+            if (confirm('Delete this record?')) {
+                const index = currentData.findIndex(r => r.id === recordId);
+                if (index > -1) {
+                    currentData.splice(index, 1);
+                    showNotification('Record deleted successfully!', 'success');
+                    applyQuickFilter();
+                    renderCurrentView();
+                    closeRecordEdit(); // Close edit modal if open
+                }
+            }
+        }
+        
+        function closeRecordEdit() {
+            document.getElementById('recordEditModal').style.display = 'none';
+        }
+        
+        function exportData() {
+            if (filteredData.length === 0) {
+                showNotification('No data to export!', 'warning');
+                return;
+            }
+            const csv = convertToCSV(filteredData);
+            downloadCSV(csv, `${currentTable}_export.csv`);
+            showNotification(`Exported ${filteredData.length} records successfully!`, 'success');
+        }
+        
+        function convertToCSV(data) {
+            if (data.length === 0) return '';
+            
+            const headers = Object.keys(data[0]);
+            const csvContent = [
+                headers.join(','),
+                ...data.map(row => 
+                    headers.map(header => {
+                        let cell = row[header];
+                        if (typeof cell === 'object') cell = JSON.stringify(cell);
+                        return `"${String(cell || '').replace(/"/g, '""')}"`;
+                    }).join(',')
+                )
+            ].join('\n');
+            
+            return csvContent;
+        }
+        
+        function downloadCSV(csv, filename) {
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+        
+        function updateRecordCount() {
+            document.getElementById('recordCount').textContent = `${filteredData.length} records`;
+        }
+
+        // Enhanced Utility Functions
+        function toggleAdvancedFilters() {
+            const panel = document.getElementById('advancedFiltersPanel');
+            if (panel.style.display === 'none' || !panel.style.display) {
+                panel.style.display = 'block';
+            } else {
+                panel.style.display = 'none';
+            }
+        }
+
+        function applyFilterPreset(presetType) {
+            clearFilters();
+            
+            switch(presetType) {
+                case 'active':
+                    if (filteredData.some(r => r.status)) {
+                        activeFilters.push({ column: 'status', operator: 'equals', value: 'active' });
+                    }
+                    break;
+                case 'recent':
+                    if (filteredData.some(r => r.created_at)) {
+                        const recentDate = new Date();
+                        recentDate.setDate(recentDate.getDate() - 30);
+                        activeFilters.push({ column: 'created_at', operator: 'gt', value: recentDate.toISOString().split('T')[0] });
+                    }
+                    break;
+                case 'modified':
+                    if (filteredData.some(r => r.updated_at)) {
+                        const modifiedDate = new Date();
+                        modifiedDate.setDate(modifiedDate.getDate() - 7);
+                        activeFilters.push({ column: 'updated_at', operator: 'gt', value: modifiedDate.toISOString().split('T')[0] });
+                    }
+                    break;
+            }
+            
+            applyAllFilters();
+            renderActiveFilters();
+            renderCurrentView();
+        }
+
+        function refreshData() {
+            // Simulate data refresh
+            filteredData = [...currentData];
+            applyQuickFilter();
+            renderCurrentView();
+            showNotification('Data refreshed successfully!', 'success');
+        }
+
+        function selectAllVisible() {
+            const checkboxes = document.querySelectorAll('.enhanced-data-table .bulk-checkbox:not(:first-child)');
+            checkboxes.forEach(cb => {
+                cb.checked = true;
+                const row = cb.closest('tr');
+                const recordId = row.cells[row.cells.length - 2].textContent;
+                selectedRecords.add(recordId);
+            });
+            renderCurrentView();
+        }
+
+        function selectNone() {
+            selectedRecords.clear();
+            renderCurrentView();
+        }
+
+        function invertSelection() {
+            const checkboxes = document.querySelectorAll('.enhanced-data-table .bulk-checkbox:not(:first-child)');
+            checkboxes.forEach(cb => {
+                const row = cb.closest('tr');
+                const recordId = row.cells[row.cells.length - 2].textContent;
+                if (selectedRecords.has(recordId)) {
+                    selectedRecords.delete(recordId);
+                } else {
+                    selectedRecords.add(recordId);
+                }
+            });
+            renderCurrentView();
+        }
+
+        function highlightRow(row) {
+            document.querySelectorAll('.enhanced-data-table tr').forEach(r => r.classList.remove('selected'));
+            row.classList.add('selected');
+        }
+
+        function selectCard(recordId, cardElement) {
+            if (bulkMode) {
+                if (selectedRecords.has(recordId)) {
+                    selectedRecords.delete(recordId);
+                    cardElement.classList.remove('selected');
+                } else {
+                    selectedRecords.add(recordId);
+                    cardElement.classList.add('selected');
+                }
+            } else {
+                document.querySelectorAll('.enhanced-record-card').forEach(card => card.classList.remove('selected'));
+                cardElement.classList.add('selected');
+            }
+        }
+
+        function setCardsLayout(layout) {
+            const container = document.getElementById('cardsContainer');
+            container.className = `enhanced-cards-container ${layout}`;
+            
+            document.querySelectorAll('.cards-layout-options .btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function adjustCardSize(size) {
+            document.documentElement.style.setProperty('--card-width', size + 'px');
+        }
+
+        function viewRecordDetails(recordId) {
+            const record = currentData.find(r => r.id === recordId);
+            if (!record) return;
+            
+            let detailHTML = `
+                <div style="max-width:600px;margin:20px auto;padding:20px;background:white;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+                    <h3 style="margin-bottom:20px;color:#333;">📋 Record Details</h3>
+            `;
+            
+            Object.keys(record).forEach(key => {
+                let value = record[key];
+                if (typeof value === 'object') {
+                    value = JSON.stringify(value, null, 2);
+                }
+                detailHTML += `
+                    <div style="margin:10px 0;padding:10px;background:#f8f9fa;border-radius:5px;">
+                        <strong style="color:#495057;">${key.replace(/_/g, ' ').toUpperCase()}:</strong>
+                        <div style="margin-top:5px;word-break:break-word;font-family:monospace;white-space:pre-wrap;">${value || 'N/A'}</div>
+                    </div>
+                `;
+            });
+            
+            detailHTML += `
+                    <div style="margin-top:20px;text-align:center;">
+                        <button class="btn btn-primary" onclick="editRecord('${recordId}');closeModal();">✏️ Edit</button>
+                        <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                    </div>
+                </div>
+            `;
+            
+            showModal('Record Details', detailHTML);
+        }
+
+        function showModal(title, content) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position:fixed;top:0;left:0;right:0;bottom:0;
+                background:rgba(0,0,0,0.5);z-index:10000;
+                display:flex;align-items:center;justify-content:center;
+            `;
+            modal.innerHTML = `
+                <div onclick="event.stopPropagation()" style="position:relative;">
+                    <button onclick="closeModal()" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:20px;cursor:pointer;">×</button>
+                    ${content}
+                </div>
+            `;
+            modal.onclick = closeModal;
+            document.body.appendChild(modal);
+            modal.id = 'customModal';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('customModal');
+            if (modal) modal.remove();
+        }
+
+        function updatePaginationInfo() {
+            const start = (currentPage - 1) * pageSize + 1;
+            const end = Math.min(currentPage * pageSize, filteredData.length);
+            const total = filteredData.length;
+            
+            document.getElementById('paginationInfo').textContent = 
+                pageSize === 'all' ? `Showing all ${total} records` : `Showing ${start}-${end} of ${total} records`;
+        }
+
+        function renderCurrentView() {
+            switch(currentView) {
+                case 'table':
+                    renderEnhancedTableView();
+                    break;
+                case 'cards':
+                    renderEnhancedCardsView();
+                    break;
+                case 'split':
+                    renderSplitView();
+                    break;
+                case 'pivot':
+                    renderPivotView();
+                    break;
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position:fixed;top:20px;right:20px;z-index:10000;
+                background:${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#007bff'};
+                color:white;padding:15px 20px;border-radius:5px;
+                box-shadow:0 4px 12px rgba(0,0,0,0.3);
+                animation:slideInRight 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Quick Table Switch Function
+        function quickTableSwitch() {
+            const tables = [
+                'users_consolidated', 'organizations_consolidated', 'security_access_consolidated',
+                'compliance_frameworks', 'regulatory_authorities', 'compliance_controls'
+            ];
+            
+            let options = '';
+            tables.forEach(table => {
+                const selected = table === currentTable ? 'selected' : '';
+                options += `<option value="${table}" ${selected}>${table.replace(/_/g, ' ')}</option>`;
+            });
+            
+            const selectHTML = `
+                <div style="padding:20px;">
+                    <h4>Switch to Table:</h4>
+                    <select id="tableSelect" style="width:100%;padding:10px;margin:10px 0;">
+                        ${options}
+                    </select>
+                    <div style="text-align:right;margin-top:15px;">
+                        <button class="btn btn-primary" onclick="switchToSelectedTable()">Switch</button>
+                        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    </div>
+                </div>
+            `;
+            
+            showModal('Quick Table Switch', selectHTML);
+        }
+
+        function switchToSelectedTable() {
+            const select = document.getElementById('tableSelect');
+            if (select.value) {
+                switchTable(select.value);
+                closeModal();
+            }
+        }
+
+        function showTableSchema() {
+            const schema = tableDetails[currentTable];
+            if (!schema) {
+                showNotification('Schema not available for this table', 'error');
+                return;
+            }
+            
+            let schemaHTML = `
+                <div style="padding:20px;max-width:800px;">
+                    <h3>📋 ${currentTable.replace(/_/g, ' ').toUpperCase()} Schema</h3>
+                    <p><strong>Purpose:</strong> ${schema.purpose}</p>
+                    <p><strong>Replaces:</strong> ${schema.replaces || 'N/A'} tables</p>
+                    
+                    <h4 style="margin-top:20px;">Columns:</h4>
+                    <div style="max-height:300px;overflow-y:auto;background:#f8f9fa;padding:15px;border-radius:5px;">
+            `;
+            
+            (schema.columns || []).forEach(column => {
+                schemaHTML += `<div style="margin:5px 0;padding:5px;background:white;border-radius:3px;font-family:monospace;">${column}</div>`;
+            });
+            
+            schemaHTML += `
+                    </div>
+                    <div style="text-align:center;margin-top:20px;">
+                        <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                    </div>
+                </div>
+            `;
+            
+            showModal('Table Schema', schemaHTML);
+        }
+
+        function showTableStats() {
+            const stats = {
+                totalRecords: currentData.length,
+                filteredRecords: filteredData.length,
+                columns: currentData.length > 0 ? Object.keys(currentData[0]).length : 0,
+                selectedRecords: selectedRecords.size,
+                emptyFields: 0
+            };
+            
+            // Calculate empty fields
+            if (currentData.length > 0) {
+                const columns = Object.keys(currentData[0]);
+                stats.emptyFields = currentData.reduce((total, record) => {
+                    return total + columns.filter(col => !record[col] || record[col] === '').length;
+                }, 0);
+            }
+            
+            const statsHTML = `
+                <div style="padding:20px;">
+                    <h3>📈 ${currentTable.replace(/_/g, ' ').toUpperCase()} Statistics</h3>
+                    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin:20px 0;">
+                        <div style="background:#e3f2fd;padding:15px;border-radius:8px;text-align:center;">
+                            <div style="font-size:24px;font-weight:bold;color:#1976d2;">${stats.totalRecords}</div>
+                            <div>Total Records</div>
+                        </div>
+                        <div style="background:#e8f5e8;padding:15px;border-radius:8px;text-align:center;">
+                            <div style="font-size:24px;font-weight:bold;color:#388e3c;">${stats.filteredRecords}</div>
+                            <div>Filtered Records</div>
+                        </div>
+                        <div style="background:#fff3e0;padding:15px;border-radius:8px;text-align:center;">
+                            <div style="font-size:24px;font-weight:bold;color:#f57c00;">${stats.columns}</div>
+                            <div>Columns</div>
+                        </div>
+                        <div style="background:#fce4ec;padding:15px;border-radius:8px;text-align:center;">
+                            <div style="font-size:24px;font-weight:bold;color:#c2185b;">${stats.selectedRecords}</div>
+                            <div>Selected Records</div>
+                        </div>
+                    </div>
+                    <div style="text-align:center;margin-top:20px;">
+                        <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                    </div>
+                </div>
+            `;
+            
+            showModal('Table Statistics', statsHTML);
+        }
+        
+        function changePageSize() {
+            pageSize = document.getElementById('pageSize').value;
+            currentPage = 1;
+            renderCurrentView();
+        }
+        
+        function updatePagination() {
+            const container = document.getElementById('paginationControls');
+            
+            if (pageSize === 'all') {
+                container.innerHTML = '';
+                return;
+            }
+            
+            const totalPages = Math.ceil(filteredData.length / parseInt(pageSize));
+            
+            if (totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            let paginationHTML = '';
+            
+            // Previous button
+            paginationHTML += `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">Previous</button>`;
+            
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage || i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                    paginationHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+                } else if (i === currentPage - 3 || i === currentPage + 3) {
+                    paginationHTML += `<span class="page-btn" disabled>...</span>`;
+                }
+            }
+            
+            // Next button
+            paginationHTML += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">Next</button>`;
+            
+            container.innerHTML = paginationHTML;
+        }
+        
+        function goToPage(page) {
+            currentPage = page;
+            renderCurrentView();
+        }
+        
+        function renderCurrentView() {
+            const viewType = document.getElementById('viewTypeSelect').value;
+            switch(viewType) {
+                case 'table':
+                    renderTableView();
+                    break;
+                case 'cards':
+                    renderCardsView();
+                    break;
+                case 'pivot':
+                    renderPivotView();
+                    break;
+            }
+        }
+        
+        // Drag and drop for pivot
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.add('drag-over');
+        }
+        
+        function dragStart(ev) {
+            ev.dataTransfer.setData("text", ev.target.dataset.field);
+            ev.target.classList.add('dragging');
+        }
+        
+        function drop(ev) {
+            ev.preventDefault();
+            const field = ev.dataTransfer.getData("text");
+            const dropZone = ev.currentTarget;
+            
+            // Create field tag in drop zone
+            const fieldTag = document.createElement('div');
+            fieldTag.className = 'field-tag';
+            fieldTag.textContent = field;
+            fieldTag.innerHTML += ' <span onclick="removeFromZone(this)" style="cursor: pointer;">×</span>';
+            
+            dropZone.appendChild(fieldTag);
+            dropZone.classList.remove('drag-over');
+        }
+        
+        function removeFromZone(element) {
+            element.parentElement.remove();
+        }
+
+        // Show table details in modal
+        function showTableDetails(tableName) {
+            const modal = document.getElementById('tableModal');
+            const modalTableName = document.getElementById('modalTableName');
+            const modalContent = document.getElementById('modalContent');
+            
+            modalTableName.textContent = tableName;
+            
+            const details = tableDetails[tableName];
+            if (details) {
+                let content = `
+                    <p><strong>Purpose:</strong> ${details.purpose}</p>
+                    <p><strong>Replaces:</strong> ${details.replaces} original tables</p>
+                `;
+                
+                if (details.recordTypes) {
+                    content += `<p><strong>Record Types:</strong> ${details.recordTypes.join(', ')}</p>`;
+                }
+                
+                content += `<h3>Key Columns:</h3><div class="column-list">`;
+                details.columns.forEach(column => {
+                    content += `<div class="column-item">${column}</div>`;
+                });
+                content += `</div>`;
+                
+                if (details.features) {
+                    content += `<h3>Key Features:</h3><ul>`;
+                    details.features.forEach(feature => {
+                        content += `<li>${feature}</li>`;
+                    });
+                    content += `</ul>`;
+                }
+                
+                modalContent.innerHTML = content;
+            } else {
+                modalContent.innerHTML = `
+                    <p><strong>Purpose:</strong> Consolidated table for ${tableName.replace('_consolidated', '')} management</p>
+                    <p>Detailed information will be available in the complete schema documentation.</p>
+                `;
+            }
+            
+            modal.style.display = 'block';
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('tableModal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('tableModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Only trigger in data management modal
+            if (document.getElementById('tableManagementModal').style.display === 'block') {
+                // Ctrl+N - Add new record
+                if (e.ctrlKey && e.key === 'n') {
+                    e.preventDefault();
+                    addRecord();
+                    showNotification('Add Record (Ctrl+N)', 'info');
+                }
+                
+                // Ctrl+S - Save record (if edit modal is open)
+                if (e.ctrlKey && e.key === 's') {
+                    e.preventDefault();
+                    const editModal = document.getElementById('recordEditModal');
+                    if (editModal && editModal.style.display === 'block') {
+                        const recordId = document.getElementById('recordEditForm').dataset.recordId;
+                        saveRecord(recordId);
+                    }
+                }
+                
+                // Escape - Close modals
+                if (e.key === 'Escape') {
+                    const editModal = document.getElementById('recordEditModal');
+                    if (editModal && editModal.style.display === 'block') {
+                        closeRecordEdit();
+                    }
+                }
+                
+                // Ctrl+F - Focus search
+                if (e.ctrlKey && e.key === 'f') {
+                    e.preventDefault();
+                    document.getElementById('quickSearch').focus();
+                    showNotification('Search (Ctrl+F)', 'info');
+                }
+                
+                // Ctrl+E - Export data
+                if (e.ctrlKey && e.key === 'e') {
+                    e.preventDefault();
+                    exportData();
+                }
+            }
+        });
+
+        // Add some animation on load
+        window.addEventListener('load', function() {
+            const cards = document.querySelectorAll('.table-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.5s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 50);
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

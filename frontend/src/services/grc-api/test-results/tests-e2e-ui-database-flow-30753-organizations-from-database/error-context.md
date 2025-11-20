@@ -1,0 +1,25 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - text: "Html Webpack Plugin:"
+  - generic [ref=e2]:
+    - text: "Error: Child compilation failed: Module not found: Error: Can't resolve 'D:\\Sample fortheam the tols -TEMPLATE\\frontend\\node_modules\\html-webpack-plugin\\lib\\loader.js' in 'D:\\Sample fortheam the tols -TEMPLATE\\frontend' ModuleNotFoundError: Module not found: Error: Can't resolve 'D:\\Sample fortheam the tols -TEMPLATE\\frontend\\node_modules\\html-webpack-plugin\\lib\\loader.js' in 'D:\\Sample fortheam the tols -TEMPLATE\\frontend' at D:\\Sample fortheam the tols -TEMPLATE\\frontend\\node_modules\\webpack\\lib\\Compilation.js:2029:28 at D:\\Sample fortheam the tols -TEMPLATE\\frontend\\node_modules\\webpack\\lib\\NormalModuleFactory.js:1031:13 at eval (eval at create (D:\\Sample fortheam the tols -TEMPLATE\\frontend\\node_modules\\tapable\\lib\\HookCodeFactory.js:31:10),"
+    - generic [ref=e3]:
+      - text: :10:1) at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\webpack\lib\NormalModuleFactory.js:432:22 at eval (eval at create (D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\tapable\lib\HookCodeFactory.js:31:10),
+      - generic [ref=e4]:
+        - text: :9:1) at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\webpack\lib\NormalModuleFactory.js:617:22 at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\webpack\lib\NormalModuleFactory.js:179:10 at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\webpack\lib\NormalModuleFactory.js:849:23 at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\webpack\lib\NormalModuleFactory.js:1341:5 at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\neo-async\async.js:2830:7 at done (D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\neo-async\async.js:2925:13) at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\webpack\lib\NormalModuleFactory.js:1300:10 at finishWithoutResolve (D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\enhanced-resolve\lib\Resolver.js:568:11) at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\enhanced-resolve\lib\Resolver.js:657:14 at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\enhanced-resolve\lib\Resolver.js:718:5 at eval (eval at create (D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\tapable\lib\HookCodeFactory.js:31:10),
+        - generic [ref=e5]:
+          - text: :16:1) at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\enhanced-resolve\lib\Resolver.js:718:5 at eval (eval at create (D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\tapable\lib\HookCodeFactory.js:31:10),
+          - generic [ref=e6]:
+            - text: :27:1) at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\enhanced-resolve\lib\DescriptionFilePlugin.js:89:43 at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\enhanced-resolve\lib\Resolver.js:718:5 at eval (eval at create (D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\tapable\lib\HookCodeFactory.js:31:10),
+            - generic [ref=e7]:
+              - text: :15:1) at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\enhanced-resolve\lib\Resolver.js:718:5 at eval (eval at create (D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\tapable\lib\HookCodeFactory.js:31:10),
+              - generic [ref=e8]:
+                - text: :15:1) at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\enhanced-resolve\lib\Resolver.js:718:5 at eval (eval at create (D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\tapable\lib\HookCodeFactory.js:31:10),
+                - generic [ref=e9]:
+                  - text: :16:1) at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\enhanced-resolve\lib\Resolver.js:718:5 at eval (eval at create (D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\tapable\lib\HookCodeFactory.js:31:10),
+                  - generic [ref=e10]:
+                    - text: :27:1) at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\enhanced-resolve\lib\DescriptionFilePlugin.js:89:43 at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\enhanced-resolve\lib\Resolver.js:718:5 at eval (eval at create (D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\tapable\lib\HookCodeFactory.js:31:10),
+                    - generic [ref=e11]: :16:1) at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\enhanced-resolve\lib\Resolver.js:718:5 at eval (eval at create (D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\tapable\lib\HookCodeFactory.js:31:10), :15:1) at D:\Sample fortheam the tols -TEMPLATE\frontend\node_modules\enhanced-resolve\lib\DirectoryExistsPlugin.js:43:15 at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+```

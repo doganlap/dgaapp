@@ -6,17 +6,23 @@
 ### 🏛️ Overview
 The DGA Oversight Platform is a comprehensive digital governance system designed for the Digital Government Authority (DGA) of Saudi Arabia to monitor, track, and manage digital transformation initiatives across 158 government entities.
 
-### 📊 Key Features
+### 📊 Two Main Modules
+
+#### 1️⃣ **DGA Module - Performance Monitoring & Oversight**
 - **158 Government Entities** monitored across 5 regions (Target: 100% coverage)
 - **300+ Digital Programs** tracking (Digital Transformation, Infrastructure, AI, Cybersecurity, etc.)
 - **691 Users** with 7 role-based access levels
 - **SAR 2.48+ Billion** budget oversight and allocation
 - **Real-time KPI Tracking** and performance analytics
 - **Multi-region Architecture** (Central, Western, Eastern, Northern, Southern)
-- **🚀 Advanced Analytics** - Predictive budget forecasting, risk analysis, digital maturity scoring
-- **🛡️ Compliance Monitoring** - PDPL, NCA ECC, ISO 27001 automated compliance reporting
-- **⚙️ Workflow Automation** - Multi-level approvals, automated alerts, batch operations
-- **📊 GRC Module** - Complete Governance, Risk & Compliance management (Production-ready)
+- **Interactive DataTables** with sorting, filtering, pagination, and export
+
+#### 2️⃣ **GRC Module - Governance, Risk & Compliance** (Production-Ready)
+- **Risk Management** - Identify, assess, and mitigate organizational risks
+- **Compliance Tracking** - Monitor compliance with standards (NCA ECC, PDPL, ISO 27001)
+- **GRC Dashboard** - Executive overview of GRC metrics
+- **Insights & Analytics** - AI-powered recommendations and trends
+- **Complete CRUD Operations** - Full risk and compliance record management
 
 ### 🚀 Technology Stack
 

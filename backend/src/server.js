@@ -17,6 +17,8 @@ const authRoutes = require('./routes/auth.routes');
 const dgaRoutes = require('./routes/dga.routes');
 const advancedRoutes = require('./routes/advanced.routes');
 const grcRoutes = require('./routes/grc.routes');
+const comprehensiveGrcRoutes = require('./routes/comprehensive_grc.routes');
+const grcScoringRoutes = require('./routes/grc_scoring_guidance.routes');
 
 // Initialize app
 const app = express();
@@ -158,7 +160,19 @@ app.get('/api', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/dga', dgaRoutes);
 app.use('/api/advanced', advancedRoutes);
+
+// IMPORTANT: Mount comprehensive GRC routes BEFORE general GRC routes
+// This ensures /api/grc/comprehensive/* routes are matched before /api/grc/* routes
+app.use('/api/grc/comprehensive', comprehensiveGrcRoutes);
+logger.info('✅ Comprehensive GRC routes mounted at /api/grc/comprehensive');
+
+// Mount general GRC routes (these should not conflict with comprehensive routes)
 app.use('/api/grc', grcRoutes);
+
+// Mount GRC scoring and guidance routes
+app.use('/api/grc/scoring', grcScoringRoutes);
+app.use('/api/grc/indicators', grcScoringRoutes);
+app.use('/api/grc/guidance', grcScoringRoutes);
 
 // 404 handler
 app.use(notFoundHandler);

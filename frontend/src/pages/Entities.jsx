@@ -239,66 +239,6 @@ function Entities() {
       )}
 
 
-      {/* Entities Grid */}
-      {loading ? (
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredEntities.map((entity) => (
-            <div key={entity.entity_id} className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <h3 className="text-lg font-bold text-gray-900">{isAr ? (entity.entity_name_ar || entity.entity_name || entity.entity_name_en) : (entity.entity_name_en || entity.entity_name)}</h3>
-                  <p className="text-sm text-gray-600 mt-1">{entity.entity_code}</p>
-                </div>
-                <span className={`badge ${entity.status === 'Active' ? 'badge-success' : 'badge-warning'}`}>
-                  {entity.status}
-                </span>
-              </div>
-
-              <div className="space-y-2 text-sm">
-                <div className="flex items-center gap-2 text-gray-600">
-                  <FiMapPin className="text-primary-500" />
-                  <span>{entity.location_city}, {entity.region}</span>
-                </div>
-                <div className="flex items-center justify-between py-2 border-t border-gray-100">
-                  <span className="text-gray-600">{isAr ? 'النوع:' : 'Type:'}</span>
-                  <span className="font-medium text-gray-900">{entity.entity_type}</span>
-                </div>
-                <div className="flex items-center justify-between py-2 border-t border-gray-100">
-                  <span className="text-gray-600">{isAr ? 'القطاع:' : 'Sector:'}</span>
-                  <span className="font-medium text-gray-900">{entity.sector}</span>
-                </div>
-                <div className="flex items-center justify-between py-2 border-t border-gray-100">
-                  <span className="text-gray-600">{isAr ? 'البرامج النشطة:' : 'Active Programs:'}</span>
-                  <span className="font-bold text-primary-600">{entity.active_programs}</span>
-                </div>
-                <div className="flex items-center justify-between py-2 border-t border-gray-100">
-                  <span className="text-gray-600">{isAr ? 'الميزانية:' : 'Budget:'}</span>
-                  <span className="font-bold text-green-600">
-                    {isAr ? 'ريال' : 'SAR'} {(entity.total_budget / 1000000).toFixed(1)}{isAr ? 'م' : 'M'}
-                  </span>
-                </div>
-              </div>
-
-              <button 
-                onClick={() => setSelectedEntity(entity)}
-                className="w-full mt-4 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
-              >
-                {isAr ? 'عرض التفاصيل' : 'View Details'}
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {!loading && filteredEntities.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">{isAr ? 'لا توجد جهات' : 'No entities found'}</p>
-        </div>
-      )}
 
       {/* Entity Detail Modal */}
       {selectedEntity && (

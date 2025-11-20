@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KSA IoT/IoMT Compliance - Hierarchical View</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            padding: 30px;
+        }
+
+        .filter-section {
+            background: #f0f4ff;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .filter-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"], select {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .results-info {
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .results-count {
+            font-weight: 600;
+            color: #2e7d32;
+            font-size: 16px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #6639a3 100%);
+        }
+
+        th.sortable::after {
+            content: ' ⇅';
+            opacity: 0.5;
+            font-size: 12px;
+        }
+
+        th.asc::after {
+            content: ' ▲';
+            opacity: 1;
+        }
+
+        th.desc::after {
+            content: ' ▼';
+            opacity: 1;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            margin: 2px;
+            white-space: nowrap;
+        }
+
+        .badge-regulator {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .badge-framework {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .badge-control {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-type-preventive {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .badge-type-detective {
+            background: #fff9c4;
+            color: #f57f17;
+        }
+
+        .badge-type-corrective {
+            background: #ffccbc;
+            color: #d84315;
+        }
+
+        .badge-evidence {
+            background: #e0f2f1;
+            color: #00695c;
+        }
+
+        .badge-sector {
+            background: #e8eaf6;
+            color: #3f51b5;
+        }
+
+        .hierarchical-item {
+            margin-bottom: 3px;
+            padding: 3px 0;
+        }
+
+        .sub-item {
+            padding-left: 15px;
+            border-left: 2px solid #e0e0e0;
+            margin-top: 5px;
+        }
+
+        .requirement-text {
+            color: #555;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .evidence-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .evidence-item {
+            padding: 5px 8px;
+            background: #f9f9f9;
+            margin: 3px 0;
+            border-radius: 4px;
+            border-left: 3px solid #667eea;
+            font-size: 13px;
+        }
+
+        .sector-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .control-id {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .filter-section, .button-group {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 KSA IoT/IoMT Healthcare Compliance</h1>
+            <div class="subtitle">Hierarchical View: Regulator → Framework → Control → Requirements → Evidence → Sector</div>
+        </div>
+
+        <div class="controls">
+            <!-- Filters -->
+            <div class="filter-section">
+                <div class="filter-title">🔍 Advanced Filters - Hierarchical Data View</div>
+                
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">🔎 Search All</label>
+                        <input type="text" id="searchAll" placeholder="Search..." onkeyup="applyFilters()">
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">🏛️ Regulator</label>
+                        <select id="filterRegulator" onchange="applyFilters()">
+                            <option value="">All Regulators</option>
+                            <option value="NCA">NCA - National Cybersecurity Authority</option>
+                            <option value="SDAIA/NDMO">SDAIA/NDMO - Data & AI Authority</option>
+                            <option value="SHC/MoH/CHI">SHC/MoH/CHI - Health Council/Ministry</option>
+                            <option value="SFDA">SFDA - Food & Drug Authority</option>
+                            <option value="CST">CST - Communications & Tech Commission</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">📜 Framework/Instrument</label>
+                        <select id="filterFramework" onchange="applyFilters()">
+                            <option value="">All Frameworks</option>
+                            <option value="NCA-ECC">NCA-ECC - Essential Cybersecurity Controls</option>
+                            <option value="NCA-IoT">NCA-IoT - IoT Cybersecurity Guidelines</option>
+                            <option value="NCA-OTCC">NCA-OTCC - OT Cybersecurity Controls</option>
+                            <option value="PDPL">PDPL - Personal Data Protection Law</option>
+                            <option value="HIE-SEC">HIE-SEC - HIE Security Policies</option>
+                            <option value="NHIC-SecPriv">NHIC-SecPriv - eHealth Security Standard</option>
+                            <option value="NPHIES">NPHIES - Health Insurance Platform</option>
+                            <option value="CST-IoT">CST-IoT - IoT Regulatory Framework</option>
+                            <option value="SFDA-Pre">SFDA-Pre - Pre-market Cybersecurity</option>
+                            <option value="SFDA-Post">SFDA-Post - Post-market Cybersecurity</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">🎯 Control Type</label>
+                        <select id="filterType" onchange="applyFilters()">
+                            <option value="">All Types</option>
+                            <option value="Preventive">Preventive</option>
+                            <option value="Detective">Detective</option>
+                            <option value="Corrective">Corrective</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">🏥 Sector</label>
+                        <select id="filterSector" onchange="applyFilters()">
+                            <option value="">All Sectors</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Hospitals">Hospitals</option>
+                            <option value="Clinics">Clinics</option>
+                            <option value="Pharmacies">Pharmacies</option>
+                            <option value="Medical Devices">Medical Devices</option>
+                            <option value="Health Insurance">Health Insurance</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">📊 Evidence Type</label>
+                        <select id="filterEvidence" onchange="applyFilters()">
+                            <option value="">All Evidence</option>
+                            <option value="Policy">Policy Documents</option>
+                            <option value="Config/Log/Report">Configuration/Logs/Reports</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="applyFilters()">🔍 Apply Filters</button>
+                    <button class="btn btn-secondary" onclick="resetFilters()">🔄 Reset All</button>
+                    <button class="btn btn-primary" onclick="exportToCSV()">📥 Export CSV</button>
+                    <button class="btn btn-primary" onclick="exportToJSON()">📥 Export JSON</button>
+                    <button class="btn btn-secondary" onclick="window.print()">🖨️ Print</button>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="results-info">
+                <div class="results-count" id="resultsCount">Showing 36 of 36 controls</div>
+            </div>
+
+            <!-- Hierarchical Table -->
+            <div class="table-container">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th class="sortable" onclick="sortTable(0)" style="width: 10%;">🏛️ Regulator</th>
+                            <th class="sortable" onclick="sortTable(1)" style="width: 12%;">📜 Framework</th>
+                            <th class="sortable" onclick="sortTable(2)" style="width: 10%;">🔒 Control ID</th>
+                            <th style="width: 18%;">📋 Requirements & Details</th>
+                            <th style="width: 20%;">📁 Evidence (2 items)</th>
+                            <th style="width: 15%;">🏥 Applicable Sectors</th>
+                            <th class="sortable" onclick="sortTable(6)" style="width: 8%;">🎯 Type</th>
+                            <th style="width: 7%;">👤 Owner</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Data populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Complete hierarchical data
+        const hierarchicalData = [
+            {
+                id: "C-001",
+                regulators: ["NCA"],
+                frameworks: ["NCA-ECC", "NCA-IoT"],
+                control: "ISMS governance established (scope includes IoT/IoMT)",
+                requirements: "Establish Information Security Management System covering IoT/IoMT devices. Document scope, policies, and governance structure.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-001", type: "Policy", desc: "ISMS governance policy document"},
+                    {id: "E-002", type: "Config/Log/Report", desc: "ISMS implementation evidence"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics", "Medical Devices"]
+            },
+            {
+                id: "C-002",
+                regulators: ["NCA", "SHC/MoH/CHI"],
+                frameworks: ["NCA-IoT", "HIE-SEC"],
+                control: "Risk assessment for IoT/IoMT and HIE interfaces (annual)",
+                requirements: "Conduct annual risk assessment for IoT/IoMT devices and Health Information Exchange interfaces. Document risks, impacts, and mitigation strategies.",
+                type: "Detective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-003", type: "Policy", desc: "Risk assessment methodology"},
+                    {id: "E-004", type: "Config/Log/Report", desc: "Annual risk assessment report"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics", "Health Insurance"]
+            },
+            {
+                id: "C-003",
+                regulators: ["NCA"],
+                frameworks: ["NCA-ECC"],
+                control: "Third-line assurance / internal audit over IoT controls",
+                requirements: "Conduct independent internal audit of IoT security controls. Provide assurance to management on control effectiveness.",
+                type: "Detective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-005", type: "Policy", desc: "Internal audit charter and plan"},
+                    {id: "E-006", type: "Config/Log/Report", desc: "Audit findings and reports"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics"]
+            },
+            {
+                id: "C-004",
+                regulators: ["SDAIA/NDMO", "SHC/MoH/CHI"],
+                frameworks: ["PDPL", "HIE-SEC"],
+                control: "PDPL lawful basis & consent model for patient telemetry",
+                requirements: "Establish lawful basis under PDPL for processing patient telemetry data. Implement consent management for data collection and sharing.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-007", type: "Policy", desc: "Consent management policy"},
+                    {id: "E-008", type: "Config/Log/Report", desc: "Consent records and logs"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics", "Health Insurance"]
+            },
+            {
+                id: "C-005",
+                regulators: ["SDAIA/NDMO"],
+                frameworks: ["PDPL"],
+                control: "DPIA for connected devices & cross-border flows",
+                requirements: "Conduct Data Protection Impact Assessment for connected medical devices. Document cross-border data flows and ensure PDPL compliance.",
+                type: "Detective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-009", type: "Policy", desc: "DPIA methodology and templates"},
+                    {id: "E-010", type: "Config/Log/Report", desc: "Completed DPIA reports"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Medical Devices"]
+            },
+            {
+                id: "C-006",
+                regulators: ["SDAIA/NDMO"],
+                frameworks: ["PDPL"],
+                control: "DSR handling (access, rectification, deletion) incl. device data",
+                requirements: "Implement processes for handling Data Subject Rights requests including device-generated data. Support access, rectification, and deletion requests.",
+                type: "Corrective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-011", type: "Policy", desc: "DSR handling procedures"},
+                    {id: "E-012", type: "Config/Log/Report", desc: "DSR request logs"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics"]
+            },
+            {
+                id: "C-007",
+                regulators: ["NCA", "SFDA"],
+                frameworks: ["NCA-IoT", "SFDA-Pre"],
+                control: "Secure boot, code signing, and measured boot for devices",
+                requirements: "Implement secure boot mechanisms with code signing. Ensure measured boot for device integrity verification. Required for medical device certification.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-013", type: "Policy", desc: "Secure boot requirements"},
+                    {id: "E-014", type: "Config/Log/Report", desc: "Boot verification logs"}
+                ],
+                sectors: ["Medical Devices", "Healthcare", "Hospitals"]
+            },
+            {
+                id: "C-008",
+                regulators: ["NCA"],
+                frameworks: ["NCA-IoT"],
+                control: "Cryptography (TLS/mTLS, at-rest, keys in HSM/SE)",
+                requirements: "Implement strong cryptography for data in transit (TLS/mTLS) and at rest. Store cryptographic keys in Hardware Security Module or Secure Element.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-015", type: "Policy", desc: "Cryptographic standards policy"},
+                    {id: "E-016", type: "Config/Log/Report", desc: "Encryption configuration"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Medical Devices"]
+            },
+            {
+                id: "C-009",
+                regulators: ["NCA", "SFDA"],
+                frameworks: ["NCA-IoT", "SFDA-Post"],
+                control: "OTA updates with rollback & SBOM-based impact analysis",
+                requirements: "Implement secure Over-The-Air update mechanism with rollback capability. Maintain Software Bill of Materials for vulnerability impact analysis.",
+                type: "Corrective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-017", type: "Policy", desc: "OTA update policy and SBOM"},
+                    {id: "E-018", type: "Config/Log/Report", desc: "Update logs and rollback tests"}
+                ],
+                sectors: ["Medical Devices", "Healthcare", "Hospitals"]
+            },
+            {
+                id: "C-010",
+                regulators: ["NCA"],
+                frameworks: ["NCA-OTCC", "NCA-IoT"],
+                control: "Network zoning for IoMT (patient, clinical, admin, guest)",
+                requirements: "Implement network segmentation with separate zones for patient monitoring, clinical systems, administrative functions, and guest access.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-019", type: "Policy", desc: "Network segmentation design"},
+                    {id: "E-020", type: "Config/Log/Report", desc: "Network zone configuration"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics"]
+            },
+            {
+                id: "C-011",
+                regulators: ["NCA"],
+                frameworks: ["NCA-IoT"],
+                control: "Gateway allowlists & egress filtering for device traffic",
+                requirements: "Configure IoT gateways with allowlist-based access control. Implement egress filtering to restrict device communications to authorized destinations.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-021", type: "Policy", desc: "Gateway security policy"},
+                    {id: "E-022", type: "Config/Log/Report", desc: "Allowlist configurations"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Medical Devices"]
+            },
+            {
+                id: "C-012",
+                regulators: ["NCA"],
+                frameworks: ["NCA-IoT", "NCA-ECC"],
+                control: "Zero Trust access between device, platform, cloud",
+                requirements: "Implement Zero Trust architecture for device-to-platform and platform-to-cloud communications. Verify identity and context for every access request.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-023", type: "Policy", desc: "Zero Trust architecture design"},
+                    {id: "E-024", type: "Config/Log/Report", desc: "Access verification logs"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics"]
+            },
+            {
+                id: "C-013",
+                regulators: ["NCA"],
+                frameworks: ["NCA-IoT"],
+                control: "Unique identities for devices & services (cert-based)",
+                requirements: "Assign unique digital identities to all IoT devices and services. Use certificate-based authentication for device identification.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-025", type: "Policy", desc: "Device identity management policy"},
+                    {id: "E-026", type: "Config/Log/Report", desc: "Certificate inventory"}
+                ],
+                sectors: ["Medical Devices", "Healthcare", "Hospitals"]
+            },
+            {
+                id: "C-014",
+                regulators: ["NCA"],
+                frameworks: ["NCA-ECC"],
+                control: "MFA & least-privilege for admins of IoMT platforms",
+                requirements: "Enforce Multi-Factor Authentication for all IoMT platform administrators. Implement least-privilege access model for administrative functions.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-027", type: "Policy", desc: "Admin access control policy"},
+                    {id: "E-028", type: "Config/Log/Report", desc: "MFA configuration and logs"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics"]
+            },
+            {
+                id: "C-015",
+                regulators: ["NCA"],
+                frameworks: ["NCA-ECC"],
+                control: "Just-in-time privileged access with session recording",
+                requirements: "Implement Just-In-Time (JIT) privileged access for IoMT systems. Record all privileged sessions for audit and forensic purposes.",
+                type: "Detective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-029", type: "Policy", desc: "JIT access policy"},
+                    {id: "E-030", type: "Config/Log/Report", desc: "Session recordings archive"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics"]
+            },
+            {
+                id: "C-016",
+                regulators: ["NCA"],
+                frameworks: ["NCA-IoT"],
+                control: "Device/platform security logs centralized (SIEM)",
+                requirements: "Centralize all IoMT device and platform security logs in Security Information and Event Management (SIEM) system for monitoring and analysis.",
+                type: "Detective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-031", type: "Policy", desc: "Logging and monitoring policy"},
+                    {id: "E-032", type: "Config/Log/Report", desc: "SIEM configuration"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics"]
+            },
+            {
+                id: "C-017",
+                regulators: ["SHC/MoH/CHI"],
+                frameworks: ["HIE-SEC", "NHIC-SecPriv"],
+                control: "Clinical audit trails (who accessed which record)",
+                requirements: "Maintain comprehensive audit trails of all clinical data access. Record user identity, timestamp, and accessed records for compliance and forensics.",
+                type: "Detective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-033", type: "Policy", desc: "Audit trail policy"},
+                    {id: "E-034", type: "Config/Log/Report", desc: "Access logs"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics", "Health Insurance"]
+            },
+            {
+                id: "C-018",
+                regulators: ["NCA"],
+                frameworks: ["NCA-IoT"],
+                control: "Time sync/NTP hardening across IoMT estate",
+                requirements: "Implement and harden Network Time Protocol (NTP) across all IoMT devices. Ensure accurate timestamps for logs and audit trails.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-035", type: "Policy", desc: "Time synchronization policy"},
+                    {id: "E-036", type: "Config/Log/Report", desc: "NTP configuration"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Medical Devices"]
+            },
+            {
+                id: "C-019",
+                regulators: ["NCA", "SFDA"],
+                frameworks: ["NCA-IoT", "SFDA-Pre"],
+                control: "SBOM management & SCA for device firmware/apps",
+                requirements: "Maintain Software Bill of Materials (SBOM) for all device firmware and applications. Conduct Software Composition Analysis (SCA) for vulnerabilities.",
+                type: "Detective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-037", type: "Policy", desc: "SBOM management policy"},
+                    {id: "E-038", type: "Config/Log/Report", desc: "SBOM repository and SCA reports"}
+                ],
+                sectors: ["Medical Devices", "Healthcare", "Hospitals"]
+            },
+            {
+                id: "C-020",
+                regulators: ["NCA"],
+                frameworks: ["NCA-ECC"],
+                control: "Routine VA & prioritized patching (risk-based SLAs)",
+                requirements: "Conduct routine Vulnerability Assessments. Implement risk-based patching with defined SLAs for critical, high, medium, and low vulnerabilities.",
+                type: "Corrective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-039", type: "Policy", desc: "Patch management policy"},
+                    {id: "E-040", type: "Config/Log/Report", desc: "VA scan results and patch logs"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Medical Devices"]
+            },
+            {
+                id: "C-021",
+                regulators: ["SFDA"],
+                frameworks: ["SFDA-Post"],
+                control: "Coordinated vulnerability disclosure process",
+                requirements: "Establish coordinated vulnerability disclosure process for medical devices. Work with SFDA and manufacturers on vulnerability remediation.",
+                type: "Corrective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-041", type: "Policy", desc: "Vulnerability disclosure policy"},
+                    {id: "E-042", type: "Config/Log/Report", desc: "Disclosure case logs"}
+                ],
+                sectors: ["Medical Devices", "Healthcare", "Hospitals"]
+            },
+            {
+                id: "C-022",
+                regulators: ["SHC/MoH/CHI", "SDAIA/NDMO"],
+                frameworks: ["HIE-SEC", "PDPL"],
+                control: "Consent capture & enforcement for data sharing",
+                requirements: "Implement consent capture mechanism for Health Information Exchange. Enforce consent preferences before data sharing across systems.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-043", type: "Policy", desc: "Consent management framework"},
+                    {id: "E-044", type: "Config/Log/Report", desc: "Consent enforcement logs"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics", "Health Insurance"]
+            },
+            {
+                id: "C-023",
+                regulators: ["SHC/MoH/CHI"],
+                frameworks: ["NPHIES"],
+                control: "NPHIES integration security (claims/eligibility)",
+                requirements: "Secure integration with National Platform for Health Insurance Exchange Services (NPHIES). Protect claims and eligibility data in transit and at rest.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-045", type: "Policy", desc: "NPHIES security standards"},
+                    {id: "E-046", type: "Config/Log/Report", desc: "Integration security config"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics", "Health Insurance"]
+            },
+            {
+                id: "C-024",
+                regulators: ["SHC/MoH/CHI"],
+                frameworks: ["HIE-SEC"],
+                control: "End-to-end message protection & non-repudiation",
+                requirements: "Implement end-to-end encryption for HIE messages. Ensure non-repudiation through digital signatures for all clinical data exchanges.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-047", type: "Policy", desc: "Message security architecture"},
+                    {id: "E-048", type: "Config/Log/Report", desc: "Encryption and signing logs"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics", "Health Insurance"]
+            },
+            {
+                id: "C-025",
+                regulators: ["NCA"],
+                frameworks: ["NCA-OTCC"],
+                control: "Asset inventory for clinical/OT devices (incl. IoMT)",
+                requirements: "Maintain comprehensive inventory of all clinical and Operational Technology (OT) devices including IoMT. Track location, ownership, and status.",
+                type: "Detective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-049", type: "Policy", desc: "Asset management policy"},
+                    {id: "E-050", type: "Config/Log/Report", desc: "Asset inventory database"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics"]
+            },
+            {
+                id: "C-026",
+                regulators: ["NCA"],
+                frameworks: ["NCA-OTCC"],
+                control: "Segmentation firewalls & jump hosts for maintenance",
+                requirements: "Implement segmentation firewalls between clinical networks and corporate networks. Use jump hosts for remote maintenance access to OT systems.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-051", type: "Policy", desc: "OT network security design"},
+                    {id: "E-052", type: "Config/Log/Report", desc: "Firewall rules and jump host logs"}
+                ],
+                sectors: ["Healthcare", "Hospitals"]
+            },
+            {
+                id: "C-027",
+                regulators: ["NCA"],
+                frameworks: ["NCA-OTCC", "NCA-ECC"],
+                control: "Change control for clinical systems touching IoMT",
+                requirements: "Implement formal change control process for all clinical systems that interface with IoMT. Assess impact, test, and approve changes before deployment.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-053", type: "Policy", desc: "Change management policy"},
+                    {id: "E-054", type: "Config/Log/Report", desc: "Change request records"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Medical Devices"]
+            },
+            {
+                id: "C-028",
+                regulators: ["SDAIA/NDMO"],
+                frameworks: ["PDPL"],
+                control: "Data classification incl. sensor telemetry & PHI",
+                requirements: "Classify all data including sensor telemetry and Protected Health Information (PHI). Apply appropriate security controls based on classification.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-055", type: "Policy", desc: "Data classification scheme"},
+                    {id: "E-056", type: "Config/Log/Report", desc: "Classified data inventory"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics"]
+            },
+            {
+                id: "C-029",
+                regulators: ["SDAIA/NDMO"],
+                frameworks: ["PDPL"],
+                control: "Localization & cross-border transfer register",
+                requirements: "Maintain register of all cross-border personal data transfers. Ensure data localization requirements under PDPL are met for sensitive health data.",
+                type: "Detective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-057", type: "Policy", desc: "Data localization policy"},
+                    {id: "E-058", type: "Config/Log/Report", desc: "Cross-border transfer register"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Health Insurance"]
+            },
+            {
+                id: "C-030",
+                regulators: ["NCA"],
+                frameworks: ["NCA-ECC"],
+                control: "Backup/DR for IoMT platforms & HIE bridges",
+                requirements: "Implement backup and Disaster Recovery (DR) for IoMT platforms and HIE bridge systems. Test recovery procedures regularly.",
+                type: "Corrective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-059", type: "Policy", desc: "Backup and DR policy"},
+                    {id: "E-060", type: "Config/Log/Report", desc: "Backup logs and DR test results"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics"]
+            },
+            {
+                id: "C-031",
+                regulators: ["CST"],
+                frameworks: ["CST-IoT"],
+                control: "CST device approval/type certification evidence on file",
+                requirements: "Maintain evidence of CST device type approval/certification for all IoT devices. Ensure compliance with Communications and Space Technology Commission requirements.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-061", type: "Policy", desc: "Device procurement policy"},
+                    {id: "E-062", type: "Config/Log/Report", desc: "CST approval certificates"}
+                ],
+                sectors: ["Medical Devices", "Healthcare", "Hospitals"]
+            },
+            {
+                id: "C-032",
+                regulators: ["NCA", "SFDA"],
+                frameworks: ["NCA-IoT", "SFDA-Pre"],
+                control: "Supplier security clauses (SBOM, updates, vuln SLAs)",
+                requirements: "Include security clauses in supplier contracts requiring SBOM delivery, timely security updates, and vulnerability remediation SLAs.",
+                type: "Preventive",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-063", type: "Policy", desc: "Supplier security requirements"},
+                    {id: "E-064", type: "Config/Log/Report", desc: "Executed supplier contracts"}
+                ],
+                sectors: ["Medical Devices", "Healthcare", "Hospitals", "Pharmacies"]
+            },
+            {
+                id: "C-033",
+                regulators: ["CST"],
+                frameworks: ["CST-IoT"],
+                control: "eSIM/NB-IoT profiles managed & auditable",
+                requirements: "Manage eSIM and NB-IoT connectivity profiles for medical devices. Maintain audit trail of profile changes and device connectivity.",
+                type: "Detective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-065", type: "Policy", desc: "Cellular connectivity policy"},
+                    {id: "E-066", type: "Config/Log/Report", desc: "eSIM management logs"}
+                ],
+                sectors: ["Medical Devices", "Healthcare"]
+            },
+            {
+                id: "C-034",
+                regulators: ["NCA"],
+                frameworks: ["NCA-ECC"],
+                control: "24/7 incident response runbook for IoMT scenarios",
+                requirements: "Develop and maintain 24/7 incident response runbook specific to IoMT scenarios. Include escalation procedures and medical safety considerations.",
+                type: "Corrective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-067", type: "Policy", desc: "Incident response plan"},
+                    {id: "E-068", type: "Config/Log/Report", desc: "Incident response logs"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics"]
+            },
+            {
+                id: "C-035",
+                regulators: ["SDAIA/NDMO"],
+                frameworks: ["PDPL"],
+                control: "Breach assessment & PDPL notification workflow",
+                requirements: "Establish breach assessment process to determine PDPL notification requirements. Implement workflow for notifying SDAIA and affected individuals within required timeframes.",
+                type: "Corrective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-069", type: "Policy", desc: "Breach notification procedures"},
+                    {id: "E-070", type: "Config/Log/Report", desc: "Breach assessment records"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics", "Health Insurance"]
+            },
+            {
+                id: "C-036",
+                regulators: ["NCA"],
+                frameworks: ["NCA-ECC"],
+                control: "Post-incident lessons learned & control tuning",
+                requirements: "Conduct post-incident reviews to document lessons learned. Tune security controls based on incident findings to improve future detection and response.",
+                type: "Corrective",
+                owner: "CISO/Clinical Eng.",
+                evidence: [
+                    {id: "E-071", type: "Policy", desc: "Continuous improvement process"},
+                    {id: "E-072", type: "Config/Log/Report", desc: "Lessons learned reports"}
+                ],
+                sectors: ["Healthcare", "Hospitals", "Clinics"]
+            }
+        ];
+
+        let sortDirection = {};
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable(hierarchicalData);
+        });
+
+        // Render table
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            data.forEach((item) => {
+                const row = tbody.insertRow();
+                
+                // Store data for filtering
+                row.dataset.searchText = JSON.stringify(item).toLowerCase();
+                row.dataset.regulators = item.regulators.join(',');
+                row.dataset.frameworks = item.frameworks.join(',');
+                row.dataset.type = item.type;
+                row.dataset.sectors = item.sectors.join(',');
+                row.dataset.evidenceTypes = item.evidence.map(e => e.type).join(',');
+
+                row.innerHTML = `
+                    <td>
+                        ${item.regulators.map(r => `<span class="badge badge-regulator">${r}</span>`).join('<br>')}
+                    </td>
+                    <td>
+                        ${item.frameworks.map(f => `<span class="badge badge-framework">${f}</span>`).join('<br>')}
+                    </td>
+                    <td>
+                        <span class="control-id">${item.id}</span>
+                    </td>
+                    <td>
+                        <div style="margin-bottom: 8px;"><strong>${item.control}</strong></div>
+                        <div class="requirement-text">${item.requirements}</div>
+                    </td>
+                    <td>
+                        <ul class="evidence-list">
+                            ${item.evidence.map(e => `
+                                <li class="evidence-item">
+                                    <strong>${e.id}</strong> 
+                                    <span class="badge badge-evidence">${e.type}</span><br>
+                                    <span style="font-size: 12px;">${e.desc}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </td>
+                    <td>
+                        <div class="sector-list">
+                            ${item.sectors.map(s => `<span class="badge badge-sector">${s}</span>`).join(' ')}
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge badge-type-${item.type.toLowerCase()}">${item.type}</span>
+                    </td>
+                    <td style="font-size: 12px;">
+                        ${item.owner}
+                    </td>
+                `;
+            });
+
+            updateResultsCount();
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const searchAll = document.getElementById('searchAll').value.toLowerCase();
+            const filterRegulator = document.getElementById('filterRegulator').value;
+            const filterFramework = document.getElementById('filterFramework').value;
+            const filterType = document.getElementById('filterType').value;
+            const filterSector = document.getElementById('filterSector').value;
+            const filterEvidence = document.getElementById('filterEvidence').value;
+
+            const rows = document.querySelectorAll('#tableBody tr');
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const matchesSearch = !searchAll || row.dataset.searchText.includes(searchAll);
+                const matchesRegulator = !filterRegulator || row.dataset.regulators.includes(filterRegulator);
+                const matchesFramework = !filterFramework || row.dataset.frameworks.includes(filterFramework);
+                const matchesType = !filterType || row.dataset.type === filterType;
+                const matchesSector = !filterSector || row.dataset.sectors.includes(filterSector);
+                const matchesEvidence = !filterEvidence || row.dataset.evidenceTypes.includes(filterEvidence);
+
+                const isVisible = matchesSearch && matchesRegulator && matchesFramework && matchesType && matchesSector && matchesEvidence;
+                
+                row.style.display = isVisible ? '' : 'none';
+                if (isVisible) visibleCount++;
+            });
+
+            document.getElementById('resultsCount').textContent = `Showing ${visibleCount} of ${hierarchicalData.length} controls`;
+        }
+
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('searchAll').value = '';
+            document.getElementById('filterRegulator').value = '';
+            document.getElementById('filterFramework').value = '';
+            document.getElementById('filterType').value = '';
+            document.getElementById('filterSector').value = '';
+            document.getElementById('filterEvidence').value = '';
+            applyFilters();
+        }
+
+        // Sort table
+        function sortTable(columnIndex) {
+            const table = document.getElementById('dataTable');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            const th = table.querySelectorAll('th')[columnIndex];
+            
+            const currentDir = sortDirection[columnIndex] || 'none';
+            const newDir = currentDir === 'asc' ? 'desc' : 'asc';
+            sortDirection[columnIndex] = newDir;
+            
+            table.querySelectorAll('th').forEach(h => h.classList.remove('asc', 'desc'));
+            th.classList.add(newDir);
+
+            rows.sort((a, b) => {
+                let aVal = a.cells[columnIndex].textContent.trim();
+                let bVal = b.cells[columnIndex].textContent.trim();
+                
+                const comparison = aVal.localeCompare(bVal);
+                return newDir === 'asc' ? comparison : -comparison;
+            });
+
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        // Update results count
+        function updateResultsCount() {
+            const visible = Array.from(document.querySelectorAll('#tableBody tr')).filter(r => r.style.display !== 'none').length;
+            document.getElementById('resultsCount').textContent = `Showing ${visible} of ${hierarchicalData.length} controls`;
+        }
+
+        // Export to CSV
+        function exportToCSV() {
+            const rows = Array.from(document.querySelectorAll('#tableBody tr')).filter(r => r.style.display !== 'none');
+            
+            const headers = ['Regulator', 'Framework', 'Control ID', 'Control Title', 'Requirements', 'Type', 'Owner', 'Evidence 1', 'Evidence 2', 'Sectors'];
+            const csvRows = [headers.join(',')];
+
+            rows.forEach(row => {
+                const data = hierarchicalData.find(d => row.dataset.searchText.includes(d.id.toLowerCase()));
+                if (data) {
+                    const rowData = [
+                        `"${data.regulators.join('; ')}"`,
+                        `"${data.frameworks.join('; ')}"`,
+                        data.id,
+                        `"${data.control}"`,
+                        `"${data.requirements}"`,
+                        data.type,
+                        `"${data.owner}"`,
+                        `"${data.evidence[0].id}: ${data.evidence[0].desc}"`,
+                        `"${data.evidence[1].id}: ${data.evidence[1].desc}"`,
+                        `"${data.sectors.join('; ')}"`
+                    ];
+                    csvRows.push(rowData.join(','));
+                }
+            });
+
+            const csv = csvRows.join('\n');
+            downloadFile(csv, `ksa_iot_iomt_hierarchical_${new Date().toISOString().split('T')[0]}.csv`, 'text/csv');
+        }
+
+        // Export to JSON
+        function exportToJSON() {
+            const rows = Array.from(document.querySelectorAll('#tableBody tr')).filter(r => r.style.display !== 'none');
+            const exportData = rows.map(row => {
+                return hierarchicalData.find(d => row.dataset.searchText.includes(d.id.toLowerCase()));
+            }).filter(d => d);
+
+            const json = JSON.stringify(exportData, null, 2);
+            downloadFile(json, `ksa_iot_iomt_hierarchical_${new Date().toISOString().split('T')[0]}.json`, 'application/json');
+        }
+
+        // Download file helper
+        function downloadFile(content, filename, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
+

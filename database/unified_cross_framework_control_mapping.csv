@@ -1,0 +1,263 @@
+primary_framework,primary_control,mapped_framework,mapped_control,mapping_strength,mapping_type,notes
+NCA-ECC,1.1.1,ISO27001,5.1,exact,policy,Same requirement - Information Security Policy
+NCA-ECC,1.1.1,NIST-CSF,ID.GV-1,exact,policy,Organizational cybersecurity policy
+NCA-ECC,1.1.1,SAMA-CSF,1.1.1,exact,policy,Information Security Governance Framework
+NCA-ECC,1.1.1,DGA-DG,1.1.1,partial,policy,Data governance policy covers broader scope
+NCA-ECC,1.1.2,ISO27001,5.1,partial,policy,Policy review requirement
+NCA-ECC,1.1.3,ISO27001,5.2,exact,governance,Roles and Responsibilities
+NCA-ECC,1.1.3,NIST-CSF,ID.GV-2,exact,governance,Cybersecurity roles coordinated
+NCA-ECC,1.1.3,SAMA-CSF,1.1.5,exact,governance,Roles and Responsibilities
+NCA-ECC,1.2.1,ISO27001,8.1,exact,risk,Risk Assessment
+NCA-ECC,1.2.1,NIST-CSF,ID.RA-1,exact,risk,Asset vulnerabilities identified
+NCA-ECC,1.2.1,SAMA-CSF,1.2.2,exact,risk,Risk Assessment
+PDPL,Article-1,DGA-DG,3.1.1,exact,privacy,Personal data protection scope
+PDPL,Article-6,SOC2,P2.1,exact,privacy,Consent for collection use and disclosure
+PDPL,Article-9,SOC2,P5.1,exact,privacy,Right of access to personal information
+PDPL,Article-18,ISO27001,5.34,exact,privacy,Privacy and protection of personal information
+PDPL,Article-18,NCA-ECC,1.3.4,exact,privacy,Personal Data Protection compliance
+PDPL,Article-18,SAMA-CSF,2.3.1,exact,privacy,Privacy Protection
+PDPL,Article-21,ISO27001,5.26,exact,incident,Response to information security incidents (breach notification)
+PDPL,Article-21,NCA-ECC,10.2.1,exact,incident,Incident Reporting to authorities
+PDPL,Article-21,SAMA-CSF,10.2.1,exact,incident,Incident Reporting to SAMA
+ZATCA-EINV-P1,P1-1,DGA-DG,7.1.3,partial,data,Data standards for structured format
+ZATCA-EINV-P1,P1-4,ISO27001,8.24,exact,crypto,Use of cryptography for digital signatures
+ZATCA-EINV-P1,P1-4,NCA-ECC,5.1.1,exact,crypto,Cryptographic Policy
+ZATCA-EINV-P1,P1-6,ISO27001,5.33,exact,retention,Protection of records (6 year retention)
+ZATCA-EINV-P1,P1-6,NCA-ECC,2.3.1,partial,retention,Data Retention and Disposal
+ZATCA-EINV-P1,P1-7,ISO27001,8.1,exact,protection,User endpoint devices protection
+ZATCA-EINV-P1,P1-7,NCA-ECC,6.1.1,partial,protection,Endpoint Protection
+ISO27001,5.1,NCA-ECC,1.1.1,exact,policy,Information Security Policy
+ISO27001,5.1,NIST-CSF,ID.GV-1,exact,policy,Organizational policy
+ISO27001,5.1,SAMA-CSF,1.1.1,exact,policy,Governance framework
+ISO27001,5.1,SOC2,CC1.1,exact,policy,Control environment - integrity
+ISO27001,5.2,NCA-ECC,1.1.3,exact,governance,Roles and Responsibilities
+ISO27001,5.2,NIST-CSF,ID.GV-2,exact,governance,Roles coordinated
+ISO27001,5.2,SAMA-CSF,1.1.5,exact,governance,Roles and Responsibilities
+ISO27001,5.2,SOC2,CC1.3,exact,governance,Organizational structure
+ISO27001,8.1,NCA-ECC,1.2.1,exact,risk,Risk Assessment
+ISO27001,8.1,NIST-CSF,ID.RA-1,exact,risk,Asset vulnerabilities
+ISO27001,8.1,SAMA-CSF,1.2.2,exact,risk,Risk Assessment
+ISO27001,8.1,SOC2,CC3.2,exact,risk,Risk identification
+ISO27001,9.2,NCA-ECC,4.1.1,exact,access,Access Control Policy
+ISO27001,9.2,NIST-CSF,PR.AC-1,exact,access,Identity management
+ISO27001,9.2,SAMA-CSF,3.1.2,exact,access,Identity Management
+ISO27001,9.2,SOC2,CC6.1,exact,access,Authorized users
+ISO27001,9.2,PCI-DSS,7.1,exact,access,Access control policy
+ISO27001,9.4,NCA-ECC,4.3.1,exact,auth,Multi-Factor Authentication
+ISO27001,9.4,NIST-CSF,PR.AC-7,exact,auth,Authentication based on risk
+ISO27001,9.4,SAMA-CSF,3.1.3,exact,auth,Strong Authentication
+ISO27001,9.4,PCI-DSS,8.3,exact,auth,MFA for personnel
+ISO27001,10.1,NCA-ECC,5.1.1,exact,crypto,Cryptographic Policy
+ISO27001,10.1,NIST-CSF,PR.DS-1,exact,crypto,Data-at-rest protection
+ISO27001,10.1,SAMA-CSF,5.1.1,exact,crypto,Cryptography Policy
+ISO27001,10.1,PCI-DSS,3.4,exact,crypto,PAN encryption
+ISO27001,10.1,PDPL,Article-18,partial,crypto,Data security through encryption
+ISO27001,11.1,NCA-ECC,6.1.1,exact,physical,Physical security perimeters
+ISO27001,11.1,NIST-CSF,PR.PT-2,exact,physical,Removable media protected (physical)
+ISO27001,11.1,SAMA-CSF,4.1.1,exact,physical,Security Perimeter
+ISO27001,11.1,SOC2,CC6.6,exact,physical,Physical access to facilities
+ISO27001,12.2,NCA-ECC,6.2.1,exact,malware,Anti-Malware Programs
+ISO27001,12.2,NIST-CSF,DE.CM-4,exact,malware,Malicious code detected
+ISO27001,12.2,SAMA-CSF,6.2.1,exact,malware,Anti-Malware
+ISO27001,12.2,PCI-DSS,5.1,exact,malware,Anti-malware deployment
+ISO27001,12.3,NCA-ECC,7.3.1,exact,backup,Backup procedures
+ISO27001,12.3,NIST-CSF,PR.IP-4,exact,backup,Backups of information
+ISO27001,12.3,SAMA-CSF,2.2.4,exact,backup,Data Backup
+ISO27001,12.3,SOC2,A1.2,exact,backup,Recovery and restoration
+ISO27001,12.3,DGA-DG,7.2.2,exact,backup,Data Backup
+ISO27001,12.4,NCA-ECC,7.4.1,exact,logging,Event Logging
+ISO27001,12.4,NIST-CSF,DE.CM-1,exact,logging,Network monitored
+ISO27001,12.4,SAMA-CSF,9.2.1,exact,logging,Security Logging
+ISO27001,12.4,SOC2,CC7.1,exact,logging,Detection and monitoring
+ISO27001,12.4,PCI-DSS,10.1,exact,logging,Audit trail requirements
+ISO27001,12.6,NCA-ECC,7.1.1,exact,vulnerability,Vulnerability Management
+ISO27001,12.6,NIST-CSF,DE.CM-8,exact,vulnerability,Vulnerability scans
+ISO27001,12.6,SAMA-CSF,7.1.1,exact,vulnerability,Vulnerability Management
+ISO27001,12.6,PCI-DSS,11.2,exact,vulnerability,Vulnerability scans
+ISO27001,13.1,NCA-ECC,4.4.1,exact,network,Network Access Control
+ISO27001,13.1,NIST-CSF,PR.AC-5,exact,network,Network integrity protected
+ISO27001,13.1,SAMA-CSF,3.3.1,exact,network,Network Security
+ISO27001,13.1,PCI-DSS,1.1,exact,network,Firewall documentation
+ISO27001,13.2,PDPL,Article-22,exact,transfer,Cross-Border Transfer
+ISO27001,13.2,DGA-DG,6.1.2,exact,transfer,Cross-Border Transfer
+ISO27001,14.1,NCA-ECC,8.1.1,exact,sdlc,Secure Development
+ISO27001,14.1,NIST-CSF,PR.IP-2,exact,sdlc,System development lifecycle
+ISO27001,14.1,SAMA-CSF,8.1.1,exact,sdlc,Secure Development
+ISO27001,14.1,SOC2,CC9.1,exact,sdlc,Acquisition development maintenance
+ISO27001,14.1,PCI-DSS,6.1,exact,sdlc,Secure development processes
+ISO27001,14.2,NCA-ECC,8.1.2,exact,code-review,Code Review
+ISO27001,14.2,SAMA-CSF,8.1.2,exact,code-review,Code Review
+ISO27001,14.2,PCI-DSS,6.2,exact,code-review,Secure coding practices
+ISO27001,15.1,NCA-ECC,9.1.1,exact,supplier,Supplier Management
+ISO27001,15.1,NIST-CSF,ID.SC-1,exact,supplier,Supply chain risk management
+ISO27001,15.1,SAMA-CSF,12.1.1,exact,supplier,Supplier Management
+ISO27001,15.1,SOC2,CC9.1,partial,supplier,Third-party risk
+ISO27001,16.1,NCA-ECC,10.1.1,exact,incident,Incident Response Plan
+ISO27001,16.1,NIST-CSF,RS.RP-1,exact,incident,Response plan
+ISO27001,16.1,SAMA-CSF,10.1.1,exact,incident,Response Plan
+ISO27001,16.1,SOC2,CC7.2,exact,incident,Security incidents
+ISO27001,16.1,PCI-DSS,12.10,exact,incident,Incident response plan
+ISO27001,17.1,NCA-ECC,11.1.1,exact,continuity,Business Continuity Planning
+ISO27001,17.1,NIST-CSF,RC.RP-1,exact,continuity,Recovery plan
+ISO27001,17.1,SAMA-CSF,11.1.1,exact,continuity,Business Continuity Plan
+ISO27001,17.1,SOC2,A1.3,exact,continuity,Business continuity planning
+ISO27001,17.2,NCA-ECC,11.2.1,exact,redundancy,Redundancy for critical systems
+ISO27001,17.2,NIST-CSF,PR.PT-5,exact,redundancy,Resilience mechanisms
+ISO27001,17.2,SAMA-CSF,11.2.2,exact,redundancy,Redundancy
+NIST-CSF,ID.AM-1,ISO27001,5.9,exact,asset,Asset inventory
+NIST-CSF,ID.AM-1,NCA-ECC,2.1.1,exact,asset,Asset Inventory
+NIST-CSF,ID.AM-1,SAMA-CSF,2.1.1,exact,asset,Asset Inventory
+NIST-CSF,ID.AM-1,DGA-DG,1.3.1,exact,asset,Data Catalog
+NIST-CSF,ID.AM-5,ISO27001,5.12,exact,classification,Information Classification
+NIST-CSF,ID.AM-5,NCA-ECC,2.2.1,exact,classification,Information Classification
+NIST-CSF,ID.AM-5,SAMA-CSF,2.1.3,exact,classification,Information Classification
+NIST-CSF,ID.AM-5,DGA-DG,2.1.1,exact,classification,Data Classification
+NIST-CSF,ID.GV-3,ISO27001,5.31,exact,compliance,Legal regulatory requirements
+NIST-CSF,ID.GV-3,NCA-ECC,1.3.1,exact,compliance,Identify Requirements
+NIST-CSF,ID.GV-3,SAMA-CSF,1.3.1,exact,compliance,Regulatory Compliance
+NIST-CSF,ID.GV-3,PDPL,Article-31,exact,compliance,Legal requirements
+NIST-CSF,ID.RA-1,ISO27001,8.1,exact,risk,Risk assessment
+NIST-CSF,ID.RA-1,NCA-ECC,1.2.1,exact,risk,Risk Assessment
+NIST-CSF,ID.RA-1,SAMA-CSF,1.2.2,exact,risk,Risk Assessment
+NIST-CSF,ID.RA-1,DGA-DG,4.1.3,partial,risk,AI Risk Assessment
+NIST-CSF,PR.AC-1,ISO27001,5.16,exact,access,Identity management
+NIST-CSF,PR.AC-1,NCA-ECC,4.1.1,exact,access,Access Control Policy
+NIST-CSF,PR.AC-1,SAMA-CSF,3.1.2,exact,access,Identity Management
+NIST-CSF,PR.AC-1,SOC2,CC6.1,exact,access,Authorized users
+NIST-CSF,PR.AC-1,PCI-DSS,8.1,exact,access,User identification
+NIST-CSF,PR.AC-4,ISO27001,5.18,exact,access,Access rights management
+NIST-CSF,PR.AC-4,NCA-ECC,4.1.2,exact,access,Need-to-Know Access
+NIST-CSF,PR.AC-4,SAMA-CSF,3.1.5,exact,access,Privileged Access
+NIST-CSF,PR.AC-4,SOC2,CC6.3,exact,access,Logical access restrictions
+NIST-CSF,PR.AC-4,PCI-DSS,7.2,exact,access,Least privilege
+NIST-CSF,PR.DS-1,ISO27001,8.1,exact,protection,Data-at-rest protection
+NIST-CSF,PR.DS-1,NCA-ECC,5.2.1,exact,protection,Data Encryption
+NIST-CSF,PR.DS-1,SAMA-CSF,5.1.3,exact,protection,Sensitive Data Encryption
+NIST-CSF,PR.DS-1,PCI-DSS,3.4,exact,protection,PAN encryption
+NIST-CSF,PR.DS-1,PDPL,Article-18,exact,protection,Data Security
+NIST-CSF,PR.DS-1,DGA-DG,3.2.2,exact,protection,Data Encryption
+NIST-CSF,PR.DS-2,ISO27001,8.24,exact,transmission,Transmission encryption
+NIST-CSF,PR.DS-2,NCA-ECC,5.2.2,exact,transmission,Communications Encryption
+NIST-CSF,PR.DS-2,SAMA-CSF,5.1.4,exact,transmission,Communications Encryption
+NIST-CSF,PR.DS-2,PCI-DSS,4.1,exact,transmission,CHD encryption in transit
+NIST-CSF,PR.DS-5,ISO27001,5.14,exact,transfer,Information transfer
+NIST-CSF,PR.DS-5,PDPL,Article-22,exact,transfer,Cross-border transfer
+NIST-CSF,PR.DS-5,DGA-DG,3.2.4,exact,transfer,Data Loss Prevention
+NIST-CSF,PR.DS-5,SAMA-CSF,2.2.3,exact,transfer,Data Loss Prevention
+NIST-CSF,PR.AT-1,ISO27001,6.3,exact,training,Security awareness training
+NIST-CSF,PR.AT-1,NCA-ECC,3.2.1,exact,training,Security Awareness
+NIST-CSF,PR.AT-1,SAMA-CSF,13.2.1,exact,training,Security Awareness
+NIST-CSF,PR.AT-1,SOC2,CC6.1,partial,training,User training
+NIST-CSF,PR.AT-1,DGA-DG,9.2.1,exact,training,Data Training
+NIST-CSF,PR.IP-1,ISO27001,5.37,exact,procedures,Documented operating procedures
+NIST-CSF,PR.IP-1,NCA-ECC,7.1.1,exact,procedures,Operating Procedures
+NIST-CSF,PR.IP-1,SAMA-CSF,9.1.1,exact,procedures,Secure Operations
+NIST-CSF,PR.IP-4,ISO27001,8.13,exact,backup,Information backup
+NIST-CSF,PR.IP-4,NCA-ECC,7.3.1,exact,backup,Backup
+NIST-CSF,PR.IP-4,SAMA-CSF,2.2.4,exact,backup,Data Backup
+NIST-CSF,PR.IP-4,SOC2,A1.2,exact,backup,Recovery and restoration
+NIST-CSF,PR.IP-4,DGA-DG,7.2.2,exact,backup,Data Backup
+NIST-CSF,DE.CM-1,ISO27001,8.15,exact,monitoring,Logging
+NIST-CSF,DE.CM-1,NCA-ECC,7.4.1,exact,monitoring,Event Logging
+NIST-CSF,DE.CM-1,SAMA-CSF,9.2.1,exact,monitoring,Security Logging
+NIST-CSF,DE.CM-1,SOC2,CC7.1,exact,monitoring,Detection and monitoring
+NIST-CSF,DE.CM-1,PCI-DSS,10.2,exact,monitoring,Audit log events
+NIST-CSF,DE.CM-4,ISO27001,8.7,exact,malware,Malware protection
+NIST-CSF,DE.CM-4,NCA-ECC,7.2.1,exact,malware,Anti-Malware Controls
+NIST-CSF,DE.CM-4,SAMA-CSF,6.2.1,exact,malware,Anti-Malware
+NIST-CSF,DE.CM-4,PCI-DSS,5.1,exact,malware,Deploy anti-malware
+NIST-CSF,DE.CM-8,ISO27001,8.8,exact,vulnerability,Vulnerability management
+NIST-CSF,DE.CM-8,NCA-ECC,8.2.3,exact,vulnerability,Vulnerability Assessment
+NIST-CSF,DE.CM-8,SAMA-CSF,7.1.1,exact,vulnerability,Vulnerability Management
+NIST-CSF,DE.CM-8,PCI-DSS,11.2,exact,vulnerability,Vulnerability scans
+NIST-CSF,RS.RP-1,ISO27001,5.24,exact,incident,Incident response plan
+NIST-CSF,RS.RP-1,NCA-ECC,10.1.1,exact,incident,Incident Response Plan
+NIST-CSF,RS.RP-1,SAMA-CSF,10.1.1,exact,incident,Incident Response Plan
+NIST-CSF,RS.RP-1,SOC2,CC7.2,exact,incident,Security incidents
+NIST-CSF,RS.RP-1,PCI-DSS,12.10,exact,incident,IR plan
+NIST-CSF,RS.CO-2,ISO27001,5.26,exact,notification,Incident notification
+NIST-CSF,RS.CO-2,PDPL,Article-21,exact,notification,Breach Notification
+NIST-CSF,RS.CO-2,NCA-ECC,10.2.1,exact,notification,Incident Reporting
+NIST-CSF,RS.CO-2,SAMA-CSF,10.2.1,exact,notification,Incident Reporting to SAMA
+PCI-DSS,1.1,ISO27001,8.20,exact,network,Networks security
+PCI-DSS,1.1,NCA-ECC,4.4.1,exact,network,Network Access Control
+PCI-DSS,1.1,SAMA-CSF,3.3.1,exact,network,Network Security
+PCI-DSS,3.4,ISO27001,8.24,exact,crypto,Cryptography for CHD
+PCI-DSS,3.4,NCA-ECC,5.2.1,exact,crypto,Data Encryption
+PCI-DSS,3.4,SAMA-CSF,5.1.3,exact,crypto,Sensitive Data Encryption
+PCI-DSS,3.4,NIST-CSF,PR.DS-1,exact,crypto,Data-at-rest protection
+PCI-DSS,4.1,ISO27001,8.24,exact,transmission,Transmission encryption
+PCI-DSS,4.1,NCA-ECC,5.2.2,exact,transmission,Communications Encryption
+PCI-DSS,4.1,NIST-CSF,PR.DS-2,exact,transmission,Data-in-transit protection
+PCI-DSS,5.1,ISO27001,8.7,exact,malware,Anti-malware
+PCI-DSS,5.1,NCA-ECC,7.2.1,exact,malware,Anti-Malware Controls
+PCI-DSS,5.1,SAMA-CSF,6.2.1,exact,malware,Anti-Malware
+PCI-DSS,5.1,NIST-CSF,DE.CM-4,exact,malware,Malicious code detected
+PCI-DSS,6.1,ISO27001,8.25,exact,sdlc,Secure development lifecycle
+PCI-DSS,6.1,NCA-ECC,8.1.1,exact,sdlc,Secure Development
+PCI-DSS,6.1,SAMA-CSF,8.1.1,exact,sdlc,Secure Development
+PCI-DSS,6.1,NIST-CSF,PR.IP-2,exact,sdlc,System development lifecycle
+PCI-DSS,8.1,ISO27001,5.16,exact,access,Identity management
+PCI-DSS,8.1,NCA-ECC,4.2.1,exact,access,User Registration
+PCI-DSS,8.1,NIST-CSF,PR.AC-1,exact,access,Identity management
+PCI-DSS,8.3,ISO27001,5.17,exact,auth,MFA
+PCI-DSS,8.3,NCA-ECC,4.3.1,exact,auth,Multi-Factor Authentication
+PCI-DSS,8.3,SAMA-CSF,3.1.3,exact,auth,Strong Authentication
+PCI-DSS,8.3,NIST-CSF,PR.AC-7,exact,auth,Risk-based authentication
+PCI-DSS,10.2,ISO27001,8.15,exact,logging,Logging
+PCI-DSS,10.2,NCA-ECC,7.4.1,exact,logging,Event Logging
+PCI-DSS,10.2,NIST-CSF,DE.CM-1,exact,logging,Network monitoring
+PCI-DSS,11.2,ISO27001,8.8,exact,vulnerability,Vulnerability scans
+PCI-DSS,11.2,NCA-ECC,8.2.3,exact,vulnerability,Vulnerability Assessment
+PCI-DSS,11.2,NIST-CSF,DE.CM-8,exact,vulnerability,Vulnerability scans
+PCI-DSS,12.10,ISO27001,5.24,exact,incident,Incident response
+PCI-DSS,12.10,NCA-ECC,10.1.1,exact,incident,Incident Response Plan
+PCI-DSS,12.10,NIST-CSF,RS.RP-1,exact,incident,Response plan
+SOC2,CC1.1,ISO27001,5.1,exact,policy,Policy and ethics
+SOC2,CC1.1,NIST-CSF,ID.GV-1,exact,policy,Organizational policy
+SOC2,CC1.3,ISO27001,5.2,exact,governance,Organizational structure
+SOC2,CC1.3,NIST-CSF,ID.GV-2,exact,governance,Roles coordinated
+SOC2,CC3.2,ISO27001,8.1,exact,risk,Risk assessment
+SOC2,CC3.2,NIST-CSF,ID.RA-1,exact,risk,Asset vulnerabilities
+SOC2,CC6.1,ISO27001,5.16,exact,access,Identity management
+SOC2,CC6.1,NIST-CSF,PR.AC-1,exact,access,Identity management
+SOC2,CC6.1,PCI-DSS,8.1,exact,access,User identification
+SOC2,CC7.1,ISO27001,8.16,exact,monitoring,Monitoring activities
+SOC2,CC7.1,NIST-CSF,DE.CM-1,exact,monitoring,Network monitoring
+SOC2,CC7.2,ISO27001,5.25,exact,incident,Incident assessment
+SOC2,CC7.2,NIST-CSF,RS.AN-1,exact,incident,Notification investigation
+SOC2,A1.2,ISO27001,8.13,exact,backup,Backup
+SOC2,A1.2,NIST-CSF,PR.IP-4,exact,backup,Information backup
+SOC2,A1.3,ISO27001,5.29,exact,continuity,Business continuity
+SOC2,A1.3,NIST-CSF,RC.RP-1,exact,continuity,Recovery plan
+SOC2,P1.1,PDPL,Article-29,exact,privacy,Privacy Notice
+SOC2,P2.1,PDPL,Article-6,exact,privacy,Consent
+SOC2,P5.1,PDPL,Article-9,exact,privacy,Right of Access
+SOC2,P5.2,PDPL,Article-14,exact,privacy,Disclosure to third parties
+SAMA-CSF,1.1.1,ISO27001,5.1,exact,policy,Information security policy
+SAMA-CSF,1.1.1,NCA-ECC,1.1.1,exact,policy,Information Security Policy
+SAMA-CSF,1.1.1,NIST-CSF,ID.GV-1,exact,policy,Organizational policy
+SAMA-CSF,2.2.2,ISO27001,10.1,exact,crypto,Encryption
+SAMA-CSF,2.2.2,NCA-ECC,5.2.1,exact,crypto,Data Encryption
+SAMA-CSF,2.2.2,NIST-CSF,PR.DS-1,exact,crypto,Data-at-rest protection
+SAMA-CSF,2.2.2,PCI-DSS,3.4,exact,crypto,PAN encryption
+SAMA-CSF,3.1.3,ISO27001,5.17,exact,auth,Strong authentication
+SAMA-CSF,3.1.3,NCA-ECC,4.3.1,exact,auth,Multi-Factor Authentication
+SAMA-CSF,3.1.3,NIST-CSF,PR.AC-7,exact,auth,Risk-based authentication
+SAMA-CSF,3.1.3,PCI-DSS,8.3,exact,auth,MFA
+SAMA-CSF,10.1.1,ISO27001,5.24,exact,incident,Incident response
+SAMA-CSF,10.1.1,NCA-ECC,10.1.1,exact,incident,Incident Response Plan
+SAMA-CSF,10.1.1,NIST-CSF,RS.RP-1,exact,incident,Response plan
+SAMA-CSF,10.1.1,PCI-DSS,12.10,exact,incident,IR plan
+DGA-DG,1.1.1,ISO27001,5.1,partial,policy,Data governance broader than infosec
+DGA-DG,2.1.1,ISO27001,5.12,exact,classification,Data classification
+DGA-DG,2.1.1,NCA-ECC,2.2.1,exact,classification,Information Classification
+DGA-DG,2.1.1,NIST-CSF,ID.AM-5,exact,classification,Resource prioritization
+DGA-DG,3.1.1,PDPL,Article-18,exact,privacy,Personal data protection
+DGA-DG,3.1.1,ISO27001,5.34,exact,privacy,Privacy protection
+DGA-DG,3.2.2,ISO27001,10.1,exact,crypto,Data encryption
+DGA-DG,3.2.2,NIST-CSF,PR.DS-1,exact,crypto,Data-at-rest protection
+DGA-DG,6.1.2,PDPL,Article-22,exact,transfer,Cross-border data transfer
+DGA-DG,6.1.2,ISO27001,13.2,exact,transfer,Cross-border transfer
+DGA-DG,7.2.2,ISO27001,8.13,exact,backup,Data backup
+DGA-DG,7.2.2,NIST-CSF,PR.IP-4,exact,backup,Information backup
